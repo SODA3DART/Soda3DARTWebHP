@@ -1,42 +1,1078 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website Title</title>
-    <link rel="stylesheet" href="style.css"> <!-- 外部CSSをリンク -->
+    <title>崇城大学芸術学部美術学科 3Dアートコース</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* ヒーロー部分 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/api/placeholder/1200/800') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            margin-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #3367d6;
+        }
+        
+        /* 特徴部分 */
+        .features {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: #4285f4;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        /* ギャラリー部分 */
+        .gallery {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 10px;
+            position: relative;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: #fff;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        /* ニュース部分 */
+        .news {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .news-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .news-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+        
+        .news-content {
+            padding: 20px;
+        }
+        
+        .news-date {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        .news-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        
+        .news-card:hover .news-title {
+            color: #4285f4;
+        }
+        
+        .news-excerpt {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .read-more {
+            display: inline-block;
+            color: #4285f4;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .read-more:hover {
+            color: #3367d6;
+        }
+        
+        /* 教員紹介部分 */
+        .faculty {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .faculty-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .faculty-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .faculty-image {
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .faculty-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .faculty-info {
+            padding: 20px;
+        }
+        
+        .faculty-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .faculty-position {
+            color: #777;
+            margin-bottom: 15px;
+        }
+        
+        .faculty-bio {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-link {
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .social-link:hover {
+            color: #4285f4;
+        }
+        
+        /* お問い合わせ部分 */
+        .contact {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+            margin-top: 40px;
+        }
+        
+        .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .contact-details {
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .contact-icon {
+            color: #4285f4;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .contact-text {
+            line-height: 1.4;
+        }
+        
+        .contact-text strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .contact-form button {
+            background-color: #4285f4;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-form button:hover {
+            background-color: #3367d6;
+        }
+        
+        /* フッター部分 */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+            
+            .logo-text {
+                font-size: 16px;
+            }
+            
+            .logo-text span {
+                font-size: 12px;
+            }
+            
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+            
+            nav.active {
+                transform: translateY(0);
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .news-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- ヘッダー -->
     <header>
-        <h1>Welcome to My Website</h1>
-        <nav>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="#home">ホーム</a></li>
+                    <li><a href="#features">コース紹介</a></li>
+                    <li><a href="#gallery">ギャラリー</a></li>
+                    <li><a href="#news">ニュース</a></li>
+                    <li><a href="#faculty">教員紹介</a></li>
+                    <li><a href="#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section id="about">
-            <h2>About Us</h2>
-            <p>This is where you can describe yourself or your website purpose.</p>
-        </section>
-        
-        <section id="services">
-            <h2>Services</h2>
-            <p>Here you can list the services or features you offer.</p>
-        </section>
-        
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Include your contact information or a form for visitors to reach out.</p>
-        </section>
-    </main>
+    <!-- ヒーロー部分 -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>3Dアートで新しい世界を創造する</h1>
+            <p>崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
+            <a href="#features" class="cta-button">詳しく見る</a>
+        </div>
+    </section>
 
+    <!-- 特徴 -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>コース紹介</h2>
+                <p>3Dアートコースでは、デジタル技術を駆使した表現力と創造性を養います。</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>3Dモデリング</h3>
+                    <p>業界標準のソフトウェアを使用して、キャラクターや環境、プロダクトなど様々な3Dモデルの制作技術を学びます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>アニメーション</h3>
+                    <p>キャラクターの動きや表情、物理シミュレーションなど、魅力的なアニメーション技術を習得します。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🕹️</div>
+                    <h3>インタラクティブ制作</h3>
+                    <p>ゲームエンジンを活用したインタラクティブなコンテンツの制作方法を学びます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3>VR/AR</h3>
+                    <p>仮想現実や拡張現実技術を用いた新しい表現方法を探求します。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎭</div>
+                    <h3>コンセプトアート</h3>
+                    <p>創造的なアイデアをビジュアル化するためのコンセプトアート技術を学びます。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>プロジェクト制作</h3>
+                    <p>企業との連携プロジェクトや卒業制作を通じて、実践的なスキルを身につけます。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ギャラリー -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2>ギャラリー</h2>
+                <p>3Dアートコースの学生たちが制作した作品をご紹介します。</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品1">
+                    <div class="gallery-overlay">
+                        <h3>キャラクターモデリング</h3>
+                        <p>3年生 山田太郎</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品2">
+                    <div class="gallery-overlay">
+                        <h3>環境デザイン</h3>
+                        <p>4年生 佐藤花子</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品3">
+                    <div class="gallery-overlay">
+                        <h3>VRインスタレーション</h3>
+                        <p>卒業制作 鈴木一郎</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品4">
+                    <div class="gallery-overlay">
+                        <h3>ショートアニメーション</h3>
+                        <p>3年生 高橋美咲</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品5">
+                    <div class="gallery-overlay">
+                        <h3>プロダクトデザイン</h3>
+                        <p>2年生 伊藤健太</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品6">
+                    <div class="gallery-overlay">
+                        <h3>コンセプトアート</h3>
+                        <p>4年生 中村直樹</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品7">
+                    <div class="gallery-overlay">
+                        <h3>インタラクティブアート</h3>
+                        <p>卒業制作 小林由美</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="/api/placeholder/400/400" alt="学生作品8">
+                    <div class="gallery-overlay">
+                        <h3>3Dプリント作品</h3>
+                        <p>3年生 渡辺聡</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ニュース -->
+    <section id="news" class="news">
+        <div class="container">
+            <div class="section-header">
+                <h2>ニュース</h2>
+                <p>3Dアートコースの最新情報をお届けします。</p>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-image">
+                        <img src="/api/placeholder/600/400" alt="ニュース1">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">2025年4月1日</div>
+                        <h3 class="news-title">2025年度入学式が行われました</h3>
+                        <p class="news-excerpt">4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。</p>
+                        <a href="#" class="read-more">続きを読む</a>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-image">
+                        <img src="/api/placeholder/600/400" alt="ニュース2">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">2025年3月20日</div>
+                        <h3 class="news-title">卒業制作展を開催しました</h3>
+                        <p class="news-excerpt">3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。</p>
+                        <a href="#" class="read-more">続きを読む</a>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-image">
+                        <img src="/api/placeholder/600/400" alt="ニュース3">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">2025年2月15日</div>
+                        <h3 class="news-title">業界セミナーを実施しました</h3>
+                        <p class="news-excerpt">ゲーム業界の最前線で活躍するクリエイターをお招きして、最新技術トレンドに関するセミナーを開催しました。</p>
+                        <a href="#" class="read-more">続きを読む</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 教員紹介 -->
+    <section id="faculty" class="faculty">
+        <div class="container">
+            <div class="section-header">
+                <h2>教員紹介</h2>
+                <p>業界経験豊富な教員陣があなたの創造力を育みます。</p>
+            </div>
+            <div class="faculty-grid">
+                <div class="faculty-card">
+                    <div class="faculty-image">
+                        <img src="/api/placeholder/400/400" alt="教授1">
+                    </div>
+                    <div class="faculty-info">
+                        <h3 class="faculty-name">鈴木 誠一</h3>
+                        <div class="faculty-position">教授 / コース長</div>
+                        <p class="faculty-bio">ゲーム業界で20年以上の経験を持ち、多数のAAAタイトルに携わった3Dアーティスト。キャラクターモデリングの専門家。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Twitter</a>
+                            <a href="#" class="social-link">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="faculty-image">
+                        <img src="/api/placeholder/400/400" alt="教授2">
+                    </div>
+                    <div class="faculty-info">
+                        <h3 class="faculty-name">佐々木 明子</h3>
+                        <div class="faculty-position">准教授</div>
+                        <p class="faculty-bio">アニメーション専門。数々の受賞歴を持つアニメーターで、国内外の著名なアニメーションスタジオでの勤務経験あり。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Twitter</a>
+                            <a href="#" class="social-link">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="faculty-image">
+                        <img src="/api/placeholder/400/400" alt="教授3">
+                    </div>
+                    <div class="faculty-info">
+                        <h3 class="faculty-name">高橋 健太</h3>
+                        <div class="faculty-position">講師</div>
+                        <p class="faculty-bio">VR/AR技術のスペシャリスト。インタラクティブアートの分野で革新的なプロジェクトを多数手がける。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Twitter</a>
+                            <a href="#" class="social-link">LinkedIn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="faculty-card">
+                    <div class="faculty-image">
+                        <img src="/api/placeholder/400/400" alt="教授4">
+                    </div>
+                    <div class="faculty-info">
+                        <h3 class="faculty-name">田中 友美</h3>
+                        <div class="faculty-position">非常勤講師</div>
+                        <p class="faculty-bio">環境デザインの専門家。映画やテレビの美術設定に携わった経験を活かし、リアルな世界観の構築を指導。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link
+
+
+<a href="#" class="social-link">Twitter</a>
+                            <a href="#" class="social-link">Artstation</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- お問い合わせ -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>お問い合わせ</h2>
+                <p>3Dアートコースについてのご質問やお問い合わせはこちらから</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>連絡先情報</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <div class="contact-text">
+                                <strong>住所</strong>
+                                〒860-0082 熊本県熊本市西区池田4-22-1 崇城大学芸術学部
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <div class="contact-text">
+                                <strong>電話番号</strong>
+                                096-123-4567
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">✉️</div>
+                            <div class="contact-text">
+                                <strong>メールアドレス</strong>
+                                3dart@sojo-u.ac.jp
+                            </div>
+                        </div>
+                    </div>
+                    <h3>オープンキャンパス情報</h3>
+                    <p>次回のオープンキャンパスは2025年5月15日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。</p>
+                </div>
+                <div class="contact-form">
+                    <h3>お問い合わせフォーム</h3>
+                    <form id="contactForm">
+                        <input type="text" placeholder="お名前" required>
+                        <input type="email" placeholder="メールアドレス" required>
+                        <input type="text" placeholder="件名">
+                        <textarea placeholder="メッセージ" required></textarea>
+                        <button type="submit">送信する</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
     <footer>
-        <p>&copy; 2025 Your Website Name. All rights reserved.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">大学について</a></li>
+                        <li><a href="#">学部・学科紹介</a></li>
+                        <li><a href="#">入試情報</a></li>
+                        <li><a href="#">キャンパスライフ</a></li>
+                        <li><a href="#">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">美術学科</a></li>
+                        <li><a href="#">デザイン学科</a></li>
+                        <li><a href="#">3Dアートコース</a></li>
+                        <li><a href="#">教員紹介</a></li>
+                        <li><a href="#">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">ギャラリー</a></li>
+                        <li><a href="#">卒業制作展</a></li>
+                        <li><a href="#">受賞歴</a></li>
+                        <li><a href="#">プロジェクト</a></li>
+                        <li><a href="#">学生インタビュー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">アクセス</a></li>
+                        <li><a href="#">入試に関するお問い合わせ</a></li>
+                        <li><a href="#">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="#">オープンキャンパス</a></li>
+                        <li><a href="#">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
     </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // モバイルメニュートグル
+        const mobileMenu = document.getElementById('mobileMenu');
+        const nav = document.getElementById('nav');
+        
+        mobileMenu.addEventListener('click', function() {
+            nav.classList.toggle('active');
+        });
+        
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // モバイルメニューが開いている場合は閉じる
+                    if (nav.classList.contains('active')) {
+                        nav.classList.remove('active');
+                    }
+                }
+            });
+        });
+        
+        // スクロール時のヘッダー表示/非表示
+        let lastScrollTop = 0;
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // 下にスクロール
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                // 上にスクロール
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+        
+        // フォーム送信処理
+        const contactForm = document.getElementById('contactForm');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // ここにフォーム送信処理を追加
+                alert('お問い合わせありがとうございます。メッセージが送信されました。');
+                contactForm.reset();
+            });
+        }
+        
+        // ギャラリーモーダル機能（シンプル版）
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const imgSrc = this.querySelector('img').src;
+                const title = this.querySelector('h3').textContent;
+                const author = this.querySelector('p').textContent;
+                
+                // シンプルなアラート表示
+                alert(`${title} by ${author}\n画像の詳細ページに移動します。`);
+            });
+        });
+        
+        // ページ読み込みアニメーション
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            
+            // ヒーローセクションのアニメーション
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                heroContent.style.opacity = '0';
+                heroContent.style.transform = 'translateY(20px)';
+                
+                setTimeout(function() {
+                    heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+                    heroContent.style.opacity = '1';
+                    heroContent.style.transform = 'translateY(0)';
+                }, 300);
+            }
+            
+            // 他のセクションの表示アニメーション
+            const sections = document.querySelectorAll('section:not(.hero)');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+            
+            const sectionObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transition = 'opacity 1s ease, transform 1s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        sectionObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                sectionObserver.observe(section);
+            });
+        });
+    </script>
 </body>
 </html>
