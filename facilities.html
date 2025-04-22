@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>施設アクセス | Soda 3D ART</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Babylon.jsを読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.47.0/babylon.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs-loaders/5.47.0/babylonjs.loaders.min.js"></script>
+    <style>
+        .map-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 40px;
+        }
+        
+        .facility-section {
+            margin-bottom: 60px;
+        }
+        
+        .facility-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .facility-description {
+            margin-bottom: 20px;
+        }
+        
+        .model-container {
+            width: 100%;
+            height: 400px;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+        
+        .loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.png" alt="Soda 3D ART Logo">
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="about.html">概要</a></li>
+                <li><a href="projects.html">プロジェクト</a></li>
+                <li><a href="facilities.html" class="active">施設アクセス</a></li>
+                <li><a href="contact.html">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <h1>施設アクセス</h1>
+        </section>
+        
+        <section class="map-section">
+            <h2>アクセスマップ</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.827853707791!2d139.76454987624606!3d35.68124053757511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188bfbd89f700b%3A0x277c49ba34ed38!2z5p2x5Lqs6aeF!5e0!3m2!1sja!2sjp!4v1713753687349!5m2!1sja!2sjp"
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </section>
+        
+        <section class="facilities-section">
+            <h2>施設紹介</h2>
+            
+            <!-- 施設1 -->
+            <div class="facility-section">
+                <h3 class="facility-title">メインスタジオ</h3>
+                <div class="facility-description">
+                    <p>3Dスキャン・モデリング専用の広々としたスタジオです。最新の機材を備え、様々なサイズのオブジェクトを高精細にスキャンすることができます。</p>
+                </div>
+                <div class="model-container" id="facility1-model">
+                    <div class="loading-text">モデル読み込み中...</div>
+                </div>
+            </div>
+            
+            <!-- 施設2 -->
+            <div class="facility-section">
+                <h3 class="facility-title">ワークショップルーム</h3>
+                <div class="facility-description">
+                    <p>少人数のワークショップやミーティングに最適な空間です。3Dモデリングの講習や、プロジェクト会議などに利用されています。</p>
+                </div>
+                <div class="model-container" id="facility2-model">
+                    <div class="loading-text">モデル読み込み中...</div>
+                </div>
+            </div>
+            
+            <!-- 施設3 -->
+            <div class="facility-section">
+                <h3 class="facility-title">展示スペース</h3>
+                <div class="facility-description">
+                    <p>完成した3DARTプロジェクトを展示するためのスペースです。プロジェクターやARグラスなど、様々な方法で作品を体験することができます。</p>
+                </div>
+                <div class="model-container" id="facility3-model">
+                    <div class="loading-text">モデル読み込み中...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Soda 3D ART Logo">
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="index.html">ホーム</a></li>
+                    <li><a href="about.html">概要</a></li>
+                    <li><a href="projects.html">プロジェクト</a></li>
+                    <li><a href="facilities.html">施設アクセス</a></li>
+                    <li><a href="contact.html">お問い合わせ</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <p>Email: info@soda3dart.com</p>
+                <p>TEL: 03-XXXX-XXXX</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Soda 3D ART. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 3Dモデル表示のための関数
+        function createScene(canvas, modelPath) {
+            const engine = new BABYLON.Engine(canvas, true);
+            const scene = new BABYLON.Scene(engine);
+            
+            // カメラの設定
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.wheelPrecision = 50;
+            camera.lowerRadiusLimit = 5;
+            camera.upperRadiusLimit = 20;
+            
+            // 照明の設定
+            const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+            light1.intensity = 0.7;
+            
+            const light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, -1, 1), scene);
+            light2.intensity = 0.5;
+            
+            // モデルのロード
+            BABYLON.SceneLoader.ImportMesh("", modelPath, "", scene, function(meshes) {
+                // モデルのサイズに合わせてカメラの位置を調整
+                const boundingInfo = meshes[0].getHierarchyBoundingVectors();
+                const size = boundingInfo.max.subtract(boundingInfo.min);
+                const maxSize = Math.max(size.x, size.y, size.z);
+                
+                // カメラの距離を調整
+                camera.radius = maxSize * 2;
+                
+                // モデルのセンタリング
+                const center = boundingInfo.min.add(size.scale(0.5));
+                camera.target = center;
+                
+                // モデルを自動回転させる
+                scene.registerBeforeRender(function() {
+                    meshes[0].rotation.y += 0.005;
+                });
+                
+                // ローディングテキストを非表示
+                canvas.parentElement.querySelector(".loading-text").style.display = "none";
+            });
+            
+            // レンダリングループ
+            engine.runRenderLoop(function() {
+                scene.render();
+            });
+            
+            // ウィンドウサイズ変更に対応
+            window.addEventListener("resize", function() {
+                engine.resize();
+            });
+            
+            return scene;
+        }
+        
+        // 画面ロード後に3Dモデルを表示
+        window.addEventListener("DOMContentLoaded", function() {
+            // 各施設のモデルコンテナにキャンバスを追加
+            const facilityIds = ["facility1-model", "facility2-model", "facility3-model"];
+            const modelPaths = [
+                "./models/main_studio.glb",
+                "./models/workshop_room.glb",
+                "./models/exhibition_space.glb"
+            ];
+            
+            facilityIds.forEach((id, index) => {
+                const container = document.getElementById(id);
+                const canvas = document.createElement("canvas");
+                container.appendChild(canvas);
+                
+                // モデル表示
+                createScene(canvas, modelPaths[index]);
+            });
+        });
+    </script>
+</body>
+</html>
