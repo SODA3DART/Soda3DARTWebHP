@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト | 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* ページヘッダー */
+        .page-header {
+            padding: 160px 0 80px;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/400') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        
+
+        
+
+        
+        .facilities-section {
+            padding: 60px 0;
+        }
+        
+        .facilities-section h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .facility-section {
+            margin-bottom: 80px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .facility-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #4285f4;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .facility-description {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        
+        .model-container {
+            width: 100%;
+            height: 500px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            touch-action: none;
+        }
+        
+        /* アクセス情報 */
+        .access-info {
+            padding: 40px 0 80px;
+        }
+        
+        .access-info h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .access-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .access-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .access-icon {
+            font-size: 2.5rem;
+            color: #4285f4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .access-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .access-card p {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* フッター部分 */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+            
+            .logo-text {
+                font-size: 16px;
+            }
+            
+            .logo-text span {
+                font-size: 12px;
+            }
+            
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+            
+            nav.active {
+                transform: translateY(0);
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .model-container {
+                height: 350px;
+            }
+            
+            .access-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Babylon.jsを読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.47.0/babylon.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs-loaders/5.47.0/babylonjs.loaders.min.js"></script>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html#home">ホーム</a></li>
+                    <li><a href="index.html#features">コース紹介</a></li>
+                    <li><a href="index.html#gallery">ギャラリー</a></li>
+                    <li><a href="index.html#news">ニュース</a></li>
+                    <li><a href="facilities.html" class="active">施設アクセス</a></li>
+                    <li><a href="index.html#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <section class="page-header">
+        <div class="container">
+            <h1>プロジェクト</h1>
+            <p>3Dアートコースのプロジェクト紹介</p>
+        </div>
+    </section>
+
+    
+
+    <!-- 施設紹介 -->
+    <section class="facilities-section">
+        <div class="container">
+            <h2>デジタル作品</h2>
+            
+            <!-- 施設1: デジタル室 -->
+            <div class="facility-section">
+                <h3 class="facility-title">UEFN子飼商店街プロジェクト</h3>
+                <div class="facility-description">
+                    <p>熊本市内の商店街をUEFNで再現するプロジェクトです。</p>
+                </div>
+                <div class="model-container" id="studio-model">
+                    <div class="loading-text">3Dモデル読み込み中...</div>
+                </div>
+            </div>
+            
+            <!-- 施設2: デジタルラボ -->
+            <div class="facility-section">
+                <h3 class="facility-title">MagicalClay</h3>
+                <div class="facility-description">
+                    <p>コース内有志で開発しているXRアプリケーションです。</br>
+                        </br>
+                        近日中のリリースを目標に製作をしています。</p>
+                </div>
+                <!--ここに画像を配置、クリックするとページが移動-->
+                 
+                <div class="model-container" id="lab-model">
+                    <div class="loading-text">3Dモデル読み込み中...</div>
+                </div>
+            </div>
+            
+            <!-- 施設3: 展示・体験スペース -->
+            <div class="facility-section">
+                <h3 class="facility-title">モンマルト(学食)</h3>
+                <div class="facility-description">
+                    <p>芸術学部生が使用するレストランです。</p>
+                </div>
+                <div class="model-container" id="gallery-model">
+                    <div class="loading-text">3Dモデル読み込み中...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- アクセス情報 -->
+    <section class="access-info">
+        <div class="container">
+            <h2>アクセス情報</h2>
+            <div class="access-grid">
+                <div class="access-card">
+                    <div class="access-icon">🚶</div>
+                    <h3>所在地</h3>
+                    <p>〒860-0082<br>熊本県熊本市西区池田4-22-1<br>崇城大学 L号館 1階</p>
+                </div>
+                <div class="access-card">
+                    <div class="access-icon">🚌</div>
+                    <h3>学生循環バス</h3>
+                    <p>熊本駅から産交バス「崇城大学前」行き 約25分<br>
+                    「崇城大学前」バス停下車 徒歩3分<br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="https://soda3dart.github.io/Soda3DARTWebHP/facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">ギャラリー</a></li>
+                        <li><a href="#">卒業制作展</a></li>
+                        <li><a href="#">受賞歴</a></li>
+                        <li><a href="#">プロジェクト</a></li>
+                        <li><a href="#">学生インタビュー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="#">入試に関するお問い合わせ</a></li>
+                        <li><a href="#">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="#">オープンキャンパス</a></li>
+                        <li><a href="#">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // モバイルメニュートグル
+        const mobileMenu = document.getElementById('mobileMenu');
+        const nav = document.getElementById('nav');
+        
+        mobileMenu.addEventListener('click', function() {
+            nav.classList.toggle('active');
+        });
+        
+        // 3Dモデル表示のための関数
+        function createScene(canvas, modelPath) {
+            const engine = new BABYLON.Engine(canvas, true);
+            const scene = new BABYLON.Scene(engine);
+            
+            // カメラの設定
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.wheelPrecision = 50;
+            camera.lowerRadiusLimit = 3;
+            camera.upperRadiusLimit = 20;
+            
+            // 照明の設定
+            const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+            light1.intensity = 0.7;
+            
+            const light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, -1, 1), scene);
+            light2.intensity = 0.5;
+            
+            // 環境光の追加
+            const envLight = new BABYLON.HemisphericLight("envLight", new BABYLON.Vector3(0, 1, 0), scene);
+            envLight.diffuse = new BABYLON.Color3(0.8, 0.8, 0.8);
+            envLight.groundColor = new BABYLON.Color3(0.6, 0.6, 0.6);
+            envLight.intensity = 0.5;
+            
+            // モデルのロード
+            BABYLON.SceneLoader.ImportMesh("", "", modelPath, scene, function(meshes) {
+                if(meshes.length > 0) {
+                    // 境界ボックスの計算
+                    let min = meshes[0].getBoundingInfo().boundingBox.minimumWorld;
+                    let max = meshes[0].getBoundingInfo().boundingBox.maximumWorld;
+                    
+                    for(let i = 1; i < meshes.length; i++) {
+                        const boundingInfo = meshes[i].getBoundingInfo();
+                        const meshMin = boundingInfo.boundingBox.minimumWorld;
+                        const meshMax = boundingInfo.boundingBox.maximumWorld;
+                        
+                        min = BABYLON.Vector3.Minimize(min, meshMin);
+                        max = BABYLON.Vector3.Maximize(max, meshMax); 
+                    }
+                    
+                    // モデルのサイズと中心を計算
+                    const size = max.subtract(min);
+                    const center = min.add(size.scale(0.5));
+                    
+                    // カメラの位置を調整
+                    const maxDimension = Math.max(size.x, size.y, size.z);
+                    camera.radius = maxDimension * 2;
+                    camera.target = center;
+                    
+                    // モデルを自動回転
+                    let rootMesh = meshes[0];
+                    scene.registerBeforeRender(function() {
+                        rootMesh.rotation.y += 0.005;
+                    });
+                }
+                
+                // ローディングテキストを非表示
+                canvas.parentElement.querySelector(".loading-text").style.display = "none";
+            }, function(evt) {
+                // プログレスバーがあれば更新
+            }, function(error) {
+                console.log("モデルのロードに失敗しました:", error);
+                canvas.parentElement.querySelector(".loading-text").textContent = "モデルの読み込みに失敗しました";
+            });
+            
+            // レンダリングループ
+            engine.runRenderLoop(function() {
+                scene.render();
+            });
+            
+            // ウィンドウサイズ変更に対応
+            window.addEventListener("resize", function() {
+                engine.resize();
+            });
+            
+            return scene;
+        }
+        
+        // ページロード後に実行
+        window.addEventListener("DOMContentLoaded", function() {
+            // 施設モデルの読み込み
+            const modelContainers = [
+                { id: "studio-model", path: "./models/3d_studio.glb" },
+                { id: "lab-model", path: "./models/digital_lab.glb" },
+                { id: "gallery-model", path: "./models/exhibition_space.glb" }
+            ];
+            
+            modelContainers.forEach(container => {
+                const element = document.getElementById(container.id);
+                if(element) {
+                    const canvas = document.createElement("canvas");
+                    element.appendChild(canvas);
+                    createScene(canvas, container.path);
+                }
+            });
+            
+            // スクロールアニメーション
+            const animateOnScroll = function() {
+                const sections = document.querySelectorAll('.facility-section, .access-card');
+                
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if(entry.isIntersecting) {
+                            entry.target.style.opacity = 1;
+                            entry.target.style.transform = 'translateY(0)';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    root: null,
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                });
+                
+                sections.forEach(section => {
+                    section.style.opacity = 0;
+                    section.style.transform = 'translateY(20px)';
+                    section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                    observer.observe(section);
+                });
+            };
+            
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>
