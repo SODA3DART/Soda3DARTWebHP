@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>崇城大学芸術学部美術学科 3Dアートコース</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="text/javascript">
+        (function() {
+            // EmailJSの初期化 (実際のPUBLIC_KEYに置き換える必要があります)
+            // EmailJSのセットアップ手順:
+            // 1. https://www.emailjs.com/ でアカウントを作成
+            // 2. Email Servicesで新しいサービスを追加（GmailやOutlookなど）
+            // 3. Email Templatesで新しいテンプレートを作成し、以下の変数を使用:
+            //    - {{from_name}} - 送信者の名前
+            //    - {{from_email}} - 送信者のメールアドレス
+            //    - {{subject}} - 件名
+            //    - {{message}} - メッセージ内容
+            // 4. 「to_email」に「h0005345@m.sojo-u.ac.jp」を設定
+            // 5. Account > API Keysから公開キーを取得
+            // 6. 下記のYOUR_PUBLIC_KEYを実際の公開キーに置き換え
+            // 7. JavaScriptコード内のSERVICE_IDとTEMPLATE_IDも実際の値に置き換え
+            emailjs.init("hBWdlDiL0u-tbA-4c");
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -781,77 +802,6 @@
         </div>
     </section>
 
-    <!-- 教員紹介
-    <section id="faculty" class="faculty">
-        <div class="container">
-            <div class="section-header">
-                <h2>教員紹介</h2>
-                <p>業界経験豊富な教員陣があなたの創造力を育みます。</p>
-            </div>
-            <div class="faculty-grid">
-                <div class="faculty-card">
-                    <div class="faculty-image">
-                        <img src="/api/placeholder/400/400" alt="教授1">
-                    </div>
-                    <div class="faculty-info">
-                        <h3 class="faculty-name">null</h3>
-                        <div class="faculty-position">教授 / コース長</div>
-                        <p class="faculty-bio">ゲーム業界で20年以上の経験を持ち、多数のAAAタイトルに携わった3Dアーティスト。キャラクターモデリングの専門家。</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link">Twitter</a>
-                            <a href="#" class="social-link">LinkedIn</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="faculty-image">
-                        <img src="/api/placeholder/400/400" alt="教授2">
-                    </div>
-                    <div class="faculty-info">
-                        <h3 class="faculty-name">null</h3>
-                        <div class="faculty-position">准教授</div>
-                        <p class="faculty-bio">アニメーション専門。数々の受賞歴を持つアニメーターで、国内外の著名なアニメーションスタジオでの勤務経験あり。</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link">Twitter</a>
-                            <a href="#" class="social-link">Instagram</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="faculty-image">
-                        <img src="/api/placeholder/400/400" alt="教授3">
-                    </div>
-                    <div class="faculty-info">
-                        <h3 class="faculty-name">hoge</h3>
-                        <div class="faculty-position">講師</div>
-                        <p class="faculty-bio">VR/AR技術のスペシャリスト。インタラクティブアートの分野で革新的なプロジェクトを多数手がける。</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link">Twitter</a>
-                            <a href="#" class="social-link">LinkedIn</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="faculty-card">
-                    <div class="faculty-image">
-                        <img src="/api/placeholder/400/400" alt="教授4">
-                    </div>
-                    <div class="faculty-info">
-                        <h3 class="faculty-name">坂元　旭</h3>
-                        <div class="faculty-position">非常勤講師</div>
-                        <p class="faculty-bio">空間コンピューティングの専門家。モデリングからアプリ開発の経験を活かし、デジタルとフィジカルが融合する世界観の構築を指導。</p>
-                        <div class="social-links">
-                            <a href="https://redhologerbera.hatenablog.com/" class="blog
-
-
-<a href="https://x.com/HoloMotoRanger" class="social-link">Twitter</a>
-                            <a href="#" class="social-link">Artstation</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-　　-->
     <!-- お問い合わせ -->
     <section id="contact" class="contact">
         <div class="container">
@@ -891,10 +841,16 @@
                 <div class="contact-form">
                     <h3>お問い合わせフォーム</h3>
                     <form id="contactForm">
-                        <input type="text" placeholder="お名前" required>
-                        <input type="email" placeholder="メールアドレス" required>
-                        <input type="text" placeholder="件名">
-                        <textarea placeholder="メッセージ" required></textarea>
+                        <input type="text" name="from_name" placeholder="お名前" required>
+                        <input type="email" name="from_email" placeholder="メールアドレス" required>
+                        <input type="text" name="subject" placeholder="件名" required>
+                        <textarea name="message" placeholder="メッセージ" required></textarea>
+                        <input type="hidden" name="to_email" value="h0005345@m.sojo-u.ac.jp">
+                        <!-- Google reCAPTCHA -->
+                        <div class="g-recaptcha" data-sitekey="6LcvNCErAAAAAD5njLu2n5qQGF4UgPmC7oP_gHYY"></div>
+                        <div class="recaptcha-note" style="margin-top: 5px; font-size: 0.8rem; color: #666;">
+                            ※ 送信前に「私はロボットではありません」にチェックを入れてください
+                        </div>
                         <button type="submit">送信する</button>
                     </form>
                 </div>
@@ -1011,9 +967,49 @@
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // ここにフォーム送信処理を追加
-                alert('お問い合わせありがとうございます。メッセージが送信されました。');
-                contactForm.reset();
+                // 必須フィールドの検証（HTML5のrequired属性でも検証されますが、念のため）
+                const nameField = this.querySelector('[name="from_name"]');
+                const emailField = this.querySelector('[name="from_email"]');
+                const subjectField = this.querySelector('[name="subject"]');
+                const messageField = this.querySelector('[name="message"]');
+
+                if (!nameField.value || !emailField.value || !subjectField.value || !messageField.value) {
+                    alert('すべての必須項目（お名前、メールアドレス、件名、メッセージ）を入力してください。');
+                    return;
+                }
+
+                // reCAPTCHAの検証
+                const recaptchaResponse = grecaptcha.getResponse();
+                if (!recaptchaResponse) {
+                    alert('「私はロボットではありません」にチェックを入れてください。');
+                    return;
+                }
+
+                // 送信ボタンを無効化して二重送信を防止
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                submitButton.disabled = true;
+                submitButton.textContent = '送信中...';
+
+                // EmailJSを使用してメール送信
+                // 重要: 以下の値を実際のEmailJSアカウントの値に置き換えてください
+                // SERVICE_ID: EmailJSダッシュボードのEmail Servicesで作成したサービスのID
+                // TEMPLATE_ID: Email Templatesで作成したテンプレートのID
+                // 注意: 必ずテンプレート内で{{to_email}}変数を使用するか、テンプレート設定で固定の送信先を設定してください
+                emailjs.sendForm('service_418v1yh', 'template_7misyfs', this)
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        alert('お問い合わせありがとうございます。メッセージが送信されました。');
+                        contactForm.reset();
+                        grecaptcha.reset(); // reCAPTCHAをリセット
+                    }, function(error) {
+                        console.log('FAILED...', error);
+                        alert('メッセージの送信に失敗しました。後でもう一度お試しください。');
+                    })
+                    .finally(function() {
+                        // 送信ボタンを再度有効化
+                        submitButton.disabled = false;
+                        submitButton.textContent = '送信する';
+                    });
             });
         }
 
