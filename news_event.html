@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニュース - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ニュース一覧スタイル */
+        .news-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .news-item {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .news-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .news-header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .news-thumbnail {
+            width: 120px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .news-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .news-info {
+            flex-grow: 1;
+        }
+
+        .news-date {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .news-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .news-item:hover .news-title {
+            color: #4285f4;
+        }
+
+        .news-excerpt {
+            color: #555;
+            font-size: 0.95rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            padding: 0 20px;
+        }
+
+        .news-content.active {
+            max-height: 2000px;
+            padding: 0 20px 20px;
+        }
+
+        .news-full-content {
+            margin-top: 10px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .news-full-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .news-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #4285f4;
+            color: #fff;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .read-more-btn:hover {
+            background-color: #3367d6;
+        }
+
+        .toggle-icon {
+            margin-left: 10px;
+            font-size: 1.5rem;
+            color: #777;
+            transition: transform 0.3s;
+        }
+
+        .news-item.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* フッター */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-text span {
+                font-size: 12px;
+            }
+
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+
+            nav.active {
+                transform: translateY(0);
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .news-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .news-thumbnail {
+                width: 100%;
+                height: 150px;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html#home">ホーム</a></li>
+                    <li><a href="index.html#features">コース紹介</a></li>
+                    <li><a href="index.html#gallery">ギャラリー</a></li>
+                    <li><a href="index.html#news">ニュース</a></li>
+                    <li><a href="index.html#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="container main-content">
+        <div class="section-header">
+            <h2>ニュース</h2>
+            <p>3Dアートコースの最新情報をお届けします。</p>
+        </div>
+
+        <div class="news-container">
+            <div class="news-list" id="newsList">
+                <!-- ニュース記事はJavaScriptで動的に生成されます -->
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="gallery.html">ギャラリー</a></li>
+                        <li><a href="#">卒業制作展</a></li>
+                        <li><a href="#">受賞歴</a></li>
+                        <li><a href="project.html">プロジェクト</a></li>
+                        <li><a href="#">学生インタビュー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="#">入試に関するお問い合わせ</a></li>
+                        <li><a href="question.html">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="#">オープンキャンパス</a></li>
+                        <li><a href="#">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // モバイルメニュートグル
+        const mobileMenu = document.getElementById('mobileMenu');
+        const nav = document.getElementById('nav');
+
+        mobileMenu.addEventListener('click', function() {
+            nav.classList.toggle('active');
+        });
+
+        // サンプルニュースデータ（実際の環境では、サーバーから取得するか、HTMLファイルを解析して取得します）
+        const newsData = [
+            {
+                id: 1,
+                date: '2025年4月1日',
+                title: '2025年度入学式が行われました',
+                excerpt: '4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。',
+                content: `<p>4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。</p>
+                <p>今年度は20名の新入生が3Dアートコースに入学しました。入学式では学長の挨拶に続き、各コースの紹介が行われ、新入生たちは熱心に聞き入っていました。</p>
+                <p>入学式後には、3Dアートコースの施設見学とオリエンテーションが行われ、先輩学生たちによる作品紹介や、教員からのメッセージが伝えられました。</p>
+                <p>新入生の皆さんの今後の活躍に期待しています。</p>`,
+                image: '/api/placeholder/600/400',
+                fullArticle: null
+            },
+            {
+                id: 2,
+                date: '2025年3月20日',
+                title: '卒業制作展を開催しました',
+                excerpt: '3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。',
+                content: `<p>3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。</p>
+                <p>今年度の卒業制作展では、3DCGアニメーション、VRインスタレーション、3Dプリントによる造形作品など、多様な作品が展示されました。</p>
+                <p>特に注目を集めたのは、AIを活用した対話型インスタレーション作品で、来場者との対話を通じて形を変える3D作品が好評でした。</p>
+                <p>卒業生たちの新たな門出を祝うとともに、今後の活躍を期待しています。</p>`,
+                image: '/api/placeholder/600/400',
+                fullArticle: null
+            },
+            {
+                id: 3,
+                date: '2025年2月15日',
+                title: '業界セミナーを実施しました',
+                excerpt: 'ゲーム業界の最前線で活躍するクリエイターをお招きして、最新技術トレンドに関するセミナーを開催しました。',
+                content: `<p>ゲーム業界の最前線で活躍するクリエイターをお招きして、最新技術トレンドに関するセミナーを開催しました。</p>
+                <p>今回のセミナーでは、大手ゲーム会社のアートディレクターとテクニカルアーティストをゲストスピーカーとしてお招きし、最新のゲームエンジンを活用したアート制作のワークフローや、リアルタイムレンダリング技術の進化について講演いただきました。</p>
+                <p>学生たちは熱心に聞き入り、質疑応答では活発な議論が交わされました。実際の業界で求められるスキルや知識について理解を深める貴重な機会となりました。</p>`,
+                image: '/api/placeholder/600/400',
+                fullArticle: null
+            }
+        ];
+
+        // ニュース記事を動的に生成する関数
+        function renderNewsItems() {
+            const newsListElement = document.getElementById('newsList');
+            
+            // ニュースデータを日付の新しい順にソート
+            const sortedNews = [...newsData].sort((a, b) => {
+                const dateA = new Date(a.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
+                const dateB = new Date(b.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
+                return dateB - dateA;
+            });
+            
+            // HTMLを生成
+            sortedNews.forEach(news => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+                newsItem.dataset.id = news.id;
+                
+                // ニュースの全文記事がある場合はそのリンクを使用
+                const fullArticleLink = news.fullArticle ? 
+                    `<a href="${news.fullArticle}" class="read-more-btn">詳細を見る</a>` : 
+                    '';
+                
+                newsItem.innerHTML = `
+                    <div class="news-header">
+                        <div class="news-thumbnail">
+                            <img src="${news.image}" alt="${news.title}">
+                        </div>
+                        <div class="news-info">
+                            <div class="news-date">${news.date}</div>
+                            <h3 class="news-title">${news.title}</h3>
+                            <p class="news-excerpt">${news.excerpt}</p>
+                        </div>
+                        <div class="toggle-icon">▼</div>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-full-content">
+                            ${news.content}
+                        </div>
+                        <div class="news-actions">
+                            ${fullArticleLink}
+                        </div>
+                    </div>
+                `;
+                
+                newsListElement.appendChild(newsItem);
+                
+                // クリックイベントを追加
+                const header = newsItem.querySelector('.news-header');
+                const content = newsItem.querySelector('.news-content');
+                
+                header.addEventListener('click', () => {
+                    newsItem.classList.toggle('active');
+                    content.classList.toggle('active');
+                });
+            });
+        }
+
+        // ページ読み込み時にニュース記事を生成
+        document.addEventListener('DOMContentLoaded', renderNewsItems);
+
+        // 新しいニュース記事を追加する関数（newsblogTemplate.htmlからエクスポートされたHTMLを統合するために使用）
+        function addNewsArticle(newsData) {
+            // ローカルストレージからニュースデータを取得
+            let storedNews = localStorage.getItem('newsArticles');
+            let newsArticles = storedNews ? JSON.parse(storedNews) : [];
+            
+            // 新しいニュース記事を追加
+            newsArticles.unshift(newsData);
+            
+            // ローカルストレージに保存
+            localStorage.setItem('newsArticles', JSON.stringify(newsArticles));
+            
+            // ページをリロード
+            location.reload();
+        }
+
+        // ページ読み込み時にローカルストレージからニュース記事を読み込む
+        function loadStoredNewsArticles() {
+            const storedNews = localStorage.getItem('newsArticles');
+            if (storedNews) {
+                const newsArticles = JSON.parse(storedNews);
+                newsData.unshift(...newsArticles);
+            }
+        }
+
+        // ページ読み込み時に保存されたニュース記事を読み込む
+        loadStoredNewsArticles();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニュースブログ作成 - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* エディタースタイル */
+        .editor-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editor-title {
+            margin-bottom: 20px;
+        }
+
+        .editor-title input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .editor-date {
+            margin-bottom: 20px;
+        }
+
+        .editor-date input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .editor-content {
+            margin-bottom: 20px;
+        }
+
+        .editor-content textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .image-upload-container {
+            margin-bottom: 20px;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #ff4444;
+        }
+
+        .image-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .image-list-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .image-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .image-list-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .button {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+
+        .primary-button {
+            background-color: #4285f4;
+            color: #fff;
+        }
+
+        .primary-button:hover {
+            background-color: #3367d6;
+        }
+
+        .secondary-button {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .secondary-button:hover {
+            background-color: #e9ecef;
+        }
+
+        .danger-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .danger-button:hover {
+            background-color: #c82333;
+        }
+
+        /* 既存ニュース管理スタイル */
+        .news-management, .image-management {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .news-management-header, .image-management-header {
+            margin-bottom: 20px;
+        }
+
+        .uploaded-images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .uploaded-image-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+        }
+
+        .uploaded-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .uploaded-image-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .uploaded-image-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #ff4444;
+        }
+
+        .news-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item-checkbox {
+            margin-right: 15px;
+        }
+
+        .news-item-info {
+            flex-grow: 1;
+        }
+
+        .news-item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .news-item-date {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* プレビュースタイル */
+        .preview-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .preview-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .preview-content {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        /* フッター */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="container main-content">
+        <div class="section-header">
+            <h2>ニュースブログテンプレート作成</h2>
+            <p>画像を選択し、テキストを入力して、ニュースブログのHTMLを作成できます。</p>
+        </div>
+
+        <!-- エディター部分 -->
+        <div class="editor-container">
+            <div class="editor-title">
+                <label for="blog-title">タイトル</label>
+                <input type="text" id="blog-title" placeholder="ニュースのタイトルを入力してください">
+            </div>
+
+            <div class="editor-date">
+                <label for="blog-date">日付</label>
+                <input type="date" id="blog-date">
+            </div>
+
+            <div class="image-upload-container">
+                <h3>画像の追加</h3>
+                <p>imagesフォルダから画像を選択するか、新しい画像をアップロードしてください</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button id="show-images-btn" class="button secondary-button">既存の画像を選択</button>
+                    <label for="image-upload" class="button primary-button" style="cursor: pointer; display: inline-block;">
+                        新しい画像をアップロード
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    </label>
+                </div>
+                <div id="image-list" class="image-list" style="display: none;">
+                    <!-- 画像リストはJavaScriptで動的に生成されます -->
+                </div>
+                <div id="image-preview-container" class="image-preview-container">
+                    <!-- 選択された画像のプレビューがここに表示されます -->
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <label for="blog-content">本文</label>
+                <textarea id="blog-content" placeholder="ニュースの内容を入力してください"></textarea>
+            </div>
+
+            <div class="button-container">
+                <button id="preview-btn" class="button secondary-button">プレビュー</button>
+                <button id="export-btn" class="button primary-button">HTMLをエクスポート</button>
+            </div>
+        </div>
+
+        <!-- ニュース管理部分 -->
+        <div class="news-management">
+            <div class="news-management-header">
+                <h3>既存ニュースの管理</h3>
+                <p>削除したいニュースを選択して「選択したニュースを削除」ボタンをクリックしてください。</p>
+            </div>
+            <div id="existing-news-list" class="news-list">
+                <!-- 既存のニュース記事はJavaScriptで動的に生成されます -->
+            </div>
+            <div class="button-container">
+                <button id="delete-news-btn" class="button danger-button">選択したニュースを削除</button>
+            </div>
+        </div>
+
+        <!-- 画像管理部分 -->
+        <div class="image-management">
+            <div class="image-management-header">
+                <h3>アップロード済み画像の管理</h3>
+                <p>削除したい画像の「×」ボタンをクリックしてください。</p>
+            </div>
+            <div id="uploaded-images-grid" class="uploaded-images-grid">
+                <!-- アップロード済みの画像はJavaScriptで動的に生成されます -->
+            </div>
+        </div>
+
+        <!-- プレビュー部分 -->
+        <div id="preview-container" class="preview-container" style="display: none;">
+            <div class="preview-header">
+                <h3>プレビュー</h3>
+            </div>
+            <div id="preview-content" class="preview-content">
+                <!-- プレビューコンテンツはJavaScriptで動的に生成されます -->
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 画像リストを取得して表示する関数
+        async function loadImageList() {
+            try {
+                // 利用可能な画像のリストを動的に取得
+                let imageList = [];
+
+                // ローカルストレージから保存された画像リストを取得
+                const storedImages = localStorage.getItem('uploadedImages');
+                if (storedImages) {
+                    imageList = JSON.parse(storedImages);
+                }
+
+                // デフォルトの画像を追加（常に利用可能）
+                if (!imageList.some(img => img.name === 'bronzelecture1.jpg')) {
+                    imageList.push({ name: 'bronzelecture1.jpg', path: '../images/bronzelecture1.jpg' });
+                }
+
+                const imageListElement = document.getElementById('image-list');
+                imageListElement.innerHTML = '';
+
+                // 画像リストが空の場合のメッセージ
+                if (imageList.length === 0) {
+                    imageListElement.innerHTML = '<p>利用可能な画像がありません</p>';
+                    return;
+                }
+
+                imageList.forEach(image => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'image-list-item';
+
+                    // 画像のプリロードを行い、読み込みエラーを処理
+                    const img = new Image();
+                    img.onload = function() {
+                        listItem.innerHTML = `
+                            <img src="${image.path}" alt="${image.name}">
+                            <span>${image.name}</span>
+                        `;
+
+                        listItem.addEventListener('click', () => {
+                            addImageToPreview(image.path, image.name);
+                            document.getElementById('image-list').style.display = 'none';
+                        });
+
+                        imageListElement.appendChild(listItem);
+                    };
+
+                    img.onerror = function() {
+                        console.error(`画像の読み込みに失敗しました: ${image.path}`);
+                        // エラーが発生しても、選択できるようにリストに追加
+                        listItem.innerHTML = `
+                            <div style="width: 50px; height: 50px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                <span>No Image</span>
+                            </div>
+                            <span>${image.name} (読み込みエラー)</span>
+                        `;
+
+                        listItem.addEventListener('click', () => {
+                            addImageToPreview(image.path, image.name);
+                            document.getElementById('image-list').style.display = 'none';
+                        });
+
+                        imageListElement.appendChild(listItem);
+                    };
+
+                    img.src = image.path;
+                });
+            } catch (error) {
+                console.error('画像リストの読み込みに失敗しました:', error);
+                alert('画像リストの読み込みに失敗しました。');
+            }
+        }
+
+        // 画像をプレビューに追加する関数
+        function addImageToPreview(imagePath, imageName) {
+            const previewContainer = document.getElementById('image-preview-container');
+            const imagePreview = document.createElement('div');
+            imagePreview.className = 'image-preview';
+            imagePreview.innerHTML = `
+                <img src="${imagePath}" alt="${imageName}" data-path="${imagePath}">
+                <div class="remove-image">×</div>
+            `;
+
+            // 削除ボタンのイベントリスナー
+            imagePreview.querySelector('.remove-image').addEventListener('click', () => {
+                previewContainer.removeChild(imagePreview);
+            });
+
+            previewContainer.appendChild(imagePreview);
+        }
+
+        // プレビューを生成する関数
+        function generatePreview() {
+            const title = document.getElementById('blog-title').value || 'タイトルなし';
+            const date = document.getElementById('blog-date').value 
+                ? new Date(document.getElementById('blog-date').value).toLocaleDateString('ja-JP') 
+                : new Date().toLocaleDateString('ja-JP');
+            const content = document.getElementById('blog-content').value || '';
+
+            // 画像のHTMLを生成
+            let imagesHTML = '';
+            const imageElements = document.querySelectorAll('#image-preview-container .image-preview img');
+            imageElements.forEach(img => {
+                imagesHTML += `<img src="${img.getAttribute('data-path')}" alt="ニュース画像"><br>`;
+            });
+
+            // プレビューコンテンツを生成
+            const previewContent = `
+                <h2>${title}</h2>
+                <p class="date">${date}</p>
+                ${imagesHTML}
+                <div class="content">${content.replace(/\n/g, '<br>')}</div>
+            `;
+
+            document.getElementById('preview-content').innerHTML = previewContent;
+            document.getElementById('preview-container').style.display = 'block';
+        }
+
+        // HTMLをエクスポートする関数
+        function exportHTML() {
+            const title = document.getElementById('blog-title').value || 'タイトルなし';
+            const date = document.getElementById('blog-date').value 
+                ? new Date(document.getElementById('blog-date').value).toLocaleDateString('ja-JP') 
+                : new Date().toLocaleDateString('ja-JP');
+            const content = document.getElementById('blog-content').value || '';
+
+            // 画像のパスを収集
+            const imagePaths = [];
+            const imageElements = document.querySelectorAll('#image-preview-container .image-preview img');
+            imageElements.forEach(img => {
+                imagePaths.push(img.getAttribute('data-path'));
+            });
+
+            // 画像のHTMLを生成（スタンドアロンHTMLファイル用）
+            let imagesHTML = '';
+            imageElements.forEach(img => {
+                imagesHTML += `<img src="${img.getAttribute('data-path')}" alt="ニュース画像"><br>\n`;
+            });
+
+            // news_event.html用のニュース記事データを作成
+            const newsArticle = {
+                id: new Date().getTime(),
+                date: date,
+                title: title,
+                excerpt: content.length > 100 ? content.substring(0, 100) + '...' : content,
+                content: content.replace(/\n/g, '<br>'),
+                image: imagePaths.length > 0 ? imagePaths[0] : '/api/placeholder/600/400',
+                fullArticle: null,
+                images: imagePaths
+            };
+
+            // ニュース記事をローカルストレージに保存
+            try {
+                // ローカルストレージからニュースデータを取得
+                let storedNews = localStorage.getItem('newsArticles');
+                let newsArticles = storedNews ? JSON.parse(storedNews) : [];
+
+                // 新しいニュース記事を追加
+                newsArticles.unshift(newsArticle);
+
+                // ローカルストレージに保存
+                localStorage.setItem('newsArticles', JSON.stringify(newsArticles));
+
+                alert('ニュース記事が保存されました。news_event.htmlで確認できます。');
+
+                // news_event.htmlに移動するかどうか確認
+                if (confirm('news_event.htmlページに移動しますか？')) {
+                    window.location.href = '../news_event.html';
+                }
+            } catch (error) {
+                console.error('ニュース記事の保存に失敗しました:', error);
+                alert('ニュース記事の保存に失敗しました。スタンドアロンHTMLファイルをダウンロードします。');
+
+                // エラーが発生した場合は、従来通りHTMLファイルをダウンロード
+                downloadHTMLFile(title, date, content, imagesHTML);
+            }
+        }
+
+        // スタンドアロンHTMLファイルをダウンロードする関数
+        function downloadHTMLFile(title, date, content, imagesHTML) {
+            // HTMLテンプレートを生成 - index.htmlのヘッダーとフッターを継承
+            const htmlTemplate = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title} - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px; /* ヘッダーの高さ分の余白 */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        /* メインコンテンツスタイル */
+        .news-content {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .date {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* フッタースタイル */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="../index.html#home">ホーム</a></li>
+                    <li><a href="../index.html#features">コース紹介</a></li>
+                    <li><a href="../index.html#gallery">ギャラリー</a></li>
+                    <li><a href="../news_event.html">ニュース</a></li>
+                    <li><a href="../index.html#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="container">
+        <div class="news-content">
+            <h1>${title}</h1>
+            <p class="date">${date}</p>
+            ${imagesHTML}
+            <div class="content">${content.replace(/\n/g, '<br>')}</div>
+            <a href="../news_event.html" class="back-link">← ニュース一覧に戻る</a>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="../facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="../gallery.html">ギャラリー</a></li>
+                        <li><a href="#">卒業制作展</a></li>
+                        <li><a href="#">受賞歴</a></li>
+                        <li><a href="../project.html">プロジェクト</a></li>
+                        <li><a href="#">学生インタビュー</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="#">入試に関するお問い合わせ</a></li>
+                        <li><a href="../question.html">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="#">オープンキャンパス</a></li>
+                        <li><a href="#">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>`;
+
+            // HTMLファイルをダウンロード
+            const blob = new Blob([htmlTemplate], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `news_${new Date().getTime()}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 既存のニュース記事を読み込んで表示する関数
+        function loadExistingNews() {
+            const newsListElement = document.getElementById('existing-news-list');
+            newsListElement.innerHTML = '';
+
+            // ローカルストレージからニュースデータを取得
+            let storedNews = localStorage.getItem('newsArticles');
+            let newsArticles = storedNews ? JSON.parse(storedNews) : [];
+
+            if (newsArticles.length === 0) {
+                newsListElement.innerHTML = '<p style="padding: 15px; text-align: center;">保存されたニュース記事はありません</p>';
+                return;
+            }
+
+            // ニュースデータを日付の新しい順にソート
+            newsArticles.sort((a, b) => {
+                const dateA = new Date(a.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
+                const dateB = new Date(b.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
+                return dateB - dateA;
+            });
+
+            // 各ニュース記事をリストに追加
+            newsArticles.forEach((news, index) => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+
+                newsItem.innerHTML = `
+                    <input type="checkbox" class="news-item-checkbox" data-id="${news.id}">
+                    <div class="news-item-info">
+                        <div class="news-item-title">${news.title}</div>
+                        <div class="news-item-date">${news.date}</div>
+                    </div>
+                `;
+
+                newsListElement.appendChild(newsItem);
+            });
+        }
+
+        // アップロード済みの画像を読み込んで表示する関数
+        function loadUploadedImages() {
+            const imagesGridElement = document.getElementById('uploaded-images-grid');
+            imagesGridElement.innerHTML = '';
+
+            // ローカルストレージから画像データを取得
+            let storedImages = localStorage.getItem('uploadedImages');
+            let imageList = storedImages ? JSON.parse(storedImages) : [];
+
+            // デフォルトの画像を追加（常に利用可能）
+            if (!imageList.some(img => img.name === 'bronzelecture1.jpg')) {
+                imageList.push({ name: 'bronzelecture1.jpg', path: '../images/bronzelecture1.jpg' });
+            }
+
+            if (imageList.length === 0) {
+                imagesGridElement.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">アップロード済みの画像はありません</p>';
+                return;
+            }
+
+            // 各画像をグリッドに追加
+            imageList.forEach((image, index) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'uploaded-image-item';
+
+                // bronzelecture1.jpgはデフォルト画像なので削除不可
+                const deleteButton = image.name === 'bronzelecture1.jpg' ? '' : 
+                    `<div class="uploaded-image-delete" data-name="${image.name}">×</div>`;
+
+                imageItem.innerHTML = `
+                    <img src="${image.path}" alt="${image.name}">
+                    <div class="uploaded-image-name">${image.name}</div>
+                    ${deleteButton}
+                `;
+
+                imagesGridElement.appendChild(imageItem);
+
+                // 削除ボタンのイベントリスナー
+                const deleteBtn = imageItem.querySelector('.uploaded-image-delete');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => {
+                        deleteUploadedImage(image.name);
+                    });
+                }
+            });
+        }
+
+        // アップロード済みの画像を削除する関数
+        function deleteUploadedImage(imageName) {
+            // 削除確認
+            if (!confirm(`画像「${imageName}」を削除しますか？`)) {
+                return;
+            }
+
+            // ローカルストレージから画像データを取得
+            let storedImages = localStorage.getItem('uploadedImages');
+            let imageList = storedImages ? JSON.parse(storedImages) : [];
+
+            // 指定された画像を除外
+            const filteredImages = imageList.filter(image => image.name !== imageName);
+
+            // ローカルストレージに保存
+            localStorage.setItem('uploadedImages', JSON.stringify(filteredImages));
+
+            // 画像リストを再読み込み
+            loadUploadedImages();
+
+            alert(`画像「${imageName}」が削除されました`);
+        }
+
+        // 選択されたニュース記事を削除する関数
+        function deleteSelectedNews() {
+            // 選択されたチェックボックスを取得
+            const selectedCheckboxes = document.querySelectorAll('.news-item-checkbox:checked');
+
+            if (selectedCheckboxes.length === 0) {
+                alert('削除するニュース記事を選択してください');
+                return;
+            }
+
+            // 削除確認
+            if (!confirm(`選択された ${selectedCheckboxes.length} 件のニュース記事を削除しますか？`)) {
+                return;
+            }
+
+            // 選択された記事のIDを取得
+            const selectedIds = Array.from(selectedCheckboxes).map(checkbox => 
+                parseInt(checkbox.getAttribute('data-id'))
+            );
+
+            // ローカルストレージからニュースデータを取得
+            let storedNews = localStorage.getItem('newsArticles');
+            let newsArticles = storedNews ? JSON.parse(storedNews) : [];
+
+            // 選択された記事を除外
+            const filteredNews = newsArticles.filter(news => !selectedIds.includes(news.id));
+
+            // ローカルストレージに保存
+            localStorage.setItem('newsArticles', JSON.stringify(filteredNews));
+
+            // リストを再読み込み
+            loadExistingNews();
+
+            alert('選択されたニュース記事が削除されました');
+        }
+
+        // 画像をアップロードして保存する関数
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 画像ファイルかどうかチェック
+            if (!file.type.match('image.*')) {
+                alert('画像ファイルを選択してください');
+                return;
+            }
+
+            // ファイルサイズチェック (10MB以下)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('ファイルサイズは10MB以下にしてください');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imagePath = e.target.result; // データURL
+                const imageName = file.name;
+
+                // ローカルストレージから既存の画像リストを取得
+                let uploadedImages = localStorage.getItem('uploadedImages');
+                let imageList = uploadedImages ? JSON.parse(uploadedImages) : [];
+
+                // 同じ名前の画像が既に存在するかチェック
+                const existingImageIndex = imageList.findIndex(img => img.name === imageName);
+                if (existingImageIndex !== -1) {
+                    // 既存の画像を更新
+                    imageList[existingImageIndex].path = imagePath;
+                } else {
+                    // 新しい画像を追加
+                    imageList.push({ name: imageName, path: imagePath });
+                }
+
+                // ローカルストレージに保存
+                localStorage.setItem('uploadedImages', JSON.stringify(imageList));
+
+                // 画像をプレビューに追加
+                addImageToPreview(imagePath, imageName);
+
+                // アップロード成功メッセージ
+                alert(`画像「${imageName}」がアップロードされました`);
+
+                // ファイル入力をリセット
+                event.target.value = '';
+            };
+
+            reader.onerror = function() {
+                alert('画像の読み込みに失敗しました');
+            };
+
+            // ファイルをデータURLとして読み込む
+            reader.readAsDataURL(file);
+        }
+
+        // イベントリスナーの設定
+        document.addEventListener('DOMContentLoaded', () => {
+            // 画像選択ボタンのイベントリスナー
+            document.getElementById('show-images-btn').addEventListener('click', () => {
+                const imageList = document.getElementById('image-list');
+                if (imageList.style.display === 'none') {
+                    loadImageList();
+                    imageList.style.display = 'block';
+                } else {
+                    imageList.style.display = 'none';
+                }
+            });
+
+            // 画像アップロード入力のイベントリスナー
+            document.getElementById('image-upload').addEventListener('change', handleImageUpload);
+
+            // プレビューボタンのイベントリスナー
+            document.getElementById('preview-btn').addEventListener('click', generatePreview);
+
+            // エクスポートボタンのイベントリスナー
+            document.getElementById('export-btn').addEventListener('click', exportHTML);
+
+            // 削除ボタンのイベントリスナー
+            document.getElementById('delete-news-btn').addEventListener('click', deleteSelectedNews);
+
+            // ページ読み込み時に既存のニュース記事と画像を表示
+            loadExistingNews();
+            loadUploadedImages();
+        });
+    </script>
+</body>
+</html>
