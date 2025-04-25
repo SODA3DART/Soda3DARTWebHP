@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,6 +141,86 @@
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
+        }
+
+        /* 魔法のエフェクトアニメーション */
+        @keyframes magicEffect {
+            0% {
+                background-position: 0% 50%;
+                filter: blur(3px);
+                background-image: linear-gradient(90deg,
+                #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8);
+            }
+            50% {
+                background-position: 100% 50%;
+                filter: blur(2px);
+                background-image: linear-gradient(90deg,
+                #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8);
+            }
+            70% {
+                background-position: 0% 50%;
+                filter: blur(1px);
+                background-image: linear-gradient(90deg,
+                #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8);
+            }
+            85% {
+                background-position: 0% 50%;
+                filter: blur(0.5px);
+                background-image: linear-gradient(90deg,
+                rgba(255, 182, 193, 0.7), rgba(255, 215, 0, 0.7), 
+                rgba(152, 251, 152, 0.7), rgba(173, 216, 230, 0.7), 
+                rgba(216, 191, 216, 0.7), rgba(255, 255, 255, 0.7));
+            }
+            90% {
+                background-position: 0% 50%;
+                filter: blur(0.4px);
+                background-image: linear-gradient(90deg,
+                rgba(255, 182, 193, 0.8), rgba(255, 215, 0, 0.8), 
+                rgba(152, 251, 152, 0.8), rgba(173, 216, 230, 0.8), 
+                rgba(216, 191, 216, 0.8), rgba(255, 255, 255, 0.8));
+            }
+            93% {
+                background-position: 0% 50%;
+                filter: blur(0.3px);
+                background-image: linear-gradient(90deg,
+                rgba(255, 200, 210, 0.85), rgba(255, 225, 100, 0.85), 
+                rgba(180, 251, 180, 0.85), rgba(190, 225, 240, 0.85), 
+                rgba(230, 210, 230, 0.85), rgba(255, 255, 255, 0.85));
+            }
+            96% {
+                background-position: 0% 50%;
+                filter: blur(0.2px);
+                background-image: linear-gradient(90deg,
+                rgba(255, 220, 230, 0.9), rgba(255, 235, 150, 0.9), 
+                rgba(200, 251, 200, 0.9), rgba(210, 235, 245, 0.9), 
+                rgba(240, 230, 240, 0.9), rgba(255, 255, 255, 0.9));
+            }
+            100% {
+                background-position: 0% 50%;
+                filter: blur(0px);
+                /* 最終グラデーションでは完全に白へとフェードアウトさせる */
+                background-image: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(255, 255, 255, 1) 100%
+                );
+            }
+        }
+
+
+        .magic-text-effect {
+            position: relative;
+            display: inline-block;
+        }
+
+        .magic-text-effect.animate {
+            background-image: linear-gradient(90deg, 
+                #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            animation: magicEffect 4s ease-in-out forwards;
         }
 
         .cta-button {
@@ -660,8 +740,8 @@
     <!-- ヒーロー部分 -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>3Dアートで新しい世界を創造する</h1>
-            <p>崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
+            <h1 class="magic-text-effect">3Dアートで新しい世界を創造する</h1>
+            <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
             <a href="#features" class="cta-button">詳しく見る</a>
         </div>
     </section>
@@ -675,16 +755,6 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">💻</div>
-                    <h3>デジタル</h3>
-                    <p class="feature-short-desc">3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
-                    <div class="feature-details">
-                        <p>業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。</p>
-                        <p>卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。</p>
-                        <a href="courseinfo.html#digital" class="more-details-link">もっとくわしく</a>
-                    </div>
-                </div>
-                <div class="feature-card">
                     <div class="feature-icon">🗿</div>
                     <h3>フィジカル</h3>
                     <p class="feature-short-desc">従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。</p>
@@ -692,6 +762,16 @@
                         <p>伝統的な彫刻技法から最新の3Dプリント技術を活用した造形まで、幅広い立体表現を学びます。フィギュア制作、プロダクトデザイン、空間デザインなど、物理的な形を持つ作品制作に取り組みます。</p>
                         <p>卒業後はフィギュア制作会社、プロダクトデザイン会社、美術作家などとして活躍できます。</p>
                         <a href="courseinfo.html#physical" class="more-details-link">もっとくわしく</a>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3>デジタル</h3>
+                    <p class="feature-short-desc">3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
+                    <div class="feature-details">
+                        <p>業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。</p>
+                        <p>卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。</p>
+                        <a href="courseinfo.html#digital" class="more-details-link">もっとくわしく</a>
                     </div>
                 </div>
             </div>
@@ -763,6 +843,9 @@
                     </div>
                 </div>
             </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="gallery.html" class="more-details-link">もっと見る</a>
+            </div>
         </div>
     </section>
 
@@ -816,7 +899,8 @@
         <div class="container">
             <div class="section-header">
                 <h2>お問い合わせ</h2>
-                <p>3Dアートコースについてのご質問やお問い合わせはこちらから</p>
+                <p>3Dアートコースについてのご質問やお問い合わせはこちらから<br>
+                    <a href="question.html">よくある質問はこちら</a></p>
             </div>
             <div class="contact-grid">
                 <div class="contact-info">
@@ -906,7 +990,7 @@
                         <li><a href="#">入試に関するお問い合わせ</a></li>
                         <li><a href="#">3Dアートコースへのお問い合わせ</a></li>
                         <li><a href="#">オープンキャンパス</a></li>
-                        <li><a href="#">よくある質問</a></li>
+                        <li><a href="question.html">よくある質問</a></li>
                     </ul>
                 </div>
             </div>
@@ -1050,6 +1134,13 @@
                     heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
                     heroContent.style.opacity = '1';
                     heroContent.style.transform = 'translateY(0)';
+
+                    // 文字の登場とともに魔法のエフェクトアニメーションを開始
+                    const magicElements = document.querySelectorAll('.magic-text-effect');
+                    magicElements.forEach(function(element) {
+                        // animate クラスを追加してアニメーションを開始
+                        element.classList.add('animate');
+                    });
                 }, 300);
             }
 

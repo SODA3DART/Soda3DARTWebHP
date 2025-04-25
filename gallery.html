@@ -398,6 +398,7 @@
                 <button class="filter-button" data-filter="vr">VR/AR</button>
                 <button class="filter-button" data-filter="concept">コンセプトアート</button>
                 <button class="filter-button" data-filter="print">3Dプリント</button>
+                <button class="filter-button" data-filter="faculty">教員作品</button>
             </div>
 
             <!-- 3Dモデリング作品 -->
@@ -409,10 +410,12 @@
                             <img src="/api/placeholder/600/400" alt="キャラクターモデリング">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">ファンタジーキャラクター</h3>
-                            <p class="gallery-author">3年生 山田太郎</p>
-                            <p class="gallery-description">ゲーム用に制作したファンタジー世界の主人公キャラクター。Blenderを使用して制作。</p>
+                            <h3 class="gallery-title">くまゆ</h3>
+                            <p class="gallery-author">4年生 </p>
+                            <p class="gallery-description">「熊本のコンシェルジュキャラクター」をテーマにデザインからモデリングまで製作<br>
+                            工学部建築学科との共同研究にてAIコンシェルジュとして活躍</p>
                             <span class="gallery-tag">キャラクターデザイン</span>
+                            <span class="gallery-tag">Maya</span>
                             <span class="gallery-tag">Blender</span>
                         </div>
                     </div>
@@ -539,6 +542,51 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 教員作品 -->
+            <div class="gallery-section">
+                <h2 class="section-title">教員作品</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item" data-category="faculty">
+                        <div class="gallery-image">
+                            <img src="/api/placeholder/600/400" alt="教員作品1">
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">デジタルスカルプティング研究</h3>
+                            <p class="gallery-author">山本教授</p>
+                            <p class="gallery-description">デジタルスカルプティングの技法研究と表現の可能性を探る作品。ZBrushを使用した有機的フォルムの探求。</p>
+                            <span class="gallery-tag">デジタルスカルプティング</span>
+                            <span class="gallery-tag">ZBrush</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="faculty">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Harmony Keys</h3>
+                            <p class="gallery-author">坂元　旭</p>
+                            <p class="gallery-description">楽譜から鍵盤を奏でる3Dアニメーション制作ツールとピアノモデル</p>
+                            <span class="gallery-tag">3DCG</span>
+                            <span class="gallery-tag">Blender</span>
+                            <span class="gallery-tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="faculty">
+                        <div class="gallery-image">
+                            <img src="/api/placeholder/600/400" alt="教員作品3">
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">VR空間における彫刻表現</h3>
+                            <p class="gallery-author">坂元 旭</p>
+                            <p class="gallery-description">VR空間における新しい彫刻表現の研究。重力や物理法則に縛られない立体表現の可能性を探ります。</p>
+                            <span class="gallery-tag">VR</span>
+                            <span class="gallery-tag">彫刻</span>
+                            <span class="gallery-tag">Oculus Medium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -604,6 +652,7 @@
         // フィルター機能
         const filterButtons = document.querySelectorAll('.filter-button');
         const galleryItems = document.querySelectorAll('.gallery-item');
+        const gallerySections = document.querySelectorAll('.gallery-section');
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -614,11 +663,32 @@
                 // フィルター処理
                 const filterValue = this.getAttribute('data-filter');
 
+                // セクションの表示/非表示を管理するオブジェクト
+                const sectionVisibility = {};
+
+                // まずすべてのアイテムをチェックして、各セクションに表示すべきアイテムがあるか確認
                 galleryItems.forEach(item => {
-                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    const itemCategory = item.getAttribute('data-category');
+                    const parentSection = item.closest('.gallery-section');
+
+                    if (filterValue === 'all' || itemCategory === filterValue) {
                         item.style.display = 'block';
+                        // このセクションには表示するアイテムがある
+                        if (parentSection) {
+                            sectionVisibility[parentSection.querySelector('.section-title').textContent] = true;
+                        }
                     } else {
                         item.style.display = 'none';
+                    }
+                });
+
+                // セクションの表示/非表示を設定
+                gallerySections.forEach(section => {
+                    const sectionTitle = section.querySelector('.section-title').textContent;
+                    if (filterValue === 'all' || sectionVisibility[sectionTitle]) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
                     }
                 });
             });
