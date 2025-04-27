@@ -11,19 +11,19 @@
             box-sizing: border-box;
             font-family: 'Noto Sans JP', sans-serif;
         }
-        
+
         body {
             background-color: #f8f9fa;
             color: #333;
             line-height: 1.6;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         /* ヘッダースタイル */
         header {
             background-color: #fff;
@@ -33,46 +33,46 @@
             top: 0;
             z-index: 1000;
         }
-        
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
         }
-        
+
         .logo img {
             height: 50px;
             margin-right: 15px;
         }
-        
+
         .logo-text {
             font-size: 18px;
             font-weight: 700;
             color: #333;
         }
-        
+
         .logo-text span {
             display: block;
             font-size: 14px;
             color: #777;
             font-weight: 400;
         }
-        
+
         nav ul {
             display: flex;
             list-style: none;
         }
-        
+
         nav ul li {
             margin-left: 30px;
         }
-        
+
         nav ul li a {
             text-decoration: none;
             color: #333;
@@ -81,7 +81,7 @@
             position: relative;
             padding-bottom: 5px;
         }
-        
+
         nav ul li a:after {
             content: '';
             position: absolute;
@@ -92,20 +92,20 @@
             left: 0;
             transition: width 0.3s;
         }
-        
+
         nav ul li a:hover {
             color: #4285f4;
         }
-        
+
         nav ul li a:hover:after {
             width: 100%;
         }
-        
+
         .mobile-menu {
             display: none;
             cursor: pointer;
         }
-        
+
         /* ページヘッダー */
         .page-header {
             padding: 160px 0 80px;
@@ -114,24 +114,24 @@
             text-align: center;
             margin-bottom: 60px;
         }
-        
+
         .page-header h1 {
             font-size: 3rem;
             letter-spacing: 2px;
             margin-bottom: 20px;
         }
-        
+
         /* アクセスマップ */
         .map-section {
             padding: 0 0 60px;
         }
-        
+
         .map-section h2 {
             font-size: 2rem;
             margin-bottom: 30px;
             text-align: center;
         }
-        
+
         .map-container {
             width: 100%;
             height: 500px;
@@ -139,18 +139,18 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* 施設紹介 */
         .facilities-section {
             padding: 60px 0;
         }
-        
+
         .facilities-section h2 {
             font-size: 2rem;
             margin-bottom: 40px;
             text-align: center;
         }
-        
+
         .facility-section {
             margin-bottom: 80px;
             background-color: #fff;
@@ -158,7 +158,7 @@
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        
+
         .facility-title {
             font-size: 1.8rem;
             margin-bottom: 20px;
@@ -167,12 +167,12 @@
             padding-bottom: 10px;
             display: inline-block;
         }
-        
+
         .facility-description {
             margin-bottom: 25px;
             font-size: 1.1rem;
         }
-        
+
         .model-container {
             width: 100%;
             height: 500px;
@@ -181,7 +181,7 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         .loading-text {
             position: absolute;
             top: 50%;
@@ -190,31 +190,31 @@
             font-size: 1.2rem;
             color: #666;
         }
-        
+
         canvas {
             width: 100%;
             height: 100%;
             display: block;
             touch-action: none;
         }
-        
+
         /* アクセス情報 */
         .access-info {
             padding: 40px 0 80px;
         }
-        
+
         .access-info h2 {
             font-size: 2rem;
             margin-bottom: 30px;
             text-align: center;
         }
-        
+
         .access-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
         }
-        
+
         .access-card {
             background-color: #fff;
             border-radius: 10px;
@@ -222,25 +222,25 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s;
         }
-        
+
         .access-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .access-icon {
             font-size: 2.5rem;
             color: #4285f4;
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         .access-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: #333;
             text-align: center;
         }
-        
+
         .access-card p {
             color: #555;
             line-height: 1.8;
@@ -252,21 +252,21 @@
             color: #fff;
             padding: 50px 0 20px;
         }
-        
+
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 50px;
             margin-bottom: 40px;
         }
-        
+
         .footer-column h3 {
             font-size: 1.3rem;
             margin-bottom: 20px;
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .footer-column h3:after {
             content: '';
             position: absolute;
@@ -276,46 +276,46 @@
             height: 2px;
             background-color: #4285f4;
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 10px;
         }
-        
+
         .footer-links a {
             color: #ccc;
             text-decoration: none;
             transition: color 0.3s;
         }
-        
+
         .footer-links a:hover {
             color: #4285f4;
         }
-        
+
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
             border-top: 1px solid #444;
             font-size: 0.9rem;
         }
-        
+
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             .header-container {
                 padding: 15px;
             }
-            
+
             .logo-text {
                 font-size: 16px;
             }
-            
+
             .logo-text span {
                 font-size: 12px;
             }
-            
+
             nav {
                 position: fixed;
                 top: 80px;
@@ -328,31 +328,31 @@
                 transition: transform 0.3s;
                 z-index: 999;
             }
-            
+
             nav.active {
                 transform: translateY(0);
             }
-            
+
             nav ul {
                 flex-direction: column;
             }
-            
+
             nav ul li {
                 margin: 10px 0;
             }
-            
+
             .mobile-menu {
                 display: block;
             }
-            
+
             .page-header h1 {
                 font-size: 2rem;
             }
-            
+
             .model-container {
                 height: 350px;
             }
-            
+
             .access-grid {
                 grid-template-columns: 1fr;
             }
@@ -419,7 +419,7 @@
     <section class="facilities-section">
         <div class="container">
             <h2>施設紹介</h2>
-            
+
             <!-- 施設1: デジタル室 -->
             <div class="facility-section">
                 <h3 class="facility-title">デジタル室</h3>
@@ -430,7 +430,7 @@
                     <div class="loading-text">3Dモデル読み込み中...</div>
                 </div>
             </div>
-            
+
             <!-- 施設2: デジタルラボ -->
             <div class="facility-section">
                 <h3 class="facility-title">造形実習室</h3>
@@ -442,7 +442,7 @@
                     <div class="loading-text">3Dモデル読み込み中...</div>
                 </div>
             </div>
-            
+
             <!-- 施設3: 展示・体験スペース -->
             <div class="facility-section">
                 <h3 class="facility-title">モンマルト(学食)</h3>
@@ -531,68 +531,68 @@
         // モバイルメニュートグル
         const mobileMenu = document.getElementById('mobileMenu');
         const nav = document.getElementById('nav');
-        
+
         mobileMenu.addEventListener('click', function() {
             nav.classList.toggle('active');
         });
-        
+
         // 3Dモデル表示のための関数
         function createScene(canvas, modelPath) {
             const engine = new BABYLON.Engine(canvas, true);
             const scene = new BABYLON.Scene(engine);
-            
+
             // カメラの設定
             const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
             camera.attachControl(canvas, true);
             camera.wheelPrecision = 50;
             camera.lowerRadiusLimit = 3;
             camera.upperRadiusLimit = 20;
-            
+
             // 照明の設定
             const light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light1.intensity = 0.7;
-            
+
             const light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, -1, 1), scene);
             light2.intensity = 0.5;
-            
+
             // 環境光の追加
             const envLight = new BABYLON.HemisphericLight("envLight", new BABYLON.Vector3(0, 1, 0), scene);
             envLight.diffuse = new BABYLON.Color3(0.8, 0.8, 0.8);
             envLight.groundColor = new BABYLON.Color3(0.6, 0.6, 0.6);
             envLight.intensity = 0.5;
-            
+
             // モデルのロード
             BABYLON.SceneLoader.ImportMesh("", "", modelPath, scene, function(meshes) {
                 if(meshes.length > 0) {
                     // 境界ボックスの計算
                     let min = meshes[0].getBoundingInfo().boundingBox.minimumWorld;
                     let max = meshes[0].getBoundingInfo().boundingBox.maximumWorld;
-                    
+
                     for(let i = 1; i < meshes.length; i++) {
                         const boundingInfo = meshes[i].getBoundingInfo();
                         const meshMin = boundingInfo.boundingBox.minimumWorld;
                         const meshMax = boundingInfo.boundingBox.maximumWorld;
-                        
+
                         min = BABYLON.Vector3.Minimize(min, meshMin);
                         max = BABYLON.Vector3.Maximize(max, meshMax); 
                     }
-                    
+
                     // モデルのサイズと中心を計算
                     const size = max.subtract(min);
                     const center = min.add(size.scale(0.5));
-                    
+
                     // カメラの位置を調整
                     const maxDimension = Math.max(size.x, size.y, size.z);
                     camera.radius = maxDimension * 2;
                     camera.target = center;
-                    
+
                     // モデルを自動回転
                     let rootMesh = meshes[0];
                     scene.registerBeforeRender(function() {
                         rootMesh.rotation.y += 0.005;
                     });
                 }
-                
+
                 // ローディングテキストを非表示
                 canvas.parentElement.querySelector(".loading-text").style.display = "none";
             }, function(evt) {
@@ -601,20 +601,20 @@
                 console.log("モデルのロードに失敗しました:", error);
                 canvas.parentElement.querySelector(".loading-text").textContent = "モデルの読み込みに失敗しました";
             });
-            
+
             // レンダリングループ
             engine.runRenderLoop(function() {
                 scene.render();
             });
-            
+
             // ウィンドウサイズ変更に対応
             window.addEventListener("resize", function() {
                 engine.resize();
             });
-            
+
             return scene;
         }
-        
+
         // ページロード後に実行
         window.addEventListener("DOMContentLoaded", function() {
             // 施設モデルの読み込み
@@ -623,7 +623,7 @@
                 { id: "lab-model", path: "./models/digital_lab.glb" },
                 { id: "gallery-model", path: "./models/exhibition_space.glb" }
             ];
-            
+
             modelContainers.forEach(container => {
                 const element = document.getElementById(container.id);
                 if(element) {
@@ -632,11 +632,11 @@
                     createScene(canvas, container.path);
                 }
             });
-            
+
             // スクロールアニメーション
             const animateOnScroll = function() {
                 const sections = document.querySelectorAll('.facility-section, .access-card');
-                
+
                 const observer = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
                         if(entry.isIntersecting) {
@@ -650,7 +650,7 @@
                     threshold: 0.1,
                     rootMargin: '0px 0px -100px 0px'
                 });
-                
+
                 sections.forEach(section => {
                     section.style.opacity = 0;
                     section.style.transform = 'translateY(20px)';
@@ -658,9 +658,11 @@
                     observer.observe(section);
                 });
             };
-            
+
             animateOnScroll();
         });
     </script>
+    <!-- Logo Transition Animation -->
+    <script src="js/logoTransition.js"></script>
 </body>
 </html>

@@ -514,25 +514,25 @@
         // ニュース記事を動的に生成する関数
         function renderNewsItems() {
             const newsListElement = document.getElementById('newsList');
-            
+
             // ニュースデータを日付の新しい順にソート
             const sortedNews = [...newsData].sort((a, b) => {
                 const dateA = new Date(a.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
                 const dateB = new Date(b.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
                 return dateB - dateA;
             });
-            
+
             // HTMLを生成
             sortedNews.forEach(news => {
                 const newsItem = document.createElement('div');
                 newsItem.className = 'news-item';
                 newsItem.dataset.id = news.id;
-                
+
                 // ニュースの全文記事がある場合はそのリンクを使用
                 const fullArticleLink = news.fullArticle ? 
                     `<a href="${news.fullArticle}" class="read-more-btn">詳細を見る</a>` : 
                     '';
-                
+
                 newsItem.innerHTML = `
                     <div class="news-header">
                         <div class="news-thumbnail">
@@ -554,13 +554,13 @@
                         </div>
                     </div>
                 `;
-                
+
                 newsListElement.appendChild(newsItem);
-                
+
                 // クリックイベントを追加
                 const header = newsItem.querySelector('.news-header');
                 const content = newsItem.querySelector('.news-content');
-                
+
                 header.addEventListener('click', () => {
                     newsItem.classList.toggle('active');
                     content.classList.toggle('active');
@@ -576,13 +576,13 @@
             // ローカルストレージからニュースデータを取得
             let storedNews = localStorage.getItem('newsArticles');
             let newsArticles = storedNews ? JSON.parse(storedNews) : [];
-            
+
             // 新しいニュース記事を追加
             newsArticles.unshift(newsData);
-            
+
             // ローカルストレージに保存
             localStorage.setItem('newsArticles', JSON.stringify(newsArticles));
-            
+
             // ページをリロード
             location.reload();
         }
@@ -599,5 +599,7 @@
         // ページ読み込み時に保存されたニュース記事を読み込む
         loadStoredNewsArticles();
     </script>
+    <!-- Logo Transition Animation -->
+    <script src="js/logoTransition.js"></script>
 </body>
 </html>
