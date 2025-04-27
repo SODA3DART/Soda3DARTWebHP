@@ -72,6 +72,46 @@
             font-weight: 400;
         }
 
+        /* 言語切り替えボタンのスタイル */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        /* ナビゲーション内の言語切り替えボタン用のスタイル */
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .language-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
@@ -424,6 +464,10 @@
                     <li><a href="index.html#gallery">ギャラリー</a></li>
                     <li><a href="index.html#news">ニュース</a></li>
                     <li><a href="index.html#contact">お問い合わせ</a></li>
+                    <li class="language-switch">
+                        <button class="language-btn active" data-lang="ja">日本語</button>
+                        <button class="language-btn" data-lang="en">English</button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -711,5 +755,437 @@
     </script>
     <!-- Logo Transition Animation -->
     <script src="js/logoTransition.js"></script>
+
+    <!-- Language Switcher Script -->
+    <script>
+        // 言語データの定義
+        const languageData = {
+            'ja': {
+                // ナビゲーション
+                'nav-home': 'ホーム',
+                'nav-features': 'コース紹介',
+                'nav-gallery': 'ギャラリー',
+                'nav-news': 'ニュース',
+                'nav-contact': 'お問い合わせ',
+
+                // ページタイトル
+                'page-title': 'コース詳細',
+                'page-subtitle': '3Dアートコースの詳細情報をご紹介します。デジタルコースとフィジカルコースの特徴や学べる内容、学生の一日のスケジュールなどをご覧いただけます。',
+
+                // デジタルコース
+                'digital-title': 'デジタル',
+                'digital-desc-1': 'デジタルコースでは、3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。',
+                'digital-desc-2': '卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。',
+                'digital-feature-1-title': '3Dモデリング',
+                'digital-feature-1-desc': 'Maya、Blender、ZBrushなどの業界標準ソフトウェアを使用して、キャラクター、環境、プロップなどの3Dモデルを制作する技術を学びます。',
+                'digital-feature-2-title': 'アニメーション',
+                'digital-feature-2-desc': 'キャラクターアニメーション、物理シミュレーション、モーションキャプチャーなど、3Dモデルに動きを与える技術を習得します。',
+                'digital-feature-3-title': 'ゲーム開発',
+                'digital-feature-3-desc': 'UnityやUnreal Engineなどのゲームエンジンを使用して、インタラクティブなゲームやアプリケーションを開発する方法を学びます。',
+                'digital-feature-4-title': 'VR/AR開発',
+                'digital-feature-4-desc': 'バーチャルリアリティ（VR）や拡張現実（AR）技術を活用した没入型体験の制作方法を学びます。',
+                'digital-feature-5-title': 'レンダリングとライティング',
+                'digital-feature-5-desc': 'フォトリアルなCG映像を作るためのレンダリング技術やライティング手法を習得します。',
+                'digital-feature-6-title': 'デジタル彫刻',
+                'digital-feature-6-desc': 'ZBrushなどのソフトウェアを使用して、デジタル空間で彫刻のように3Dモデルを造形する技術を学びます。',
+
+                // フィジカルコース
+                'physical-title': 'フィジカル',
+                'physical-desc-1': '彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。伝統的な彫刻技法から最新の3Dプリント技術を活用した造形まで、幅広い立体表現を学びます。フィギュア制作、プロダクトデザイン、空間デザインなど、物理的な形を持つ作品制作に取り組みます。',
+                'physical-desc-2': '卒業後はフィギュア制作会社、プロダクトデザイン会社、美術作家などとして活躍できます。',
+                'physical-feature-1-title': '彫刻技法',
+                'physical-feature-1-desc': '木彫、石彫、粘土造形など、伝統的な彫刻技法の基礎から応用までを学びます。',
+                'physical-feature-2-title': 'フィギュア造形',
+                'physical-feature-2-desc': 'キャラクターフィギュアの原型制作から塗装、仕上げまでの一連のプロセスを習得します。',
+                'physical-feature-3-title': '鋳造実習',
+                'physical-feature-3-desc': '集中実習ではブロンズ像を作成します。',
+                'physical-feature-4-title': '3Dプリント技術',
+                'physical-feature-4-desc': 'デジタルデータを物理的なオブジェクトに変換する3Dプリント技術の活用方法を学びます。',
+                'physical-feature-5-title': '型取り・複製技術',
+                'physical-feature-5-desc': 'シリコン型や石膏型を使った複製技術を習得し、作品の量産方法を学びます。',
+                'physical-feature-6-title': '空間デザイン',
+                'physical-feature-6-desc': 'インスタレーションやパブリックアートなど、空間と関わる立体作品の制作方法を学びます。',
+
+                // 講義紹介
+                'lectures-title': '講義紹介',
+                'lectures-desc': '3Dアートコースでは、デジタルとフィジカルの両分野にわたる多様な講義を提供しています。理論から実践まで、幅広い知識と技術を習得できるカリキュラムを用意しています。以下は代表的な講義の一部です。',
+                'lecture-1-title': '3Dモデリング基礎',
+                'lecture-1-desc': '3DCGの基礎となるモデリング技術を学びます。Maya、Blenderなどのソフトウェアの基本操作からポリゴンモデリングの手法まで、段階的に習得します。',
+                'lecture-2-title': 'デジタル彫刻演習',
+                'lecture-2-desc': 'ZBrushを使用したデジタル彫刻の技法を学びます。キャラクターや生物のモデリングに必要な有機的な形状の作成方法を習得します。',
+                'lecture-3-title': 'アニメーション理論と実践',
+                'lecture-3-desc': '動きの原理から始まり、キャラクターアニメーションの基礎技術を学びます。タイミングやスペーシングなどのアニメーション原則を実践的に習得します。',
+                'lecture-4-title': '造形材料学',
+                'lecture-4-desc': '彫刻や立体造形に使用される様々な材料の特性と加工方法について学びます。木材、金属、樹脂など多様な素材の扱い方を習得します。',
+                'lecture-5-title': 'ゲームデザイン概論',
+                'lecture-5-desc': 'ゲーム開発の基礎知識とデザイン理論を学びます。ゲームメカニクス、レベルデザイン、ユーザー体験などの要素について理解を深めます。',
+                'lecture-6-title': 'VR/AR技術演習',
+                'lecture-6-desc': 'バーチャルリアリティと拡張現実の技術を活用したコンテンツ制作を学びます。没入型体験のデザインと実装方法を習得します。',
+
+                // 学生インタビュー
+                'interview-title': '学生インタビュー',
+                'interview-desc': '3Dアートコースで学ぶ学生たちの声をお届けします。実際に学んでいる学生の経験や感想、将来の目標などをインタビュー形式でご紹介します。',
+                'interview-video-caption': '※ 実際の学生へのインタビュー動画です。学生たちの生の声をお聞きください。',
+
+                // 学生の一日
+                'schedule-title': '学生の一日',
+                'schedule-desc': '3Dアートコースの学生の一日のスケジュールをご紹介します。授業や制作活動、課外活動など、充実したキャンパスライフをお届けします。',
+                'schedule-1-time': '8:30',
+                'schedule-1-title': '登校・準備',
+                'schedule-1-desc': 'キャンパスに到着し、一日の授業や制作活動の準備をします。',
+                'schedule-2-time': '8:50',
+                'schedule-2-title': '午前の授業',
+                'schedule-2-desc': '3Dモデリングの基礎や造形理論など、専門的な講義や実習を受講します。',
+                'schedule-3-time': '12:10',
+                'schedule-3-title': '昼食・休憩',
+                'schedule-3-desc': '学食やカフェテリアで昼食をとり、友人たちと交流します。',
+                'schedule-4-time': '13:00',
+                'schedule-4-title': '午後の実習',
+                'schedule-4-desc': '専門的な制作実習に取り組みます。デジタルコースの学生はコンピュータルームで3DCG制作、フィジカルコースの学生は工房で造形作業を行います。',
+                'schedule-5-time': '16:00',
+                'schedule-5-title': '自主制作・研究',
+                'schedule-5-desc': '授業後も残って自分のプロジェクトや課題に取り組みます。教員からの個別指導を受けることもあります。',
+                'schedule-6-time': '18:00',
+                'schedule-6-title': '帰宅',
+                'schedule-6-desc': 'アニメーション研究会やゲーム開発サークルなど、興味のある課外活動に参加します。',
+                'schedule-7-time': '20:00',
+                'schedule-7-title': 'アルバイト',
+                'schedule-7-desc': '帰宅後も自宅で作品制作の続きや、オンラインチュートリアルで新しい技術を学びます。',
+
+                // フッター
+                'footer-university': '崇城大学',
+                'footer-about': '大学について',
+                'footer-faculty': '学部・学科紹介',
+                'footer-examination': '入試情報',
+                'footer-campus-life': 'キャンパスライフ',
+                'footer-career': '就職・進路',
+                'footer-art-faculty': '芸術学部',
+                'footer-art-department': '美術学科',
+                'footer-professors': '教員紹介',
+                'footer-facilities': '施設・設備',
+                'footer-student-works': '学生作品',
+                'footer-gallery': 'ギャラリー',
+                'footer-graduation': '卒業制作展',
+                'footer-awards': '受賞歴',
+                'footer-projects': 'プロジェクト',
+                'footer-interviews': '学生インタビュー',
+                'footer-contact': 'お問い合わせ',
+                'footer-access': 'アクセス',
+                'footer-admission-contact': '入試に関するお問い合わせ',
+                'footer-course-contact': '3Dアートコースへのお問い合わせ',
+                'footer-open-campus': 'オープンキャンパス',
+                'footer-faq': 'よくある質問',
+                'footer-copyright': '© 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.'
+            },
+            'en': {
+                // Navigation
+                'nav-home': 'Home',
+                'nav-features': 'Courses',
+                'nav-gallery': 'Gallery',
+                'nav-news': 'News',
+                'nav-contact': 'Contact',
+
+                // Page title
+                'page-title': 'Course Details',
+                'page-subtitle': 'Here we introduce detailed information about the 3D Art Course. You can see the features and content of the Digital Course and Physical Course, as well as the daily schedule of students.',
+
+                // Digital course
+                'digital-title': 'Digital',
+                'digital-desc-1': 'In the Digital Course, you will learn expression methods utilizing digital technologies such as 3DCG, games, and VR/AR. You will engage in creative activities using digital technology, such as 3D modeling using industry-standard software, animation, interactive content creation using game engines, and new expression methods using VR/AR technology.',
+                'digital-desc-2': 'After graduation, you can expect to work for game companies, CG production companies, and video production companies.',
+                'digital-feature-1-title': '3D Modeling',
+                'digital-feature-1-desc': 'Learn the techniques to create 3D models such as characters, environments, and props using industry-standard software like Maya, Blender, and ZBrush.',
+                'digital-feature-2-title': 'Animation',
+                'digital-feature-2-desc': 'Acquire techniques to give movement to 3D models, such as character animation, physical simulation, and motion capture.',
+                'digital-feature-3-title': 'Game Development',
+                'digital-feature-3-desc': 'Learn how to develop interactive games and applications using game engines such as Unity and Unreal Engine.',
+                'digital-feature-4-title': 'VR/AR Development',
+                'digital-feature-4-desc': 'Learn how to create immersive experiences using Virtual Reality (VR) and Augmented Reality (AR) technologies.',
+                'digital-feature-5-title': 'Rendering and Lighting',
+                'digital-feature-5-desc': 'Acquire rendering techniques and lighting methods for creating photorealistic CG images.',
+                'digital-feature-6-title': 'Digital Sculpting',
+                'digital-feature-6-desc': 'Learn techniques to sculpt 3D models in digital space, like traditional sculpture, using software such as ZBrush.',
+
+                // Physical course
+                'physical-title': 'Physical',
+                'physical-desc-1': 'Learn physical expression methods such as sculpture, figure modeling, and three-dimensional modeling. Learn a wide range of three-dimensional expressions from traditional sculpting techniques to modeling using the latest 3D printing technology. Work on creating physical works such as figure production, product design, and spatial design.',
+                'physical-desc-2': 'After graduation, you can work for figure production companies, product design companies, or as an artist.',
+                'physical-feature-1-title': 'Sculpting Techniques',
+                'physical-feature-1-desc': 'Learn from the basics to applications of traditional sculpting techniques such as wood carving, stone carving, and clay modeling.',
+                'physical-feature-2-title': 'Figure Modeling',
+                'physical-feature-2-desc': 'Acquire the entire process from prototype production to painting and finishing of character figures.',
+                'physical-feature-3-title': 'Casting Practice',
+                'physical-feature-3-desc': 'Create bronze statues in intensive practice.',
+                'physical-feature-4-title': '3D Printing Technology',
+                'physical-feature-4-desc': 'Learn how to utilize 3D printing technology to convert digital data into physical objects.',
+                'physical-feature-5-title': 'Molding and Replication Techniques',
+                'physical-feature-5-desc': 'Acquire replication techniques using silicone molds and plaster molds, and learn methods for mass production of works.',
+                'physical-feature-6-title': 'Spatial Design',
+                'physical-feature-6-desc': 'Learn how to create three-dimensional works that interact with space, such as installations and public art.',
+
+                // Lectures
+                'lectures-title': 'Lectures',
+                'lectures-desc': 'The 3D Art Course offers a variety of lectures across both digital and physical fields. We provide a curriculum that allows you to acquire a wide range of knowledge and skills from theory to practice. Below are some representative lectures.',
+                'lecture-1-title': 'Basics of 3D Modeling',
+                'lecture-1-desc': 'Learn modeling techniques that form the basis of 3DCG. Gradually acquire from basic operations of software such as Maya and Blender to polygon modeling methods.',
+                'lecture-2-title': 'Digital Sculpting Exercise',
+                'lecture-2-desc': 'Learn digital sculpting techniques using ZBrush. Acquire methods for creating organic shapes necessary for modeling characters and creatures.',
+                'lecture-3-title': 'Animation Theory and Practice',
+                'lecture-3-desc': 'Starting from the principles of movement, learn the basic techniques of character animation. Practically acquire animation principles such as timing and spacing.',
+                'lecture-4-title': 'Material Science for Modeling',
+                'lecture-4-desc': 'Learn about the characteristics and processing methods of various materials used in sculpture and three-dimensional modeling. Acquire how to handle diverse materials such as wood, metal, and resin.',
+                'lecture-5-title': 'Introduction to Game Design',
+                'lecture-5-desc': 'Learn the basic knowledge and design theory of game development. Deepen understanding of elements such as game mechanics, level design, and user experience.',
+                'lecture-6-title': 'VR/AR Technology Exercise',
+                'lecture-6-desc': 'Learn content creation utilizing Virtual Reality and Augmented Reality technologies. Acquire design and implementation methods for immersive experiences.',
+
+                // Student interview
+                'interview-title': 'Student Interview',
+                'interview-desc': 'We deliver the voices of students learning in the 3D Art Course. We introduce the experiences, impressions, and future goals of students who are actually studying in an interview format.',
+                'interview-video-caption': '* This is an actual interview video with students. Please listen to the students\' raw voices.',
+
+                // Student's day
+                'schedule-title': 'Student\'s Day',
+                'schedule-desc': 'We introduce the daily schedule of students in the 3D Art Course. We deliver a fulfilling campus life including classes, creative activities, and extracurricular activities.',
+                'schedule-1-time': '8:30',
+                'schedule-1-title': 'Arrival & Preparation',
+                'schedule-1-desc': 'Arrive at campus and prepare for the day\'s classes and creative activities.',
+                'schedule-2-time': '8:50',
+                'schedule-2-title': 'Morning Classes',
+                'schedule-2-desc': 'Take specialized lectures and practical training such as basics of 3D modeling and modeling theory.',
+                'schedule-3-time': '12:10',
+                'schedule-3-title': 'Lunch & Break',
+                'schedule-3-desc': 'Have lunch at the school cafeteria or cafeteria and interact with friends.',
+                'schedule-4-time': '13:00',
+                'schedule-4-title': 'Afternoon Practice',
+                'schedule-4-desc': 'Work on specialized production practice. Digital course students create 3DCG in the computer room, and physical course students do modeling work in the workshop.',
+                'schedule-5-time': '16:00',
+                'schedule-5-title': 'Independent Production & Research',
+                'schedule-5-desc': 'Stay after class to work on your own projects and assignments. You may also receive individual guidance from faculty members.',
+                'schedule-6-time': '18:00',
+                'schedule-6-title': 'Return Home',
+                'schedule-6-desc': 'Participate in extracurricular activities of interest, such as animation research clubs and game development circles.',
+                'schedule-7-time': '20:00',
+                'schedule-7-title': 'Part-time Job',
+                'schedule-7-desc': 'Continue working on your creations at home or learn new techniques through online tutorials.',
+
+                // Footer
+                'footer-university': 'Sojo University',
+                'footer-about': 'About the University',
+                'footer-faculty': 'Faculties & Departments',
+                'footer-examination': 'Admission Information',
+                'footer-campus-life': 'Campus Life',
+                'footer-career': 'Career & Employment',
+                'footer-art-faculty': 'Faculty of Art',
+                'footer-art-department': 'Department of Art',
+                'footer-professors': 'Faculty Members',
+                'footer-facilities': 'Facilities & Equipment',
+                'footer-student-works': 'Student Works',
+                'footer-gallery': 'Gallery',
+                'footer-graduation': 'Graduation Exhibition',
+                'footer-awards': 'Awards',
+                'footer-projects': 'Projects',
+                'footer-interviews': 'Student Interviews',
+                'footer-contact': 'Contact',
+                'footer-access': 'Access',
+                'footer-admission-contact': 'Admission Inquiries',
+                'footer-course-contact': 'Inquiries to 3D Art Course',
+                'footer-open-campus': 'Open Campus',
+                'footer-faq': 'FAQ',
+                'footer-copyright': '© 2025 3D Art Course, Department of Art, Faculty of Art, Sojo University. All Rights Reserved.'
+            }
+        };
+
+        // 言語切り替え機能の実装
+        document.addEventListener('DOMContentLoaded', function() {
+            // 言語ボタンの取得
+            const languageButtons = document.querySelectorAll('.language-btn');
+
+            // 言語切り替えボタンにイベントリスナーを追加
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+
+                    // アクティブなボタンのスタイルを更新
+                    languageButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // 言語を切り替える
+                    changeLanguage(lang);
+
+                    // 言語設定をローカルストレージに保存
+                    localStorage.setItem('preferredLanguage', lang);
+                });
+            });
+
+            // ページ読み込み時に保存された言語設定を適用
+            const savedLanguage = localStorage.getItem('preferredLanguage');
+            if (savedLanguage) {
+                // 保存された言語ボタンをアクティブにする
+                languageButtons.forEach(btn => {
+                    if (btn.getAttribute('data-lang') === savedLanguage) {
+                        btn.click(); // クリックイベントをトリガーして言語を切り替える
+                    }
+                });
+            }
+        });
+
+        // 言語切り替え関数
+        function changeLanguage(lang) {
+            // ナビゲーションの翻訳
+            document.querySelector('a[href="index.html#home"]').textContent = languageData[lang]['nav-home'];
+            document.querySelector('a[href="index.html#features"]').textContent = languageData[lang]['nav-features'];
+            document.querySelector('a[href="index.html#gallery"]').textContent = languageData[lang]['nav-gallery'];
+            document.querySelector('a[href="index.html#news"]').textContent = languageData[lang]['nav-news'];
+            document.querySelector('a[href="index.html#contact"]').textContent = languageData[lang]['nav-contact'];
+
+            // ページタイトルの翻訳
+            document.querySelector('.page-title h1').textContent = languageData[lang]['page-title'];
+            document.querySelector('.page-title p').textContent = languageData[lang]['page-subtitle'];
+
+            // デジタルコースの翻訳
+            const digitalSection = document.getElementById('digital');
+            digitalSection.querySelector('.course-title').textContent = languageData[lang]['digital-title'];
+            const digitalDescPs = digitalSection.querySelectorAll('.course-description p');
+            digitalDescPs[0].textContent = languageData[lang]['digital-desc-1'];
+            digitalDescPs[1].textContent = languageData[lang]['digital-desc-2'];
+
+            const digitalFeatures = digitalSection.querySelectorAll('.feature-item');
+            digitalFeatures[0].querySelector('h4').textContent = languageData[lang]['digital-feature-1-title'];
+            digitalFeatures[0].querySelector('p').textContent = languageData[lang]['digital-feature-1-desc'];
+            digitalFeatures[1].querySelector('h4').textContent = languageData[lang]['digital-feature-2-title'];
+            digitalFeatures[1].querySelector('p').textContent = languageData[lang]['digital-feature-2-desc'];
+            digitalFeatures[2].querySelector('h4').textContent = languageData[lang]['digital-feature-3-title'];
+            digitalFeatures[2].querySelector('p').textContent = languageData[lang]['digital-feature-3-desc'];
+            digitalFeatures[3].querySelector('h4').textContent = languageData[lang]['digital-feature-4-title'];
+            digitalFeatures[3].querySelector('p').textContent = languageData[lang]['digital-feature-4-desc'];
+            digitalFeatures[4].querySelector('h4').textContent = languageData[lang]['digital-feature-5-title'];
+            digitalFeatures[4].querySelector('p').textContent = languageData[lang]['digital-feature-5-desc'];
+            digitalFeatures[5].querySelector('h4').textContent = languageData[lang]['digital-feature-6-title'];
+            digitalFeatures[5].querySelector('p').textContent = languageData[lang]['digital-feature-6-desc'];
+
+            // フィジカルコースの翻訳
+            const physicalSection = document.getElementById('physical');
+            physicalSection.querySelector('.course-title').textContent = languageData[lang]['physical-title'];
+            const physicalDescPs = physicalSection.querySelectorAll('.course-description p');
+            physicalDescPs[0].textContent = languageData[lang]['physical-desc-1'];
+            physicalDescPs[1].textContent = languageData[lang]['physical-desc-2'];
+
+            const physicalFeatures = physicalSection.querySelectorAll('.feature-item');
+            physicalFeatures[0].querySelector('h4').textContent = languageData[lang]['physical-feature-1-title'];
+            physicalFeatures[0].querySelector('p').textContent = languageData[lang]['physical-feature-1-desc'];
+            physicalFeatures[1].querySelector('h4').textContent = languageData[lang]['physical-feature-2-title'];
+            physicalFeatures[1].querySelector('p').textContent = languageData[lang]['physical-feature-2-desc'];
+            physicalFeatures[2].querySelector('h4').textContent = languageData[lang]['physical-feature-3-title'];
+            physicalFeatures[2].querySelector('p').textContent = languageData[lang]['physical-feature-3-desc'];
+            physicalFeatures[3].querySelector('h4').textContent = languageData[lang]['physical-feature-4-title'];
+            physicalFeatures[3].querySelector('p').textContent = languageData[lang]['physical-feature-4-desc'];
+            physicalFeatures[4].querySelector('h4').textContent = languageData[lang]['physical-feature-5-title'];
+            physicalFeatures[4].querySelector('p').textContent = languageData[lang]['physical-feature-5-desc'];
+            physicalFeatures[5].querySelector('h4').textContent = languageData[lang]['physical-feature-6-title'];
+            physicalFeatures[5].querySelector('p').textContent = languageData[lang]['physical-feature-6-desc'];
+
+            // 講義紹介の翻訳
+            const lecturesSection = document.getElementById('lectures');
+            lecturesSection.querySelector('.course-title').textContent = languageData[lang]['lectures-title'];
+            lecturesSection.querySelector('.course-description p').textContent = languageData[lang]['lectures-desc'];
+
+            const lectures = lecturesSection.querySelectorAll('.feature-item');
+            lectures[0].querySelector('h4').textContent = languageData[lang]['lecture-1-title'];
+            lectures[0].querySelector('p').textContent = languageData[lang]['lecture-1-desc'];
+            lectures[1].querySelector('h4').textContent = languageData[lang]['lecture-2-title'];
+            lectures[1].querySelector('p').textContent = languageData[lang]['lecture-2-desc'];
+            lectures[2].querySelector('h4').textContent = languageData[lang]['lecture-3-title'];
+            lectures[2].querySelector('p').textContent = languageData[lang]['lecture-3-desc'];
+            lectures[3].querySelector('h4').textContent = languageData[lang]['lecture-4-title'];
+            lectures[3].querySelector('p').textContent = languageData[lang]['lecture-4-desc'];
+            lectures[4].querySelector('h4').textContent = languageData[lang]['lecture-5-title'];
+            lectures[4].querySelector('p').textContent = languageData[lang]['lecture-5-desc'];
+            lectures[5].querySelector('h4').textContent = languageData[lang]['lecture-6-title'];
+            lectures[5].querySelector('p').textContent = languageData[lang]['lecture-6-desc'];
+
+            // 学生インタビューの翻訳
+            const interviewSection = document.getElementById('interview');
+            interviewSection.querySelector('.course-title').textContent = languageData[lang]['interview-title'];
+            interviewSection.querySelector('.course-description p').textContent = languageData[lang]['interview-desc'];
+            interviewSection.querySelector('p[style="margin-top: 15px; color: #666; font-size: 0.9rem;"]').textContent = languageData[lang]['interview-video-caption'];
+
+            // 学生の一日スケジュールの翻訳
+            const scheduleSection = document.getElementById('schedule');
+            scheduleSection.querySelector('.schedule-header h2').textContent = languageData[lang]['schedule-title'];
+            scheduleSection.querySelector('.schedule-header p').textContent = languageData[lang]['schedule-desc'];
+
+            const timelineItems = scheduleSection.querySelectorAll('.timeline-item');
+            timelineItems[0].querySelector('.timeline-time').textContent = languageData[lang]['schedule-1-time'];
+            timelineItems[0].querySelector('h4').textContent = languageData[lang]['schedule-1-title'];
+            timelineItems[0].querySelector('p').textContent = languageData[lang]['schedule-1-desc'];
+
+            timelineItems[1].querySelector('.timeline-time').textContent = languageData[lang]['schedule-2-time'];
+            timelineItems[1].querySelector('h4').textContent = languageData[lang]['schedule-2-title'];
+            timelineItems[1].querySelector('p').textContent = languageData[lang]['schedule-2-desc'];
+
+            timelineItems[2].querySelector('.timeline-time').textContent = languageData[lang]['schedule-3-time'];
+            timelineItems[2].querySelector('h4').textContent = languageData[lang]['schedule-3-title'];
+            timelineItems[2].querySelector('p').textContent = languageData[lang]['schedule-3-desc'];
+
+            timelineItems[3].querySelector('.timeline-time').textContent = languageData[lang]['schedule-4-time'];
+            timelineItems[3].querySelector('h4').textContent = languageData[lang]['schedule-4-title'];
+            timelineItems[3].querySelector('p').textContent = languageData[lang]['schedule-4-desc'];
+
+            timelineItems[4].querySelector('.timeline-time').textContent = languageData[lang]['schedule-5-time'];
+            timelineItems[4].querySelector('h4').textContent = languageData[lang]['schedule-5-title'];
+            timelineItems[4].querySelector('p').textContent = languageData[lang]['schedule-5-desc'];
+
+            timelineItems[5].querySelector('.timeline-time').textContent = languageData[lang]['schedule-6-time'];
+            timelineItems[5].querySelector('h4').textContent = languageData[lang]['schedule-6-title'];
+            timelineItems[5].querySelector('p').textContent = languageData[lang]['schedule-6-desc'];
+
+            timelineItems[6].querySelector('.timeline-time').textContent = languageData[lang]['schedule-7-time'];
+            timelineItems[6].querySelector('h4').textContent = languageData[lang]['schedule-7-title'];
+            timelineItems[6].querySelector('p').textContent = languageData[lang]['schedule-7-desc'];
+
+            // フッターの翻訳
+            const footerColumns = document.querySelectorAll('.footer-column');
+
+            // 大学カラム
+            footerColumns[0].querySelector('h3').textContent = languageData[lang]['footer-university'];
+            const universityLinks = footerColumns[0].querySelectorAll('a');
+            universityLinks[0].textContent = languageData[lang]['footer-about'];
+            universityLinks[1].textContent = languageData[lang]['footer-faculty'];
+            universityLinks[2].textContent = languageData[lang]['footer-examination'];
+            universityLinks[3].textContent = languageData[lang]['footer-campus-life'];
+            universityLinks[4].textContent = languageData[lang]['footer-career'];
+
+            // 芸術学部カラム
+            footerColumns[1].querySelector('h3').textContent = languageData[lang]['footer-art-faculty'];
+            const artLinks = footerColumns[1].querySelectorAll('a');
+            artLinks[0].textContent = languageData[lang]['footer-art-department'];
+            artLinks[1].textContent = languageData[lang]['footer-professors'];
+            artLinks[2].textContent = languageData[lang]['footer-facilities'];
+
+            // 学生作品カラム
+            footerColumns[2].querySelector('h3').textContent = languageData[lang]['footer-student-works'];
+            const worksLinks = footerColumns[2].querySelectorAll('a');
+            worksLinks[0].textContent = languageData[lang]['footer-gallery'];
+            worksLinks[1].textContent = languageData[lang]['footer-graduation'];
+            worksLinks[2].textContent = languageData[lang]['footer-awards'];
+            worksLinks[3].textContent = languageData[lang]['footer-projects'];
+            worksLinks[4].textContent = languageData[lang]['footer-interviews'];
+
+            // お問い合わせカラム
+            footerColumns[3].querySelector('h3').textContent = languageData[lang]['footer-contact'];
+            const contactLinks = footerColumns[3].querySelectorAll('a');
+            contactLinks[0].textContent = languageData[lang]['footer-access'];
+            contactLinks[1].textContent = languageData[lang]['footer-admission-contact'];
+            contactLinks[2].textContent = languageData[lang]['footer-course-contact'];
+            contactLinks[3].textContent = languageData[lang]['footer-open-campus'];
+            contactLinks[4].textContent = languageData[lang]['footer-faq'];
+
+            // コピーライト
+            document.querySelector('.footer-bottom p').textContent = languageData[lang]['footer-copyright'];
+        }
+    </script>
 </body>
 </html>

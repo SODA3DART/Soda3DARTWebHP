@@ -85,6 +85,46 @@
             font-weight: 400;
         }
 
+        /* 言語切り替えボタンのスタイル */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        /* ナビゲーション内の言語切り替えボタン用のスタイル */
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .language-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
@@ -823,6 +863,10 @@
                     <li><a href="#faculty">教員紹介</a></li>
                      -->
                     <li><a href="#contact">お問い合わせ</a></li>
+                    <li class="language-switch">
+                        <button class="language-btn active" data-lang="ja">日本語</button>
+                        <button class="language-btn" data-lang="en">English</button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -841,7 +885,9 @@
     <section id="features" class="features">
         <div class="container">
             <div class="section-header">
-                <h2>コース紹介</h2>
+                <h2>フィジカルとデジタル<br>
+                伝統と最先端が融合するハイブリッドな学習内容</h2>
+
                 <p>従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を教養を身に着けます。</p>
                 <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
                     <a href="message.html" class="cta-button" style="background-color: #3367d6;">コース担当教員からのメッセージ</a>
@@ -1454,5 +1500,251 @@
     </script>
     <!-- Logo Transition Animation -->
     <script src="js/logoTransition.js"></script>
+
+    <!-- Language Switcher Script -->
+    <script>
+        // 言語データの定義
+        const languageData = {
+            'ja': {
+                // ナビゲーション
+                'nav-home': 'ホーム',
+                'nav-features': 'コース紹介',
+                'nav-gallery': 'ギャラリー',
+                'nav-news': 'ニュース',
+                'nav-contact': 'お問い合わせ',
+
+                // ヒーロー部分
+                'hero-title': '3Dアートで新しい世界を創造する',
+                'hero-description': '崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。',
+                'hero-cta': '詳しく見る',
+
+                // コース紹介
+                'features-title': 'フィジカルとデジタル\n伝統と最先端が融合するハイブリッドな学習内容',
+                'features-description': '従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を教養を身に着けます。',
+                'features-message-link': 'コース担当教員からのメッセージ',
+
+                // フィジカルコース
+                'physical-title': 'フィジカル',
+                'physical-short-desc': '従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。',
+                'physical-detail-1': '伝統的な彫刻技法から最新の3Dプリント技術を活用した造形まで、幅広い立体表現を学びます。フィギュア制作、プロダクトデザイン、空間デザインなど、物理的な形を持つ作品制作に取り組みます。',
+                'physical-detail-2': '卒業後はフィギュア制作会社、プロダクトデザイン会社、美術作家などとして活躍できます。',
+                'physical-more': 'もっとくわしく',
+
+                // デジタルコース
+                'digital-title': 'デジタル',
+                'digital-short-desc': '3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。',
+                'digital-detail-1': '業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。',
+                'digital-detail-2': '卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。',
+                'digital-more': 'もっとくわしく',
+
+                // ギャラリー
+                'gallery-title': 'ギャラリー',
+                'gallery-description': '3Dアートコースの学生たちが制作した作品をご紹介します。',
+                'gallery-more': 'もっと見る',
+
+                // ニュース
+                'news-title': 'ニュース',
+                'news-description': '3Dアートコースの最新情報をお届けします。',
+                'news-read-more': '続きを読む',
+
+                // お問い合わせ
+                'contact-title': 'お問い合わせ',
+                'contact-description': '3Dアートコースについてのご質問やお問い合わせはこちらから',
+                'contact-faq': 'よくある質問はこちら',
+                'contact-info-title': '連絡先情報',
+                'contact-address-label': '住所',
+                'contact-address': '〒860-0082 熊本県熊本市西区池田4-22-1 崇城大学芸術学部',
+                'contact-phone-label': '電話番号',
+                'contact-phone': '096-326-3111(大学代表番号)',
+                'contact-email-label': 'メールアドレス',
+                'contact-opencampus-title': 'オープンキャンパス情報',
+                'contact-opencampus-info': '次回のオープンキャンパスは2025年7月15日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。',
+                'contact-form-title': 'お問い合わせフォーム',
+                'contact-form-name': 'お名前',
+                'contact-form-email': 'メールアドレス',
+                'contact-form-subject': '件名',
+                'contact-form-message': 'メッセージ',
+                'contact-form-recaptcha-note': '※ 送信前に「私はロボットではありません」にチェックを入れてください',
+                'contact-form-submit': '送信する'
+            },
+            'en': {
+                // Navigation
+                'nav-home': 'Home',
+                'nav-features': 'Courses',
+                'nav-gallery': 'Gallery',
+                'nav-news': 'News',
+                'nav-contact': 'Contact',
+
+                // Hero section
+                'hero-title': 'Create New Worlds with 3D Art',
+                'hero-description': 'The 3D Art Course at Sojo University\'s Faculty of Art combines cutting-edge technology with traditional art to nurture the next generation of creators.',
+                'hero-cta': 'Learn More',
+
+                // Features section
+                'features-title': 'Course Introduction',
+                'features-description': 'Learn not only traditional sculpture and three-dimensional expression, but also cutting-edge digital 3D expression such as 3DCG, figure modeling, game design, and a wide range of expression methods utilizing AI and XR.',
+                'features-message-link': 'Message from Course Faculty',
+
+                // Physical course
+                'physical-title': 'Physical',
+                'physical-short-desc': 'Learn physical expression methods such as traditional sculpture, figure modeling, and three-dimensional modeling.',
+                'physical-detail-1': 'Learn a wide range of three-dimensional expressions from traditional sculpting techniques to modeling using the latest 3D printing technology. Work on creating physical works such as figure production, product design, and spatial design.',
+                'physical-detail-2': 'After graduation, you can work for figure production companies, product design companies, or as an artist.',
+                'physical-more': 'More Details',
+
+                // Digital course
+                'digital-title': 'Digital',
+                'digital-short-desc': 'Learn expression methods utilizing digital technologies such as 3DCG, games, VR/AR, etc.',
+                'digital-detail-1': 'Engage in creative activities using digital technology, such as 3D modeling using industry-standard software, animation, interactive content creation using game engines, and new expression methods using VR/AR technology.',
+                'digital-detail-2': 'After graduation, you can expect to work for game companies, CG production companies, and video production companies.',
+                'digital-more': 'More Details',
+
+                // Gallery section
+                'gallery-title': 'Gallery',
+                'gallery-description': 'Introducing works created by students of the 3D Art Course.',
+                'gallery-more': 'View More',
+
+                // News section
+                'news-title': 'News',
+                'news-description': 'Latest information from the 3D Art Course.',
+                'news-read-more': 'Read More',
+
+                // Contact section
+                'contact-title': 'Contact',
+                'contact-description': 'For questions and inquiries about the 3D Art Course',
+                'contact-faq': 'Frequently Asked Questions',
+                'contact-info-title': 'Contact Information',
+                'contact-address-label': 'Address',
+                'contact-address': '4-22-1 Ikeda, Nishi-ku, Kumamoto City, Kumamoto Prefecture 860-0082, Faculty of Art, Sojo University',
+                'contact-phone-label': 'Phone Number',
+                'contact-phone': '096-326-3111 (University Main Line)',
+                'contact-email-label': 'Email Address',
+                'contact-opencampus-title': 'Open Campus Information',
+                'contact-opencampus-info': 'The next Open Campus is scheduled for July 15, 2025 (Saturday). Please join us for a tour of the 3D Art Course facilities and experience workshops.',
+                'contact-form-title': 'Contact Form',
+                'contact-form-name': 'Name',
+                'contact-form-email': 'Email Address',
+                'contact-form-subject': 'Subject',
+                'contact-form-message': 'Message',
+                'contact-form-recaptcha-note': '* Please check "I\'m not a robot" before sending',
+                'contact-form-submit': 'Submit'
+            }
+        };
+
+        // 言語切り替え機能の実装
+        document.addEventListener('DOMContentLoaded', function() {
+            // 言語ボタンの取得
+            const languageButtons = document.querySelectorAll('.language-btn');
+
+            // 言語切り替えボタンにイベントリスナーを追加
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+
+                    // アクティブなボタンのスタイルを更新
+                    languageButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // 言語を切り替える
+                    changeLanguage(lang);
+
+                    // 言語設定をローカルストレージに保存
+                    localStorage.setItem('preferredLanguage', lang);
+                });
+            });
+
+            // ページ読み込み時に保存された言語設定を適用
+            const savedLanguage = localStorage.getItem('preferredLanguage');
+            if (savedLanguage) {
+                // 保存された言語ボタンをアクティブにする
+                languageButtons.forEach(btn => {
+                    if (btn.getAttribute('data-lang') === savedLanguage) {
+                        btn.click(); // クリックイベントをトリガーして言語を切り替える
+                    }
+                });
+            }
+        });
+
+        // 言語切り替え関数
+        function changeLanguage(lang) {
+            // ナビゲーションの翻訳
+            document.querySelector('a[href="#home"]').textContent = languageData[lang]['nav-home'];
+            document.querySelector('a[href="#features"]').textContent = languageData[lang]['nav-features'];
+            document.querySelector('a[href="#gallery"]').textContent = languageData[lang]['nav-gallery'];
+            document.querySelector('a[href="#news"]').textContent = languageData[lang]['nav-news'];
+            document.querySelector('a[href="#contact"]').textContent = languageData[lang]['nav-contact'];
+
+            // ヒーロー部分の翻訳
+            document.querySelector('.hero h1').textContent = languageData[lang]['hero-title'];
+            document.querySelector('.hero p').textContent = languageData[lang]['hero-description'];
+            document.querySelector('.hero .cta-button').textContent = languageData[lang]['hero-cta'];
+
+            // コース紹介部分の翻訳
+            document.querySelector('#features .section-header h2').innerHTML = languageData[lang]['features-title'].replace(/\n/g, '<br>');
+            document.querySelector('#features .section-header p').textContent = languageData[lang]['features-description'];
+            document.querySelector('#features .section-header .cta-button').textContent = languageData[lang]['features-message-link'];
+
+            // フィジカルコースの翻訳
+            const physicalCard = document.querySelector('.feature-card:nth-child(1)');
+            physicalCard.querySelector('h3').textContent = languageData[lang]['physical-title'];
+            physicalCard.querySelector('.feature-short-desc').textContent = languageData[lang]['physical-short-desc'];
+            const physicalDetails = physicalCard.querySelectorAll('.feature-details p');
+            physicalDetails[0].textContent = languageData[lang]['physical-detail-1'];
+            physicalDetails[1].textContent = languageData[lang]['physical-detail-2'];
+            physicalCard.querySelector('.more-details-link').textContent = languageData[lang]['physical-more'];
+
+            // デジタルコースの翻訳
+            const digitalCard = document.querySelector('.feature-card:nth-child(2)');
+            digitalCard.querySelector('h3').textContent = languageData[lang]['digital-title'];
+            digitalCard.querySelector('.feature-short-desc').textContent = languageData[lang]['digital-short-desc'];
+            const digitalDetails = digitalCard.querySelectorAll('.feature-details p');
+            digitalDetails[0].textContent = languageData[lang]['digital-detail-1'];
+            digitalDetails[1].textContent = languageData[lang]['digital-detail-2'];
+            digitalCard.querySelector('.more-details-link').textContent = languageData[lang]['digital-more'];
+
+            // ギャラリー部分の翻訳
+            document.querySelector('#gallery .section-header h2').textContent = languageData[lang]['gallery-title'];
+            document.querySelector('#gallery .section-header p').textContent = languageData[lang]['gallery-description'];
+            document.querySelector('#gallery .more-details-link').textContent = languageData[lang]['gallery-more'];
+
+            // ニュース部分の翻訳
+            document.querySelector('#news .section-header h2').textContent = languageData[lang]['news-title'];
+            document.querySelector('#news .section-header p').textContent = languageData[lang]['news-description'];
+            const readMoreLinks = document.querySelectorAll('.read-more');
+            readMoreLinks.forEach(link => {
+                link.textContent = languageData[lang]['news-read-more'];
+            });
+
+            // お問い合わせ部分の翻訳
+            document.querySelector('#contact .section-header h2').textContent = languageData[lang]['contact-title'];
+            const contactDesc = document.querySelector('#contact .section-header p');
+            contactDesc.childNodes[0].textContent = languageData[lang]['contact-description'];
+            document.querySelector('#contact .section-header p a').textContent = languageData[lang]['contact-faq'];
+
+            document.querySelector('.contact-info h3').textContent = languageData[lang]['contact-info-title'];
+
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems[0].querySelector('strong').textContent = languageData[lang]['contact-address-label'];
+            contactItems[0].querySelector('.contact-text').childNodes[2].textContent = languageData[lang]['contact-address'];
+
+            contactItems[1].querySelector('strong').textContent = languageData[lang]['contact-phone-label'];
+            contactItems[1].querySelector('.contact-text').childNodes[2].textContent = languageData[lang]['contact-phone'];
+
+            contactItems[2].querySelector('strong').textContent = languageData[lang]['contact-email-label'];
+
+            document.querySelector('.contact-info h3:nth-of-type(2)').textContent = languageData[lang]['contact-opencampus-title'];
+            document.querySelector('.contact-info p').textContent = languageData[lang]['contact-opencampus-info'];
+
+            document.querySelector('.contact-form h3').textContent = languageData[lang]['contact-form-title'];
+            document.querySelector('input[name="from_name"]').placeholder = languageData[lang]['contact-form-name'];
+            document.querySelector('input[name="from_email"]').placeholder = languageData[lang]['contact-form-email'];
+            document.querySelector('input[name="subject"]').placeholder = languageData[lang]['contact-form-subject'];
+            document.querySelector('textarea[name="message"]').placeholder = languageData[lang]['contact-form-message'];
+            document.querySelector('.recaptcha-note').textContent = languageData[lang]['contact-form-recaptcha-note'];
+            document.querySelector('.contact-form button').textContent = languageData[lang]['contact-form-submit'];
+        }
+    </script>
 </body>
 </html>

@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教授からのメッセージ - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'セザンヌ';
+            src: url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/dist/cezanne/cezanne.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
     <style>
         * {
             margin: 0;
@@ -64,6 +76,46 @@
             font-weight: 400;
         }
 
+        /* 言語切り替えボタンのスタイル */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        /* ナビゲーション内の言語切り替えボタン用のスタイル */
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .language-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
@@ -120,11 +172,13 @@
             font-size: 2.5rem;
             margin-bottom: 15px;
             color: #333;
+            font-family: 'IPAex明朝', serif;
         }
 
         .page-title p {
             font-size: 1.1rem;
             color: #777;
+            font-family: 'セザンヌ', sans-serif;
         }
 
         /* 教授メッセージスタイル */
@@ -169,6 +223,7 @@
             font-size: 1.8rem;
             margin-bottom: 5px;
             color: #333;
+            font-family: 'IPAex明朝', serif;
         }
 
         .professor-position {
@@ -180,6 +235,7 @@
         .professor-bio {
             line-height: 1.6;
             color: #555;
+            font-family: 'セザンヌ', sans-serif;
         }
 
         .message-content {
@@ -188,6 +244,7 @@
 
         .message-content p {
             margin-bottom: 20px;
+            font-family: 'セザンヌ', sans-serif;
         }
 
         .message-signature {
@@ -322,6 +379,10 @@
                     <li><a href="index.html#gallery">ギャラリー</a></li>
                     <li><a href="index.html#news">ニュース</a></li>
                     <li><a href="index.html#contact">お問い合わせ</a></li>
+                    <li class="language-switch">
+                        <button class="language-btn active" data-lang="ja">日本語</button>
+                        <button class="language-btn" data-lang="en">English</button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -331,7 +392,7 @@
     <main class="main-content">
         <div class="container">
             <div class="page-title">
-                <h1>教授からのメッセージ</h1>
+                <h1>コース担当教員からのメッセージ</h1>
                 <p>3Dアートコースを訪れてくださった皆様へ</p>
             </div>
 
@@ -432,5 +493,218 @@
     </script>
     <!-- Logo Transition Animation -->
     <script src="js/logoTransition.js"></script>
+
+    <!-- Language Switcher Script -->
+    <script>
+        // 言語データの定義
+        const languageData = {
+            'ja': {
+                // ナビゲーション
+                'nav-home': 'ホーム',
+                'nav-features': 'コース紹介',
+                'nav-gallery': 'ギャラリー',
+                'nav-news': 'ニュース',
+                'nav-contact': 'お問い合わせ',
+
+                // ページタイトル
+                'page-title': 'コース担当教員からのメッセージ',
+                'page-subtitle': '3Dアートコースを訪れてくださった皆様へ',
+
+                // 教授プロフィール
+                'professor-name': '清島 浩徳',
+                'professor-position': '崇城大学芸術学部美術学科 教授',
+                'professor-bio': 'hogehoge',
+
+                // メッセージ内容
+                'message-p1': '3Dアートコースのウェブサイトをご覧いただき、誠にありがとうございます。本コースでは、従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身につけることができます。',
+                'message-p2': '現代のアート表現において、デジタルとフィジカルの境界は急速に曖昧になりつつあります。私たちのコースでは、この二つの世界を自由に行き来できる柔軟な思考と技術を持ったクリエイターの育成を目指しています。伝統的な造形の基礎をしっかりと学びながら、最新のデジタル技術も習得することで、未来のアート表現を切り拓く力を養います。',
+                'message-p3': '本コースの特徴は、少人数制の丁寧な指導と、実践的なプロジェクトベースの学習にあります。学生一人ひとりの個性や関心に合わせたカリキュラムを提供し、創造性を最大限に引き出すサポートを行っています。また、企業や地域との連携プロジェクトを通じて、実社会での経験を積む機会も豊富に用意しています。',
+                'message-p4': '芸術とテクノロジーの融合に興味を持つ皆さん、ぜひ私たちと一緒に新しい表現の可能性を探求しましょう。オープンキャンパスや個別相談会も随時開催していますので、お気軽にお問い合わせください。皆さんとお会いできることを心より楽しみにしています。',
+                'message-signature-title': '崇城大学芸術学部美術学科 教授',
+                'message-signature-name': '清島 浩徳',
+
+                // フッター
+                'footer-university': '崇城大学',
+                'footer-about': '大学について',
+                'footer-faculty': '学部・学科紹介',
+                'footer-examination': '入試情報',
+                'footer-campus-life': 'キャンパスライフ',
+                'footer-career': '就職・進路',
+                'footer-art-faculty': '芸術学部',
+                'footer-art-department': '美術学科',
+                'footer-professors': '教員紹介',
+                'footer-facilities': '施設・設備',
+                'footer-student-works': '学生作品',
+                'footer-gallery': 'ギャラリー',
+                'footer-graduation': '卒業制作展',
+                'footer-awards': '受賞歴',
+                'footer-projects': 'プロジェクト',
+                'footer-interviews': '学生インタビュー',
+                'footer-contact': 'お問い合わせ',
+                'footer-access': 'アクセス',
+                'footer-admission-contact': '入試に関するお問い合わせ',
+                'footer-course-contact': '3Dアートコースへのお問い合わせ',
+                'footer-open-campus': 'オープンキャンパス',
+                'footer-faq': 'よくある質問',
+                'footer-copyright': '© 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.'
+            },
+            'en': {
+                // Navigation
+                'nav-home': 'Home',
+                'nav-features': 'Courses',
+                'nav-gallery': 'Gallery',
+                'nav-news': 'News',
+                'nav-contact': 'Contact',
+
+                // Page title
+                'page-title': 'Message from Course Faculty',
+                'page-subtitle': 'To all visitors of the 3D Art Course',
+
+                // Professor profile
+                'professor-name': 'Hironori Kiyoshima',
+                'professor-position': 'Professor, Department of Art, Faculty of Art, Sojo University',
+                'professor-bio': 'hogehoge',
+
+                // Message content
+                'message-p1': 'Thank you for visiting the 3D Art Course website. In this course, you can learn not only traditional three-dimensional expressions such as sculpture, but also cutting-edge digital three-dimensional expressions such as 3DCG, and acquire a wide range of expression methods utilizing figure modeling, game design, AI, and XR.',
+                'message-p2': 'In contemporary art expression, the boundary between digital and physical is rapidly becoming ambiguous. In our course, we aim to nurture creators with flexible thinking and skills who can freely move between these two worlds. By learning the basics of traditional modeling while acquiring the latest digital technology, we cultivate the power to pioneer future art expressions.',
+                'message-p3': 'The feature of this course is in small-group, careful guidance and practical project-based learning. We provide a curriculum tailored to each student\'s individuality and interests, and support to maximize creativity. We also offer many opportunities to gain experience in the real world through collaborative projects with companies and communities.',
+                'message-p4': 'To those interested in the fusion of art and technology, let\'s explore the possibilities of new expression together. We also hold open campus and individual consultation meetings regularly, so please feel free to contact us. We look forward to meeting you.',
+                'message-signature-title': 'Professor, Department of Art, Faculty of Art, Sojo University',
+                'message-signature-name': 'Hironori Kiyoshima',
+
+                // Footer
+                'footer-university': 'Sojo University',
+                'footer-about': 'About the University',
+                'footer-faculty': 'Faculties & Departments',
+                'footer-examination': 'Admission Information',
+                'footer-campus-life': 'Campus Life',
+                'footer-career': 'Career & Employment',
+                'footer-art-faculty': 'Faculty of Art',
+                'footer-art-department': 'Department of Art',
+                'footer-professors': 'Faculty Members',
+                'footer-facilities': 'Facilities & Equipment',
+                'footer-student-works': 'Student Works',
+                'footer-gallery': 'Gallery',
+                'footer-graduation': 'Graduation Exhibition',
+                'footer-awards': 'Awards',
+                'footer-projects': 'Projects',
+                'footer-interviews': 'Student Interviews',
+                'footer-contact': 'Contact',
+                'footer-access': 'Access',
+                'footer-admission-contact': 'Admission Inquiries',
+                'footer-course-contact': 'Inquiries to 3D Art Course',
+                'footer-open-campus': 'Open Campus',
+                'footer-faq': 'FAQ',
+                'footer-copyright': '© 2025 3D Art Course, Department of Art, Faculty of Art, Sojo University. All Rights Reserved.'
+            }
+        };
+
+        // 言語切り替え機能の実装
+        document.addEventListener('DOMContentLoaded', function() {
+            // 言語ボタンの取得
+            const languageButtons = document.querySelectorAll('.language-btn');
+
+            // 言語切り替えボタンにイベントリスナーを追加
+            languageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+
+                    // アクティブなボタンのスタイルを更新
+                    languageButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+
+                    // 言語を切り替える
+                    changeLanguage(lang);
+
+                    // 言語設定をローカルストレージに保存
+                    localStorage.setItem('preferredLanguage', lang);
+                });
+            });
+
+            // ページ読み込み時に保存された言語設定を適用
+            const savedLanguage = localStorage.getItem('preferredLanguage');
+            if (savedLanguage) {
+                // 保存された言語ボタンをアクティブにする
+                languageButtons.forEach(btn => {
+                    if (btn.getAttribute('data-lang') === savedLanguage) {
+                        btn.click(); // クリックイベントをトリガーして言語を切り替える
+                    }
+                });
+            }
+        });
+
+        // 言語切り替え関数
+        function changeLanguage(lang) {
+            // ナビゲーションの翻訳
+            document.querySelector('a[href="index.html#home"]').textContent = languageData[lang]['nav-home'];
+            document.querySelector('a[href="index.html#features"]').textContent = languageData[lang]['nav-features'];
+            document.querySelector('a[href="index.html#gallery"]').textContent = languageData[lang]['nav-gallery'];
+            document.querySelector('a[href="index.html#news"]').textContent = languageData[lang]['nav-news'];
+            document.querySelector('a[href="index.html#contact"]').textContent = languageData[lang]['nav-contact'];
+
+            // ページタイトルの翻訳
+            document.querySelector('.page-title h1').textContent = languageData[lang]['page-title'];
+            document.querySelector('.page-title p').textContent = languageData[lang]['page-subtitle'];
+
+            // 教授プロフィールの翻訳
+            document.querySelector('.professor-name').textContent = languageData[lang]['professor-name'];
+            document.querySelector('.professor-position').textContent = languageData[lang]['professor-position'];
+            document.querySelector('.professor-bio').textContent = languageData[lang]['professor-bio'];
+
+            // メッセージ内容の翻訳
+            const messagePs = document.querySelectorAll('.message-content p');
+            messagePs[0].textContent = languageData[lang]['message-p1'];
+            messagePs[1].textContent = languageData[lang]['message-p2'];
+            messagePs[2].textContent = languageData[lang]['message-p3'];
+            messagePs[3].textContent = languageData[lang]['message-p4'];
+
+            // 署名の翻訳
+            const signatureLines = document.querySelector('.message-signature').innerHTML.split('<br>');
+            document.querySelector('.message-signature').innerHTML = languageData[lang]['message-signature-title'] + '<br>' + languageData[lang]['message-signature-name'];
+
+            // フッターの翻訳
+            const footerColumns = document.querySelectorAll('.footer-column');
+
+            // 大学カラム
+            footerColumns[0].querySelector('h3').textContent = languageData[lang]['footer-university'];
+            const universityLinks = footerColumns[0].querySelectorAll('a');
+            universityLinks[0].textContent = languageData[lang]['footer-about'];
+            universityLinks[1].textContent = languageData[lang]['footer-faculty'];
+            universityLinks[2].textContent = languageData[lang]['footer-examination'];
+            universityLinks[3].textContent = languageData[lang]['footer-campus-life'];
+            universityLinks[4].textContent = languageData[lang]['footer-career'];
+
+            // 芸術学部カラム
+            footerColumns[1].querySelector('h3').textContent = languageData[lang]['footer-art-faculty'];
+            const artLinks = footerColumns[1].querySelectorAll('a');
+            artLinks[0].textContent = languageData[lang]['footer-art-department'];
+            artLinks[1].textContent = languageData[lang]['footer-professors'];
+            artLinks[2].textContent = languageData[lang]['footer-facilities'];
+
+            // 学生作品カラム
+            footerColumns[2].querySelector('h3').textContent = languageData[lang]['footer-student-works'];
+            const worksLinks = footerColumns[2].querySelectorAll('a');
+            worksLinks[0].textContent = languageData[lang]['footer-gallery'];
+            worksLinks[1].textContent = languageData[lang]['footer-graduation'];
+            worksLinks[2].textContent = languageData[lang]['footer-awards'];
+            worksLinks[3].textContent = languageData[lang]['footer-projects'];
+            worksLinks[4].textContent = languageData[lang]['footer-interviews'];
+
+            // お問い合わせカラム
+            footerColumns[3].querySelector('h3').textContent = languageData[lang]['footer-contact'];
+            const contactLinks = footerColumns[3].querySelectorAll('a');
+            contactLinks[0].textContent = languageData[lang]['footer-access'];
+            contactLinks[1].textContent = languageData[lang]['footer-admission-contact'];
+            contactLinks[2].textContent = languageData[lang]['footer-course-contact'];
+            contactLinks[3].textContent = languageData[lang]['footer-open-campus'];
+            contactLinks[4].textContent = languageData[lang]['footer-faq'];
+
+            // コピーライト
+            document.querySelector('.footer-bottom p').textContent = languageData[lang]['footer-copyright'];
+        }
+    </script>
 </body>
 </html>
