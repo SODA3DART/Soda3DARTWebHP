@@ -262,6 +262,25 @@
         .magic-text-effect {
             position: relative;
             display: inline-block;
+            padding: 10px 20px;
+            margin: 5px 0;
+        }
+
+        /* Add blurred background with rounded corners */
+        .magic-text-effect::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.18));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: -1;
         }
 
         .magic-text-effect.animate {
@@ -943,10 +962,10 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-image">
-                        <div class="feature-image-text">フィジカル</div>
+                        <div class="feature-image-text" style="font-family: 'IPAexMincho', serif;">フィジカルな学び</div>
                         <img src="images/IMG_2031 (002).jpg" alt="フィジカル - 彫刻作品" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
                     </div>
-                    <h3>フィジカル</h3>
+                    <h3 style="font-family: 'IPAexMincho', serif;">フィジカルな学び</h3>
                     <p class="feature-short-desc">従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。</p>
                     <div class="feature-details">
                         <p>伝統的な彫刻技法から最新のCG技術を活用した造形まで、幅広い立体表現を学びます。<br>
@@ -957,10 +976,10 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-image">
-                        <div class="feature-image-text">デジタル</div>
+                        <div class="feature-image-text" style="font-family: 'IPAexMincho', serif;">デジタルな学び</div>
                         <img src="images/3DScan1.jpg" alt="デジタル - 3Dスキャン" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
                     </div>
-                    <h3>デジタル</h3>
+                    <h3 style="font-family: 'IPAexMincho', serif;">デジタルな学び</h3>
                     <p class="feature-short-desc">3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
                     <div class="feature-details">
                         <p>業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。</p>
@@ -1024,10 +1043,10 @@
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
-                        <img src="images/takasegura3.png" alt="学生作品7">
+                        <img src="images/inposter_iw.png" alt="学生作品7">
                         <div class="gallery-overlay">
-                            <h3>3年生フィギュア製作</h3>
-                            <p>3年生</p>
+                            <h3>インポスター</h3>
+                            <p>2年生 W.I</p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
@@ -1151,13 +1170,13 @@
                             <div class="contact-icon">✉️</div>
                             <div class="contact-text">
                                 <strong>メールアドレス</strong>
-                                @m.sojo-u.ac.jp
+                                hirokiyo@art/sojo-u.ac.jp
                             </div>
                         </div>
                     </div>
                     <h3>オープンキャンパス情報</h3>
                     <p>次回のオープンキャンパスは2025年7月19日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。</p>
-                    <p>詳細は<a href="https://www.sojo-u.ac.jp/nyushi/event/">こちら</a>をご覧ください。</p>
+                    <p>詳細は<a href="https://www.sojo-u.ac.jp/nyushi/event/#:~:text=%E5%8F%97%E4%BB%9812%EF%BC%9A00%EF%BD%9E%EF%BC%89-,%E8%8A%B8%E8%A1%93%E5%AD%A6%E9%83%A8,-2025%E5%B9%B47">こちら</a>をご覧ください。</p>
                 </div>
                 <div class="contact-form">
                     <h3>お問い合わせフォーム</h3>
@@ -1603,14 +1622,14 @@
                 'features-message-link': 'コース担当教員からのメッセージ',
 
                 // フィジカルコース
-                'physical-title': 'フィジカル',
+                'physical-title': 'フィジカルな学び',
                 'physical-short-desc': '従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。',
                 'physical-detail-1': '伝統的な彫刻技法から最新の3Dプリント技術を活用した造形まで、幅広い立体表現を学びます。フィギュア制作、プロダクトデザイン、空間デザインなど、物理的な形を持つ作品制作に取り組みます。',
                 'physical-detail-2': '卒業後はフィギュア制作会社、プロダクトデザイン会社、美術作家などとして活躍できます。',
                 'physical-more': 'もっとくわしく',
 
                 // デジタルコース
-                'digital-title': 'デジタル',
+                'digital-title': 'デジタルな学び',
                 'digital-short-desc': '3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。',
                 'digital-detail-1': '業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。',
                 'digital-detail-2': '卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。',
@@ -1824,6 +1843,127 @@
             document.querySelector('.recaptcha-note').textContent = languageData[lang]['contact-form-recaptcha-note'];
             document.querySelector('.contact-form button').textContent = languageData[lang]['contact-form-submit'];
         }
+    </script>
+
+    <!-- Random Top Background Image Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to get all image files from the Images/TopImage directory
+            async function getTopImages() {
+                try {
+                    // Get all files in the Images/TopImage directory
+                    const topImageFiles = [];
+
+                    // Scan the directory for image files
+                    // Since we can't directly access the file system with client-side JavaScript,
+                    // we'll check for known image extensions in the directory
+                    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+                    // Check for files with incrementing numbers (up to a reasonable limit)
+                    const maxImagesToCheck = 20; // Adjust this number as needed
+
+                    // Check each potential image file
+                    for (let i = 1; i <= maxImagesToCheck; i++) {
+                        let foundImageForThisIndex = false;
+
+                        // Try each extension
+                        for (const ext of imageExtensions) {
+                            const imagePath = `images/TopImage/topimage${i}${ext}`;
+
+                            // Try to fetch the image to see if it exists
+                            try {
+                                const response = await fetch(imagePath, { method: 'HEAD' });
+                                if (response.ok) {
+                                    topImageFiles.push(imagePath);
+                                    foundImageForThisIndex = true;
+                                    break; // Found an image for this index, move to the next index
+                                }
+                            } catch (error) {
+                                // Image doesn't exist or couldn't be fetched, continue checking other extensions
+                            }
+                        }
+
+                        // If we've checked 3 consecutive indices without finding an image, stop searching
+                        // This is an optimization to avoid checking too many non-existent files
+                        if (!foundImageForThisIndex) {
+                            const consecutiveNotFound = 3;
+                            let allMissing = true;
+
+                            // Check if the next few indices also don't have images
+                            for (let j = 1; j <= consecutiveNotFound; j++) {
+                                if (i + j > maxImagesToCheck) break;
+
+                                let foundNext = false;
+                                for (const ext of imageExtensions) {
+                                    const nextPath = `images/TopImage/topimage${i + j}${ext}`;
+                                    try {
+                                        const response = await fetch(nextPath, { method: 'HEAD' });
+                                        if (response.ok) {
+                                            foundNext = true;
+                                            break;
+                                        }
+                                    } catch (error) {
+                                        // Continue checking
+                                    }
+                                }
+
+                                if (foundNext) {
+                                    allMissing = false;
+                                    break;
+                                }
+                            }
+
+                            // If all the next few indices are also missing, stop searching
+                            if (allMissing && i > 2) {
+                                break;
+                            }
+                        }
+                    }
+
+                    // Also check for any files that don't follow the naming pattern
+                    // This would require a server-side solution to list all files in the directory
+                    // For now, we'll just use the files we've found
+
+                    // If no images were found, fall back to known images
+                    if (topImageFiles.length === 0) {
+                        console.log("No images found, falling back to known images");
+                        topImageFiles.push('images/TopImage/topimage1.png');
+                        topImageFiles.push('images/TopImage/topimage2.png');
+                        // Add more known images here if needed
+                    }
+
+                    console.log("Found top images:", topImageFiles);
+                    return topImageFiles;
+                } catch (error) {
+                    console.error('Error getting top images:', error);
+                    // Fallback to known images if there's an error
+                    return [
+                        'images/TopImage/topimage1.png',
+                        'images/TopImage/topimage2.png'
+                    ];
+                }
+            }
+
+            // Get the images and set a random one as the background
+            getTopImages().then(topImages => {
+                // Get a random image from the array
+                const randomImage = topImages[Math.floor(Math.random() * topImages.length)];
+                console.log("Selected random image:", randomImage);
+
+                // Set the random image as the background for the hero section
+                const heroSection = document.querySelector('.hero');
+                if (heroSection) {
+                    heroSection.style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('${randomImage}') center/cover no-repeat`;
+                }
+            }).catch(error => {
+                console.error('Error setting random background image:', error);
+                // Fallback to a default image if there's an error
+                const heroSection = document.querySelector('.hero');
+                if (heroSection) {
+                    heroSection.style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/TopImage/topimage1.png') center/cover no-repeat`;
+                }
+            });
+        });
     </script>
 </body>
 </html>
