@@ -5,137 +5,438 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>シャトルバス時刻表</title>
     <meta name="description" content="崇城大学シャトルバス時刻表 - バス停を選択して時刻を確認できます">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-dark: #0d47a1;
+            --primary-light: #e8f0fe;
+            --accent-color: #ff5252;
+            --accent-dark: #c50e29;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --background-light: #f8f9fa;
+            --card-background: #ffffff;
+            --border-radius: 16px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
+
         .container {
             max-width: 100%;
-            padding: 20px;
+            padding: 16px;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin: 0 0 24px 0;
             font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            position: relative;
+            padding-bottom: 12px;
         }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            border-radius: 3px;
+        }
+
         .bus-info {
-            background-color: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary-color);
         }
+
+        .bus-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
         .bus-type {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
         }
+
+        .bus-type::before {
+            content: '\f207';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
         .next-bus {
             font-size: 1.5rem;
             text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #f0f8ff;
-            border-radius: 5px;
+            margin: 20px 0;
+            padding: 16px;
+            background: linear-gradient(to right, var(--primary-light), #f0f8ff);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
         }
+
         .countdown {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #e74c3c;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: block;
+            margin: 8px 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
+
         .bus-schedule {
-            margin-top: 10px;
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
         .bus-time {
-            display: inline-block;
-            margin: 5px;
-            padding: 5px 10px;
-            background-color: #eee;
-            border-radius: 15px;
-            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 6px;
+            padding: 8px 14px;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: var(--transition);
         }
+
+        .bus-time:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
         .current-time {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
+            margin-bottom: 24px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background-color: var(--card-background);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .current-time::before {
+            content: '\f017';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             font-style: italic;
-            color: #666;
+            color: var(--text-secondary);
         }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .error {
-            color: #e74c3c;
+            color: var(--accent-color);
             text-align: center;
-            padding: 10px;
+            padding: 16px;
+            background-color: #ffebee;
+            border-radius: var(--border-radius);
+            margin: 16px 0;
         }
+
         .no-more-buses {
             text-align: center;
-            padding: 10px;
-            color: #e74c3c;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 15px 0;
+            padding: 16px;
+            color: var(--accent-dark);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin: 16px 0;
+            background-color: #ffebee;
+            border-radius: var(--border-radius);
         }
+
         .back-button {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px auto 8px;
             text-decoration: none;
-            color: #3498db;
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 12px 24px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            width: fit-content;
         }
+
+        .back-button::before {
+            content: '\f060';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
         .retry-button {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            margin-top: 10px;
+            border-radius: var(--border-radius);
+            padding: 12px 24px;
+            margin-top: 16px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background-color 0.3s;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
         }
+
+        .retry-button::before {
+            content: '\f2f1';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
         .retry-button:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+
         /* バス時刻が近い場合の強調表示 */
         .urgent {
-            color: #e74c3c;
+            color: var(--accent-color);
             animation: pulse 1.5s infinite;
+            position: relative;
         }
+
+        .urgent::before {
+            content: '\f0f3';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            animation: shake 0.5s infinite;
+        }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
             100% { opacity: 1; }
         }
-        /* バス停リンクのスタイル */
+
+        @keyframes shake {
+            0% { transform: rotate(0); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0); }
+        }
+
+        /* バス停セレクター */
+        #busStopSelector {
+            text-align: center;
+            margin-bottom: 24px;
+            background-color: var(--card-background);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        #selectedBusStopName {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        .bus-stop-links-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
         .bus-stop-link {
-            display: inline-block;
-            margin: 3px;
-            padding: 3px 8px;
+            display: inline-flex;
+            align-items: center;
+            margin: 4px;
+            padding: 8px 12px;
             text-decoration: none;
-            color: #3498db;
-            border-radius: 3px;
-            transition: background-color 0.2s;
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            border-radius: 20px;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.9rem;
         }
+
         .bus-stop-link:hover {
-            background-color: #f0f8ff;
-        }
-        .bus-stop-link.active {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .bus-stop-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* ダークモード切り替え */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background-color: var(--card-background);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        /* ダークモードのスタイル */
+        body.dark-mode {
+            --primary-color: #4285f4;
+            --primary-dark: #1a73e8;
+            --primary-light: #1f2937;
+            --accent-color: #ff5252;
+            --accent-dark: #ff8a80;
+            --text-primary: #e0e0e0;
+            --text-secondary: #9e9e9e;
+            --background-light: #121212;
+            --card-background: #1e1e1e;
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+        }
+
+        body.dark-mode .bus-time {
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .next-bus {
+            background: linear-gradient(to right, #1f2937, #2c3e50);
+        }
+
+        body.dark-mode .error {
+            background-color: #3a0505;
+        }
+
+        body.dark-mode .no-more-buses {
+            background-color: #3a0505;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .bus-type {
+                font-size: 1.2rem;
+            }
+
+            .countdown {
+                font-size: 2.2rem;
+            }
+
+            .bus-time {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            .bus-stop-link {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- ダークモード切り替えボタン -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
     <div class="container">
         <h1>シャトルバス時刻表</h1>
 
@@ -143,19 +444,19 @@
             現在時刻: 読み込み中...
         </div>
 
-        <div id="busStopSelector" style="text-align: center; margin-bottom: 20px;">
-            <div style="margin-bottom: 10px; font-weight: bold;">
+        <div id="busStopSelector">
+            <div>
                 <span id="selectedBusStopName">バス停を選択してください</span>
             </div>
-            <div>
-                <a href="?stop=1" class="bus-stop-link">県立体育館前</a> |
-                <a href="?stop=2" class="bus-stop-link">上熊本駅</a> |
-                <a href="?stop=3" class="bus-stop-link">県営団地バス停前</a> |
-                <a href="?stop=4" class="bus-stop-link">シャンテSOJO</a> |
-                <a href="?stop=5" class="bus-stop-link">崇城大学食堂前</a> |
-                <a href="?stop=6" class="bus-stop-link">崇城大学前駅</a> |
-                <a href="?stop=7" class="bus-stop-link">薬学部</a> |
-                <a href="?stop=8" class="bus-stop-link">芸術学部</a> |
+            <div class="bus-stop-links-container">
+                <a href="?stop=1" class="bus-stop-link">県立体育館前</a>
+                <a href="?stop=2" class="bus-stop-link">上熊本駅</a>
+                <a href="?stop=3" class="bus-stop-link">県営団地バス停前</a>
+                <a href="?stop=4" class="bus-stop-link">シャンテSOJO</a>
+                <a href="?stop=5" class="bus-stop-link">崇城大学食堂前</a>
+                <a href="?stop=6" class="bus-stop-link">崇城大学前駅</a>
+                <a href="?stop=7" class="bus-stop-link">薬学部</a>
+                <a href="?stop=8" class="bus-stop-link">芸術学部</a>
                 <a href="?stop=9" class="bus-stop-link">硯川校舎</a>
             </div>
         </div>
@@ -163,7 +464,7 @@
         <div class="bus-info">
             <div class="bus-type">芸術学部・薬学部方面 (Type 1)</div>
             <div id="nextBus1" class="next-bus">
-                <div class="loading">バス情報を読み込み中...</div>
+                <div class="loading">バス情報を読み込み中</div>
             </div>
             <div id="schedule1" class="bus-schedule"></div>
         </div>
@@ -171,7 +472,7 @@
         <div class="bus-info">
             <div class="bus-type">上熊本駅方面 (Type 2)</div>
             <div id="nextBus2" class="next-bus">
-                <div class="loading">バス情報を読み込み中...</div>
+                <div class="loading">バス情報を読み込み中</div>
             </div>
             <div id="schedule2" class="bus-schedule"></div>
         </div>
@@ -356,9 +657,9 @@
                 const errorMessage = error.message || 'データの読み込みに失敗しました。';
                 const errorHTML = `
                     <div class="error">
-                        <p>バス情報の取得に問題が発生しました。</p>
+                        <p><i class="fas fa-exclamation-triangle"></i> バス情報の取得に問題が発生しました。</p>
                         <p>${errorMessage}</p>
-                        <p>しばらくしてからもう一度お試しください。</p>
+                        <p><i class="fas fa-info-circle"></i> しばらくしてからもう一度お試しください。</p>
                         <button onclick="location.reload()" class="retry-button">再読み込み</button>
                     </div>
                 `;
@@ -432,7 +733,7 @@
             // Type 1のバスがデータに存在するか確認
             if (type1Buses.length === 0) {
                 console.log('Type 1のバスデータが見つかりません。「本日の運行は終了しました」を表示します。');
-                nextBus1Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                nextBus1Element.innerHTML = '<div class="no-more-buses"><i class="fas fa-ban"></i> 本日の運行は終了しました</div>';
                 schedule1Element.innerHTML = '';
             } else {
                 const nextBus1 = getNextBus(1);
@@ -444,9 +745,9 @@
                     const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
 
                     nextBus1Element.innerHTML = `
-                        次のバス: ${nextBus1.time}<br>
-                        <span class="${countdownClass}">${nextBus1.minutesUntil}分後</span>
-                        ${isUrgent ? '<p style="margin:5px 0;font-size:0.9rem;">まもなく到着します！</p>' : ''}
+                        <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus1.time}</div>
+                        <span class="${countdownClass}"><i class="fas fa-hourglass-half"></i> ${nextBus1.minutesUntil}分後</span>
+                        ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
                     `;
 
                     // 今後のバス時刻を表示
@@ -467,7 +768,7 @@
             // Type 2のバスがデータに存在するか確認
             if (type2Buses.length === 0) {
                 console.log('Type 2のバスデータが見つかりません。「本日の運行は終了しました」を表示します。');
-                nextBus2Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                nextBus2Element.innerHTML = '<div class="no-more-buses"><i class="fas fa-ban"></i> 本日の運行は終了しました</div>';
                 schedule2Element.innerHTML = '';
             } else {
                 const nextBus2 = getNextBus(2);
@@ -479,9 +780,9 @@
                     const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
 
                     nextBus2Element.innerHTML = `
-                        次のバス: ${nextBus2.time}<br>
-                        <span class="${countdownClass}">${nextBus2.minutesUntil}分後</span>
-                        ${isUrgent ? '<p style="margin:5px 0;font-size:0.9rem;">まもなく到着します！</p>' : ''}
+                        <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus2.time}</div>
+                        <span class="${countdownClass}"><i class="fas fa-hourglass-half"></i> ${nextBus2.minutesUntil}分後</span>
+                        ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
                     `;
 
                     // 今後のバス時刻を表示
@@ -517,12 +818,19 @@
 
             // 今後のバス時刻を表示
             if (upcomingBuses.length > 0) {
-                scheduleElement.innerHTML = '<div>今後の発車時刻:</div>';
+                scheduleElement.innerHTML = '<div style="margin-bottom:10px;font-weight:500;color:var(--primary-dark);"><i class="fas fa-list-ul"></i> 今後の発車時刻:</div>';
 
                 upcomingBuses.forEach(bus => {
                     const busTimeElement = document.createElement('div');
                     busTimeElement.className = 'bus-time';
-                    busTimeElement.textContent = bus.departureTime;
+
+                    // アイコンを追加
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-bus';
+                    icon.style.marginRight = '5px';
+
+                    busTimeElement.appendChild(icon);
+                    busTimeElement.appendChild(document.createTextNode(bus.departureTime));
                     scheduleElement.appendChild(busTimeElement);
                 });
             }
@@ -556,7 +864,38 @@
             updateCurrentTime();
             updateSelectedBusStopUI();
             loadBusData();
+            initThemeToggle();
         });
+
+        // ダークモード切り替え機能
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+
+            // ローカルストレージからテーマ設定を取得
+            const savedTheme = localStorage.getItem('busAppTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            // テーマ切り替えボタンのクリックイベント
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+
+                // アイコンを切り替え
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('busAppTheme', 'dark');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('busAppTheme', 'light');
+                }
+            });
+        }
     </script>
 </body>
 </html>
