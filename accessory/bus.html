@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シャトルバス時刻表</title>
+    <meta name="description" content="崇城大学シャトルバス時刻表 - バス停を選択して時刻を確認できます">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 100%;
+            padding: 20px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        .bus-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .bus-type {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .next-bus {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+        }
+        .countdown {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .bus-schedule {
+            margin-top: 10px;
+        }
+        .bus-time {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        .current-time {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 10px;
+        }
+        .no-more-buses {
+            text-align: center;
+            padding: 10px;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+        .back-button {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #3498db;
+        }
+        .retry-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        .retry-button:hover {
+            background-color: #2980b9;
+        }
+        /* バス時刻が近い場合の強調表示 */
+        .urgent {
+            color: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        /* バス停リンクのスタイル */
+        .bus-stop-link {
+            display: inline-block;
+            margin: 3px;
+            padding: 3px 8px;
+            text-decoration: none;
+            color: #3498db;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        .bus-stop-link:hover {
+            background-color: #f0f8ff;
+        }
+        .bus-stop-link.active {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>シャトルバス時刻表</h1>
+
+        <div class="current-time" id="currentTime">
+            現在時刻: 読み込み中...
+        </div>
+
+        <div id="busStopSelector" style="text-align: center; margin-bottom: 20px;">
+            <div style="margin-bottom: 10px; font-weight: bold;">
+                <span id="selectedBusStopName">バス停を選択してください</span>
+            </div>
+            <div>
+                <a href="?stop=1" class="bus-stop-link">県立体育館前</a> |
+                <a href="?stop=2" class="bus-stop-link">上熊本駅</a> |
+                <a href="?stop=3" class="bus-stop-link">県営団地バス停前</a> |
+                <a href="?stop=4" class="bus-stop-link">シャンテSOJO</a> |
+                <a href="?stop=5" class="bus-stop-link">崇城大学食堂前</a> |
+                <a href="?stop=6" class="bus-stop-link">崇城大学前駅</a> |
+                <a href="?stop=7" class="bus-stop-link">薬学部</a> |
+                <a href="?stop=8" class="bus-stop-link">芸術学部</a> |
+                <a href="?stop=9" class="bus-stop-link">硯川校舎</a>
+            </div>
+        </div>
+
+        <div class="bus-info">
+            <div class="bus-type">芸術学部・薬学部方面 (Type 1)</div>
+            <div id="nextBus1" class="next-bus">
+                <div class="loading">バス情報を読み込み中...</div>
+            </div>
+            <div id="schedule1" class="bus-schedule"></div>
+        </div>
+
+        <div class="bus-info">
+            <div class="bus-type">上熊本駅方面 (Type 2)</div>
+            <div id="nextBus2" class="next-bus">
+                <div class="loading">バス情報を読み込み中...</div>
+            </div>
+            <div id="schedule2" class="bus-schedule"></div>
+        </div>
+
+        <a href="../index.html" class="back-button">トップページに戻る</a>
+    </div>
+
+    <script>
+        // バスデータを格納する配列
+        let busData = [];
+
+        // バス停の名前と対応する列インデックスのマッピング
+        const busStopMapping = {
+            1: { name: "県立体育館前", columnIndex: 1 },
+            2: { name: "上熊本駅", columnIndex: 2 },
+            3: { name: "県営団地バス停前", columnIndex: 3 },
+            4: { name: "シャンテSOJO", columnIndex: 4 },
+            5: { name: "崇城大学食堂前", columnIndex: 5 },
+            6: { name: "崇城大学前駅", columnIndex: 6 },
+            7: { name: "薬学部", columnIndex: 7 },
+            8: { name: "芸術学部", columnIndex: 8 },
+            9: { name: "硯川校舎", columnIndex: 9 }
+        };
+
+        // URLパラメータから選択されたバス停を取得
+        function getSelectedBusStop() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const stopParam = urlParams.get('stop');
+
+            // stopパラメータが存在し、有効な値（1-9）であれば、その値を返す
+            if (stopParam && /^[1-9]$/.test(stopParam)) {
+                return parseInt(stopParam);
+            }
+
+            // デフォルトでは、Type 1は県立体育館前（1）、Type 2は上熊本駅（2）を使用
+            return null;
+        }
+
+        // 選択されたバス停
+        const selectedBusStop = getSelectedBusStop();
+
+        // 現在時刻を表示する関数
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('currentTime').textContent = 
+                `現在時刻: ${hours}:${minutes}:${seconds}`;
+        }
+
+        // CSVファイルを読み込む関数
+        async function loadBusData() {
+            try {
+                const response = await fetch('./Busdata/busN.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.text();
+
+                // CSVデータを解析
+                const rows = data.split('\n');
+                if (rows.length <= 1) {
+                    throw new Error('CSVデータが空か、正しく読み込めませんでした');
+                }
+
+                // ヘッダー行を確認 (エンコーディングの問題があっても処理を続行)
+                const headerRow = rows[0].split(',');
+                // タイプは最後の列と仮定するが、列数が不足している場合に備えて安全に処理
+                const typeColumnIndex = Math.max(headerRow.length - 1, 0);
+
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i].trim() === '') continue;
+
+                    const columns = rows[i].split(',');
+                    // 少なくともバス番号と時刻があれば処理を続行
+                    if (columns.length < 2) continue;
+
+                    try {
+                        // タイプ情報を取得 (最後の列または指定された列)
+                        let busType;
+                        // 最後の列を優先的にチェック
+                        if (columns.length > 0 && columns[columns.length - 1].trim() !== '') {
+                            const lastColumn = columns[columns.length - 1].trim();
+                            if (/^[12]$/.test(lastColumn)) {
+                                busType = parseInt(lastColumn);
+                            } else if (columns.length > typeColumnIndex && typeColumnIndex >= 0) {
+                                // 指定された列をチェック
+                                busType = parseInt(columns[typeColumnIndex]);
+                            } else {
+                                busType = 1; // デフォルト値
+                            }
+                        } else if (columns.length > typeColumnIndex && typeColumnIndex >= 0) {
+                            busType = parseInt(columns[typeColumnIndex]);
+                        } else {
+                            busType = 1; // デフォルト値
+                        }
+
+                        // 時刻フォーマットを確認して修正
+                        // CSVのカラムはBusnumber,県立体育館前,上熊本駅,県営団地バス停前,シャンテSOJO,崇城大学食堂前,崇城大学前駅,薬学部,芸術学部,硯川校舎,type
+                        let departureTime;
+
+                        // URLパラメータで指定されたバス停がある場合はそのカラムを使用
+                        if (selectedBusStop && busStopMapping[selectedBusStop]) {
+                            const columnIndex = busStopMapping[selectedBusStop].columnIndex;
+                            departureTime = columns[columnIndex];
+                        } else {
+                            // 指定がない場合はデフォルト: Type 1は県立体育館前、Type 2は上熊本駅
+                            if (busType === 1) {
+                                // Type 1 (芸術学部・薬学部方面) は県立体育館前の時刻を使用
+                                departureTime = columns[1];
+                            } else {
+                                // Type 2 (上熊本駅方面) は上熊本駅の時刻を使用
+                                departureTime = columns[2];
+                            }
+                        }
+                        if (!departureTime || departureTime.trim() === '') {
+                            // 時刻データが空の場合はスキップ
+                            continue;
+                        }
+
+                        // HH:MMフォーマットでない場合は変換
+                        if (!departureTime.includes(':')) {
+                            // 時刻が "HH時MM分" のような形式の場合
+                            if (departureTime.includes('時') && departureTime.includes('分')) {
+                                const timeParts = departureTime.split(/[時分]/);
+                                if (timeParts.length >= 2) {
+                                    const hours = timeParts[0].padStart(2, '0');
+                                    const minutes = timeParts[1].padStart(2, '0');
+                                    departureTime = `${hours}:${minutes}`;
+                                }
+                            } 
+                            // 時刻が "HHMM" のような形式の場合
+                            else if (departureTime.length >= 4) {
+                                const hours = departureTime.substring(0, 2);
+                                const minutes = departureTime.substring(2, 4);
+                                departureTime = `${hours}:${minutes}`;
+                            }
+                        }
+
+                        // バス情報を格納
+                        busData.push({
+                            busNumber: columns[0],
+                            departureTime: departureTime,
+                            type: busType
+                        });
+                    } catch (parseError) {
+                        console.error(`行 ${i} の解析中にエラーが発生しました:`, parseError);
+                        // エラーがあっても処理を続行
+                    }
+                }
+
+                // バスデータが取得できたか確認
+                if (busData.length === 0) {
+                    throw new Error('有効なバスデータが見つかりませんでした');
+                }
+
+                // デバッグ情報を出力
+                console.log(`読み込まれたバスデータ: ${busData.length}件`);
+                console.log(`Type 1のバス: ${busData.filter(bus => parseInt(bus.type) === 1).length}件`);
+                console.log(`Type 2のバス: ${busData.filter(bus => parseInt(bus.type) === 2).length}件`);
+
+                // バスデータを時刻順にソート
+                busData.sort((a, b) => {
+                    // 時刻を比較用の数値に変換 (HH:MM → HHMM)
+                    const timeA = a.departureTime.replace(':', '');
+                    const timeB = b.departureTime.replace(':', '');
+                    return timeA - timeB;
+                });
+
+                // バス情報を表示
+                updateBusInfo();
+
+                // 1分ごとに情報を更新
+                setInterval(updateBusInfo, 60000);
+
+                // 1秒ごとに現在時刻を更新
+                setInterval(updateCurrentTime, 1000);
+
+            } catch (error) {
+                console.error('バスデータの読み込みに失敗しました:', error);
+                const errorMessage = error.message || 'データの読み込みに失敗しました。';
+                const errorHTML = `
+                    <div class="error">
+                        <p>バス情報の取得に問題が発生しました。</p>
+                        <p>${errorMessage}</p>
+                        <p>しばらくしてからもう一度お試しください。</p>
+                        <button onclick="location.reload()" class="retry-button">再読み込み</button>
+                    </div>
+                `;
+                document.getElementById('nextBus1').innerHTML = errorHTML;
+                document.getElementById('nextBus2').innerHTML = errorHTML;
+            }
+        }
+
+        // 次のバスまでの時間を計算する関数
+        function getNextBus(type) {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+
+            // デバッグ情報
+            console.log(`現在時刻: ${currentHours}:${currentMinutes} (${currentTimeInMinutes}分)`);
+
+            // 指定されたタイプのバスをフィルタリング
+            const typeBuses = busData.filter(bus => parseInt(bus.type) === type);
+            console.log(`Type ${type}のバス: ${typeBuses.length}件`);
+
+            // バスの時刻をデバッグ出力
+            if (typeBuses.length > 0) {
+                console.log(`Type ${type}のバス時刻:`);
+                typeBuses.forEach(bus => {
+                    const [hours, minutes] = bus.departureTime.split(':').map(Number);
+                    const busTimeInMinutes = hours * 60 + minutes;
+                    console.log(`  ${bus.departureTime} (${busTimeInMinutes}分) - 現在時刻との差: ${busTimeInMinutes - currentTimeInMinutes}分`);
+                });
+            }
+
+            // 今日の残りのバスを探す
+            for (const bus of typeBuses) {
+                const [hours, minutes] = bus.departureTime.split(':').map(Number);
+                const busTimeInMinutes = hours * 60 + minutes;
+
+                if (busTimeInMinutes > currentTimeInMinutes) {
+                    const minutesUntil = busTimeInMinutes - currentTimeInMinutes;
+                    console.log(`次のType ${type}バス: ${bus.departureTime}, ${minutesUntil}分後`);
+                    return {
+                        time: bus.departureTime,
+                        minutesUntil: minutesUntil
+                    };
+                }
+            }
+
+            // 今日の残りのバスがない場合
+            console.log(`Type ${type}の残りのバスはありません。本日の運行は終了しました。`);
+            return null;
+        }
+
+        // バス情報を更新する関数
+        function updateBusInfo() {
+            updateCurrentTime();
+            console.log('バス情報を更新しています...');
+
+            // 選択されたバス停の情報をコンソールに出力（デバッグ用）
+            if (selectedBusStop && busStopMapping[selectedBusStop]) {
+                console.log(`選択されたバス停: ${busStopMapping[selectedBusStop].name} (列インデックス: ${busStopMapping[selectedBusStop].columnIndex})`);
+            } else {
+                console.log('バス停が選択されていません。デフォルト設定を使用します。');
+            }
+
+            // Type 1 (芸術学部・薬学部方面)
+            console.log('Type 1 (芸術学部・薬学部方面) の次のバスを取得中...');
+            const type1Buses = busData.filter(bus => parseInt(bus.type) === 1);
+            const nextBus1Element = document.getElementById('nextBus1');
+            const schedule1Element = document.getElementById('schedule1');
+
+            // Type 1のバスがデータに存在するか確認
+            if (type1Buses.length === 0) {
+                console.log('Type 1のバスデータが見つかりません。「本日の運行は終了しました」を表示します。');
+                nextBus1Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                schedule1Element.innerHTML = '';
+            } else {
+                const nextBus1 = getNextBus(1);
+
+                if (nextBus1) {
+                    console.log(`Type 1の次のバスが見つかりました: ${nextBus1.time}, ${nextBus1.minutesUntil}分後`);
+                    // バスが10分以内に来る場合は緊急表示
+                    const isUrgent = nextBus1.minutesUntil <= 10;
+                    const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+
+                    nextBus1Element.innerHTML = `
+                        次のバス: ${nextBus1.time}<br>
+                        <span class="${countdownClass}">${nextBus1.minutesUntil}分後</span>
+                        ${isUrgent ? '<p style="margin:5px 0;font-size:0.9rem;">まもなく到着します！</p>' : ''}
+                    `;
+
+                    // 今後のバス時刻を表示
+                    updateSchedule(1, schedule1Element);
+                } else {
+                    console.log('Type 1の残りのバスはありません。「本日の運行は終了しました」を表示します。');
+                    nextBus1Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                    schedule1Element.innerHTML = '';
+                }
+            }
+
+            // Type 2 (上熊本駅方面)
+            console.log('Type 2 (上熊本駅方面) の次のバスを取得中...');
+            const type2Buses = busData.filter(bus => parseInt(bus.type) === 2);
+            const nextBus2Element = document.getElementById('nextBus2');
+            const schedule2Element = document.getElementById('schedule2');
+
+            // Type 2のバスがデータに存在するか確認
+            if (type2Buses.length === 0) {
+                console.log('Type 2のバスデータが見つかりません。「本日の運行は終了しました」を表示します。');
+                nextBus2Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                schedule2Element.innerHTML = '';
+            } else {
+                const nextBus2 = getNextBus(2);
+
+                if (nextBus2) {
+                    console.log(`Type 2の次のバスが見つかりました: ${nextBus2.time}, ${nextBus2.minutesUntil}分後`);
+                    // バスが10分以内に来る場合は緊急表示
+                    const isUrgent = nextBus2.minutesUntil <= 10;
+                    const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+
+                    nextBus2Element.innerHTML = `
+                        次のバス: ${nextBus2.time}<br>
+                        <span class="${countdownClass}">${nextBus2.minutesUntil}分後</span>
+                        ${isUrgent ? '<p style="margin:5px 0;font-size:0.9rem;">まもなく到着します！</p>' : ''}
+                    `;
+
+                    // 今後のバス時刻を表示
+                    updateSchedule(2, schedule2Element);
+                } else {
+                    console.log('Type 2の残りのバスはありません。「本日の運行は終了しました」を表示します。');
+                    nextBus2Element.innerHTML = '<div class="no-more-buses">本日の運行は終了しました</div>';
+                    schedule2Element.innerHTML = '';
+                }
+            }
+        }
+
+        // 今後のバス時刻を表示する関数
+        function updateSchedule(type, scheduleElement) {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+
+            // 指定されたタイプの今後のバスを最大5件取得
+            const upcomingBuses = busData
+                .filter(bus => {
+                    if (parseInt(bus.type) !== type) return false;
+
+                    const [hours, minutes] = bus.departureTime.split(':').map(Number);
+                    const busTimeInMinutes = hours * 60 + minutes;
+                    return busTimeInMinutes > currentTimeInMinutes;
+                })
+                .slice(0, 5);
+
+            // スケジュール表示をクリア
+            scheduleElement.innerHTML = '';
+
+            // 今後のバス時刻を表示
+            if (upcomingBuses.length > 0) {
+                scheduleElement.innerHTML = '<div>今後の発車時刻:</div>';
+
+                upcomingBuses.forEach(bus => {
+                    const busTimeElement = document.createElement('div');
+                    busTimeElement.className = 'bus-time';
+                    busTimeElement.textContent = bus.departureTime;
+                    scheduleElement.appendChild(busTimeElement);
+                });
+            }
+        }
+
+        // 選択されたバス停の表示を更新する関数
+        function updateSelectedBusStopUI() {
+            const selectedBusStopElement = document.getElementById('selectedBusStopName');
+            const busStopLinks = document.querySelectorAll('.bus-stop-link');
+
+            // 選択されたバス停がある場合
+            if (selectedBusStop && busStopMapping[selectedBusStop]) {
+                selectedBusStopElement.textContent = `選択中のバス停: ${busStopMapping[selectedBusStop].name}`;
+
+                // 選択されたバス停のリンクをハイライト
+                busStopLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href === `?stop=${selectedBusStop}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            } else {
+                selectedBusStopElement.textContent = "デフォルト表示: Type 1は県立体育館前、Type 2は上熊本駅";
+            }
+        }
+
+        // ページ読み込み時にバスデータを取得
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCurrentTime();
+            updateSelectedBusStopUI();
+            loadBusData();
+        });
+    </script>
+</body>
+</html>
