@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://soda3dart.github.io/Soda3DARTWebHP/sitemap.xml
+
+# Disallow access to temp directory
+Disallow: /temp/
