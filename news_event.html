@@ -477,37 +477,31 @@
         const newsData = [
             {
                 id: 1,
-                date: '2025年4月1日',
-                title: '2025年度入学式が行われました',
-                excerpt: '4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。',
-                content: `<p>4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。</p>
-                <p>今年度は20名の新入生が3Dアートコースに入学しました。入学式では学長の挨拶に続き、各コースの紹介が行われ、新入生たちは熱心に聞き入っていました。</p>
-                <p>入学式後には、3Dアートコースの施設見学とオリエンテーションが行われ、先輩学生たちによる作品紹介や、教員からのメッセージが伝えられました。</p>
-                <p>新入生の皆さんの今後の活躍に期待しています。</p>`,
-                image: '/api/placeholder/600/400',
+                date: '2025年5月2日',
+                title: 'コースオリエンテーションが開催されました。',
+                excerpt: '',
+                content: `<p></p>`,
+                image: 'images/newsorien.png',
                 fullArticle: null
             },
             {
                 id: 2,
-                date: '2025年3月20日',
-                title: '卒業制作展を開催しました',
-                excerpt: '3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。',
-                content: `<p>3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。</p>
-                <p>今年度の卒業制作展では、3DCGアニメーション、VRインスタレーション、3Dプリントによる造形作品など、多様な作品が展示されました。</p>
-                <p>特に注目を集めたのは、AIを活用した対話型インスタレーション作品で、来場者との対話を通じて形を変える3D作品が好評でした。</p>
-                <p>卒業生たちの新たな門出を祝うとともに、今後の活躍を期待しています。</p>`,
-                image: '/api/placeholder/600/400',
+                date: '2025年5月2日',
+                title: 'ウェブページがリニューアルしました。',
+                excerpt: '',
+                content: `<p>3Dアートコースのウェブサイトがリニューアルしました。</p>
+                <p>フィジカルとデジタルが融合するコースとして学生作品のギャラリーページなどを一新、より多くの人に立体造形の魅力が伝えられるようにコース一同頑張っていきます。</p>
+                <p>ページ内で特殊なコマンドを入力すると遊べるゲームも用意されています！</p>>`,
+                image: 'images/logo.png',
                 fullArticle: null
             },
             {
                 id: 3,
-                date: '2025年2月15日',
-                title: '業界セミナーを実施しました',
-                excerpt: 'ゲーム業界の最前線で活躍するクリエイターをお招きして、最新技術トレンドに関するセミナーを開催しました。',
-                content: `<p>ゲーム業界の最前線で活躍するクリエイターをお招きして、最新技術トレンドに関するセミナーを開催しました。</p>
-                <p>今回のセミナーでは、大手ゲーム会社のアートディレクターとテクニカルアーティストをゲストスピーカーとしてお招きし、最新のゲームエンジンを活用したアート制作のワークフローや、リアルタイムレンダリング技術の進化について講演いただきました。</p>
-                <p>学生たちは熱心に聞き入り、質疑応答では活発な議論が交わされました。実際の業界で求められるスキルや知識について理解を深める貴重な機会となりました。</p>`,
-                image: '/api/placeholder/600/400',
+                date: '2025年4月6日',
+                title: '2025年度入学式が行われました',
+                excerpt: '2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています',
+                content: `<p>新たな新入生を迎え、コースでは創立以来ついに４学年がそろいました。</p><p>新入生歓迎会などのコース内イベントも学生を中心に企画されています。</p>`,
+                image: 'images/logo.png',
                 fullArticle: null
             }
         ];
@@ -569,8 +563,71 @@
             });
         }
 
-        // ページ読み込み時にニュース記事を生成
-        document.addEventListener('DOMContentLoaded', renderNewsItems);
+        // ローカルストレージの最終更新時間を保存するキー
+        const NEWS_LAST_UPDATED_KEY = 'newsLastUpdated';
+
+        // ページ読み込み時にローカルストレージからニュース記事を読み込む
+        function loadStoredNewsArticles() {
+            const storedNews = localStorage.getItem('newsArticles');
+            if (storedNews) {
+                const newsArticles = JSON.parse(storedNews);
+
+                // 既存のニュースデータをクリアして新しいデータで置き換える
+                newsData.length = 0;
+                newsData.push(...newsArticles);
+
+                // 組み込みのニュースデータを追加（重複を避けるため、IDをチェック）
+                const existingIds = newsData.map(news => news.id);
+                const defaultNews = getDefaultNewsData();
+                defaultNews.forEach(news => {
+                    if (!existingIds.includes(news.id)) {
+                        newsData.push(news);
+                    }
+                });
+
+                // 最終更新時間を記録
+                localStorage.setItem(NEWS_LAST_UPDATED_KEY, Date.now().toString());
+            }
+        }
+
+        // デフォルトのニュースデータを取得する関数
+        function getDefaultNewsData() {
+            return [
+                {
+                    id: 1,
+                    date: '2025年4月1日',
+                    title: '2025年度入学式が行われました',
+                    excerpt: '4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。',
+                    content: `<p>4月1日に2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています。</p>
+                    <p>今年度は20名の新入生が3Dアートコースに入学しました。入学式では学長の挨拶に続き、各コースの紹介が行われ、新入生たちは熱心に聞き入っていました。</p>
+                    <p>入学式後には、3Dアートコースの施設見学とオリエンテーションが行われ、先輩学生たちによる作品紹介や、教員からのメッセージが伝えられました。</p>
+                    <p>新入生の皆さんの今後の活躍に期待しています。</p>`,
+                    image: 'images/logo.png',
+                    fullArticle: null
+                },
+                {
+                    id: 2,
+                    date: '2025年5月1日',
+                    title: '卒業制作展を開催しました',
+                    excerpt: '3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。',
+                    content: `<p>3月15日から20日まで、3Dアートコース卒業生による卒業制作展が開催されました。多くの来場者に恵まれ、盛況のうちに終了しました。</p>
+                    <p>今年度の卒業制作展では、3DCGアニメーション、VRインスタレーション、3Dプリントによる造形作品など、多様な作品が展示されました。</p>
+                    <p>特に注目を集めたのは、AIを活用した対話型インスタレーション作品で、来場者との対話を通じて形を変える3D作品が好評でした。</p>
+                    <p>卒業生たちの新たな門出を祝うとともに、今後の活躍を期待しています。</p>`,
+                    image: 'images/logo.png',
+                    fullArticle: null
+                },
+                {
+                    id: 3,
+                    date: '2025年4月6日',
+                    title: '2025年度入学式が行われました',
+                    excerpt: '2025年度入学式が行われ、新入生たちが3Dアートコースに加わりました。これから始まる創造的な学びの旅にワクワクしています',
+                    content: `<p>新たな新入生を迎え、コースでは創立以来ついに４学年がそろいました。</p><p>新入生歓迎会などのコース内イベントも学生を中心に企画されています。</p>`,
+                    image: 'images/logo.png',
+                    fullArticle: null
+                }
+            ];
+        }
 
         // 新しいニュース記事を追加する関数（newsblogTemplate.htmlからエクスポートされたHTMLを統合するために使用）
         function addNewsArticle(newsData) {
@@ -578,27 +635,63 @@
             let storedNews = localStorage.getItem('newsArticles');
             let newsArticles = storedNews ? JSON.parse(storedNews) : [];
 
+            // 新しいニュース記事のIDを設定（既存の最大ID + 1）
+            const maxId = newsArticles.length > 0 ? Math.max(...newsArticles.map(news => news.id)) : 0;
+            newsData.id = maxId + 1;
+
             // 新しいニュース記事を追加
             newsArticles.unshift(newsData);
 
             // ローカルストレージに保存
             localStorage.setItem('newsArticles', JSON.stringify(newsArticles));
 
-            // ページをリロード
-            location.reload();
+            // 最終更新時間を更新（少し遅延させて確実に変更を検知させる）
+            setTimeout(() => {
+                localStorage.setItem(NEWS_LAST_UPDATED_KEY, Date.now().toString());
+
+                // ページをリロード
+                location.reload();
+            }, 100);
         }
 
-        // ページ読み込み時にローカルストレージからニュース記事を読み込む
-        function loadStoredNewsArticles() {
-            const storedNews = localStorage.getItem('newsArticles');
-            if (storedNews) {
-                const newsArticles = JSON.parse(storedNews);
-                newsData.unshift(...newsArticles);
+        // 最後にチェックした更新時間
+        let lastCheckedUpdate = '';
+
+        // ローカルストレージの変更を監視して、ニュース記事を更新する関数
+        function checkForNewsUpdates() {
+            const currentLastUpdated = localStorage.getItem(NEWS_LAST_UPDATED_KEY);
+
+            // 初回実行時は現在の値を記録するだけ
+            if (lastCheckedUpdate === '') {
+                lastCheckedUpdate = currentLastUpdated;
+                return;
+            }
+
+            // ローカルストレージの最終更新時間が変わっていれば、ニュース記事を再読み込み
+            if (lastCheckedUpdate !== currentLastUpdated) {
+                console.log('News update detected, refreshing news items');
+                loadStoredNewsArticles();
+                renderNewsItems();
+                lastCheckedUpdate = currentLastUpdated;
             }
         }
 
-        // ページ読み込み時に保存されたニュース記事を読み込む
-        loadStoredNewsArticles();
+        // ストレージイベントリスナーを設定（他のタブでの変更を検知）
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'newsArticles' || e.key === NEWS_LAST_UPDATED_KEY) {
+                loadStoredNewsArticles();
+                renderNewsItems();
+            }
+        });
+
+        // ページ読み込み時に保存されたニュース記事を読み込んでから、ニュース記事を生成
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStoredNewsArticles();
+            renderNewsItems();
+
+            // 定期的にニュース更新をチェック（5秒ごと）
+            setInterval(checkForNewsUpdates, 5000);
+        });
     </script>
     <!-- Logo Transition Animation -->
     <script src="js/logoTransition.js"></script>
