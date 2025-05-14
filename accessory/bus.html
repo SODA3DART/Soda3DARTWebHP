@@ -713,6 +713,23 @@
             return null;
         }
 
+        // 日曜日または祝日かどうかをチェックする関数
+        function isSundayOrHoliday() {
+            const now = new Date();
+            const dayOfWeek = now.getDay();
+
+            // 0は日曜日
+            if (dayOfWeek === 0) {
+                console.log('今日は日曜日です。バスは運行していません。');
+                return true;
+            }
+
+            // 祝日のチェックはここに追加できます
+            // 現在は日曜日のみをチェックしています
+
+            return false;
+        }
+
         // バス情報を更新する関数
         function updateBusInfo() {
             updateCurrentTime();
@@ -723,6 +740,21 @@
                 console.log(`選択されたバス停: ${busStopMapping[selectedBusStop].name} (列インデックス: ${busStopMapping[selectedBusStop].columnIndex})`);
             } else {
                 console.log('バス停が選択されていません。デフォルト設定を使用します。');
+            }
+
+            // 日曜日または祝日の場合は運行終了メッセージを表示
+            if (isSundayOrHoliday()) {
+                const nextBus1Element = document.getElementById('nextBus1');
+                const schedule1Element = document.getElementById('schedule1');
+                const nextBus2Element = document.getElementById('nextBus2');
+                const schedule2Element = document.getElementById('schedule2');
+
+                nextBus1Element.innerHTML = '<div class="no-more-buses"><i class="fas fa-ban"></i> 本日の運行は終了しました</div>';
+                schedule1Element.innerHTML = '';
+                nextBus2Element.innerHTML = '<div class="no-more-buses"><i class="fas fa-ban"></i> 本日の運行は終了しました</div>';
+                schedule2Element.innerHTML = '';
+
+                return; // 日曜日または祝日の場合は処理を終了
             }
 
             // Type 1 (芸術学部・薬学部方面)
@@ -860,12 +892,50 @@
             }
         }
 
+        // アクセスカウンターの機能
+        function trackPageVisit() {
+            const today = new Date().toLocaleDateString('ja-JP');
+            const storageKey = 'busPageVisits';
+
+            // ローカルストレージからアクセス記録を取得
+            let visits = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+            // 今日の日付のアクセス数を更新
+            if (!visits[today]) {
+                visits[today] = 0;
+            }
+            visits[today]++;
+
+            // ローカルストレージに保存
+            localStorage.setItem(storageKey, JSON.stringify(visits));
+
+            // コンソールにのみ表示（ページには表示しない）
+            console.log(`%c【アクセス統計】%c本日 (${today}) のアクセス数: ${visits[today]}回`, 
+                'color: #1a73e8; font-weight: bold; font-size: 14px;', 
+                'color: #202124; font-size: 14px;');
+
+            // 過去7日間のアクセス履歴も表示
+            console.log('%c【過去のアクセス履歴】', 'color: #1a73e8; font-weight: bold; font-size: 14px;');
+
+            const dates = Object.keys(visits).sort((a, b) => {
+                return new Date(b) - new Date(a);
+            });
+
+            // 最新の7日間のみ表示
+            dates.slice(0, 7).forEach(date => {
+                console.log(`%c${date}: %c${visits[date]}回`, 
+                    'color: #5f6368; font-size: 12px;', 
+                    'color: #202124; font-weight: bold; font-size: 12px;');
+            });
+        }
+
         // ページ読み込み時にバスデータを取得
         window.addEventListener('DOMContentLoaded', () => {
             updateCurrentTime();
             updateSelectedBusStopUI();
             loadBusData();
             initThemeToggle();
+            trackPageVisit(); // アクセスカウンターを実行
         });
 
         // ダークモード切り替え機能

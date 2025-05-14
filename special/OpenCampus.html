@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オープンキャンパス - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <link rel="icon" href="../images/logohedder.png" type="image/png">
+    <meta name="description" content="崇城大学芸術学部美術学科3Dアートコースのオープンキャンパス情報。3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを体験できます。最新技術と芸術を融合した教育で未来のクリエイターを育成します。">
+    <link rel="canonical" href="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">
+    <meta property="og:title" content="オープンキャンパス - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="og:description" content="崇城大学芸術学部美術学科3Dアートコースのオープンキャンパス情報。3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを体験できます。">
+    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">
+    <meta property="twitter:title" content="オープンキャンパス - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="twitter:description" content="崇城大学芸術学部美術学科3Dアートコースのオープンキャンパス情報。3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを体験できます。">
+    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        /* 言語切り替えボタンのスタイル */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        /* ナビゲーション内の言語切り替えボタン用のスタイル */
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .language-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+            animation: fadeInOut 15s infinite;
+        }
+
+        .hero-bg:nth-child(1) {
+            background-image: url('../images/TopImage/topimage1.png');
+            animation-delay: 0s;
+        }
+
+        .hero-bg:nth-child(2) {
+            background-image: url('../images/TopImage/topimage2.png');
+            opacity: 0;
+            animation-delay: 5s;
+        }
+
+        .hero-bg:nth-child(3) {
+            background-image: url('../images/TopImage/topimage3.png');
+            opacity: 0;
+            animation-delay: 10s;
+        }
+
+        @keyframes fadeInOut {
+            0%, 45%, 100% { opacity: 0; }
+            10%, 35% { opacity: 0.7; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+            animation: fadeInUp 1s ease-out 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .hero-date {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #4285f4;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1s ease-out 0.6s;
+            animation-fill-mode: both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeInUp 1s ease-out 0.9s;
+            animation-fill-mode: both;
+        }
+
+        .hero-btn {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hero-btn:hover {
+            background-color: #3367d6;
+            box-shadow: 0 0 30px rgba(66, 133, 244, 0.8);
+            transform: scale(1.05);
+        }
+
+        .hero-btn.secondary {
+            background-color: transparent;
+            border: 2px solid #fff;
+        }
+
+        .hero-btn.secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-down i {
+            font-size: 2rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* セクションスタイル */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 15px;
+            color: #333;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #4285f4;
+        }
+
+        /* スケジュールカードのスタイル */
+        .schedule-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .schedule-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+            max-width: 550px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.2);
+        }
+
+        .schedule-date {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .schedule-date .month {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .schedule-date .day {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            margin: 5px 0;
+        }
+
+        .schedule-date .year {
+            font-size: 1.2rem;
+        }
+
+        .schedule-content {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .schedule-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .schedule-time {
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .schedule-highlights {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .schedule-highlights li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .schedule-highlights li i {
+            color: #4285f4;
+            margin-right: 10px;
+        }
+
+        .schedule-btn {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+
+        /* 体験コンテンツのスタイル */
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .experience-card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.15);
+        }
+
+        .experience-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #4285f4;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .experience-icon i {
+            font-size: 2rem;
+        }
+
+        .experience-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .experience-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* コース紹介のスタイル */
+        .course-features {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .feature-card {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .feature-image {
+            width: 40%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .feature-content {
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        .feature-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-content h3 i {
+            color: #4285f4;
+            margin-right: 10px;
+        }
+
+        .feature-content p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .course-cta {
+            text-align: center;
+            background-color: #f0f4f8;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+
+        .course-cta h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+
+        /* インタラクティブセクションのスタイル */
+        .interactive-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .interactive-text {
+            flex: 1;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .interactive-hint {
+            margin-top: 20px;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .interactive-canvas {
+            flex: 1;
+            height: 400px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* 参加申し込みセクションのスタイル */
+        .registration-container {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .registration-info {
+            flex: 1;
+        }
+
+        .registration-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .benefits-list li i {
+            color: #4285f4;
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .registration-note {
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .registration-note p {
+            margin-bottom: 10px;
+        }
+
+        .registration-note p:last-child {
+            margin-bottom: 0;
+        }
+
+        .registration-note i {
+            color: #4285f4;
+            margin-right: 10px;
+        }
+
+        .registration-form {
+            flex: 1;
+            text-align: center;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .registration-form p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .registration-btn {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .registration-btn:hover {
+            background-color: #3367d6;
+            box-shadow: 0 0 30px rgba(66, 133, 244, 0.5);
+            transform: scale(1.05);
+        }
+
+        .form-note {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* フッター部分 */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-text span {
+                font-size: 12px;
+            }
+
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+
+            nav.active {
+                transform: translateY(0);
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-date {
+                font-size: 1.8rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            /* モバイル用スケジュールカードスタイル */
+            .schedule-card {
+                flex-direction: column;
+                max-width: 100%;
+            }
+
+            .schedule-date {
+                width: 100%;
+                min-width: auto;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .schedule-date .month,
+            .schedule-date .day,
+            .schedule-date .year {
+                margin: 0;
+            }
+
+            /* モバイル用体験コンテンツスタイル */
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* モバイル用コース紹介スタイル */
+            .feature-card,
+            .feature-card.reverse {
+                flex-direction: column;
+            }
+
+            .feature-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            /* モバイル用インタラクティブセクションスタイル */
+            .interactive-container {
+                flex-direction: column;
+            }
+
+            .interactive-canvas {
+                height: 300px;
+                width: 100%;
+            }
+
+            /* モバイル用参加申し込みセクションスタイル */
+            .registration-container {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .registration-info,
+            .registration-form {
+                width: 100%;
+            }
+
+            .benefits-list li {
+                font-size: 1rem;
+            }
+        }
+
+        /* 小さいモバイル画面用 */
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-date {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+            }
+
+            .schedule-content h3 {
+                font-size: 1.3rem;
+            }
+
+            .experience-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .experience-icon i {
+                font-size: 1.5rem;
+            }
+
+            .feature-content h3 {
+                font-size: 1.3rem;
+            }
+
+            .course-cta h3 {
+                font-size: 1.3rem;
+            }
+
+            .registration-btn,
+            .cta-btn,
+            .hero-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ヘッダー -->
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <nav id="nav">
+            <ul>
+                <li><a href="../index.html#home">ホーム</a></li>
+                <li><a href="../index.html#features">コース紹介</a></li>
+                <li><a href="../index.html#gallery">ギャラリー</a></li>
+                <li><a href="../index.html#news">ニュース</a></li>
+                <li><a href="../index.html#contact">お問い合わせ</a></li>
+                <li class="language-switch">
+                    <button class="language-btn active" data-lang="ja">日本語</button>
+                    <button class="language-btn" data-lang="en">English</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ヒーローセクション -->
+<section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-bg"></div>
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">オープンキャンパス</h1>
+        <p class="hero-subtitle">崇城大学芸術学部美術学科 3Dアートコース</p>
+        <p class="hero-date">2025年7月19日・8月3日・8月23日</p>
+        <div class="hero-buttons">
+            <a href="#schedule" class="hero-btn">詳細を見る</a>
+            <a href="#registration" class="hero-btn secondary">参加申し込み</a>
+        </div>
+    </div>
+    <div class="scroll-down">
+        スクロールして詳細を見る
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- イベント概要セクション -->
+<section id="schedule" class="section" style="background-color: #fff;">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">オープンキャンパススケジュール</h2>
+        <div class="schedule-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="schedule-card">
+                <div class="schedule-date">
+                    <span class="month">7</span>
+                    <span class="day">19</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="schedule-content">
+                    <h3>夏のオープンキャンパス 第1回</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <ul class="schedule-highlights">
+                        <li><i class="fas fa-check-circle"></i> 3DCGモデリング体験</li>
+                        <li><i class="fas fa-check-circle"></i> VR作品体験</li>
+                        <li><i class="fas fa-check-circle"></i> 学生作品展示</li>
+                        <li><i class="fas fa-check-circle"></i> 個別相談会</li>
+                    </ul>
+                    <a href="#registration" class="schedule-btn">参加申し込み</a>
+                </div>
+            </div>
+
+            <div class="schedule-card">
+                <div class="schedule-date">
+                    <span class="month">8</span>
+                    <span class="day">10</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="schedule-content">
+                    <h3>夏のオープンキャンパス 第2回</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <ul class="schedule-highlights">
+                        <li><i class="fas fa-check-circle"></i> モデリングとアニメーション</li>
+                        <li><i class="fas fa-check-circle"></i> ゲーム制作体験</li>
+                        <li><i class="fas fa-check-circle"></i> 在学生との交流会</li>
+                        <li><i class="fas fa-check-circle"></i> 入試対策相談</li>
+                    </ul>
+                    <a href="#registration" class="schedule-btn">参加申し込み</a>
+                </div>
+            </div>
+            <div class="schedule-card">
+                <div class="schedule-date">
+                    <span class="month">8</span>
+                    <span class="day">23</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="schedule-content">
+                    <h3>夏のオープンキャンパス 第3回</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <ul class="schedule-highlights">
+                        <li><i class="fas fa-check-circle"></i> 3DCGモデリング体験</li>
+                        <li><i class="fas fa-check-circle"></i> VR作品体験</li>
+                        <li><i class="fas fa-check-circle"></i> 学生作品展示</li>
+                        <li><i class="fas fa-check-circle"></i> 個別相談会</li>
+                    </ul>
+                    <a href="#registration" class="schedule-btn">参加申し込み</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 体験コンテンツセクション -->
+<section class="section" style="background-color: #f0f4f8;">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">体験できるコンテンツ</h2>
+        <div class="experience-grid" data-aos="fade-up" data-aos-delay="200">
+            <div class="experience-card">
+                <div class="experience-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3>3DCGモデリング体験</h3>
+                <p>初心者でも簡単に3Dモデルを作れる体験ワークショップ。自分だけのキャラクターやオブジェクトを作ってみよう！</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-icon">
+                    <i class="fas fa-vr-cardboard"></i>
+                </div>
+                <h3>VR体験</h3>
+                <p>最新のVR機器を使って、学生が制作した3D空間を体験。自分の作品がVRで見られる未来を体感しよう！</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h3>ゲーム制作体験</h3>
+                <p>簡単なゲームエンジンを使って、オリジナルゲームの一部を作成。プログラミング初心者でも楽しめる内容です。</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3>デジタルアート制作</h3>
+                <p>デジタルペンタブレットを使って、プロ仕様のソフトでイラストを描く体験。講師がていねいに指導します。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3Dアートコース紹介セクション -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">3Dアートコースの魅力</h2>
+
+        <div class="course-features" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-card">
+                <img src="../images/3DScan1.jpg" alt="最新設備" class="feature-image">
+                <div class="feature-content">
+                    <h3><i class="fas fa-laptop"></i> 最新設備で学ぶ</h3>
+                    <p>ハイスペックPC、3Dスキャナー、モーションキャプチャー、VR機器など、業界標準の最新設備を完備。プロと同じ環境で創作活動ができます。</p>
+                </div>
+            </div>
+
+            <div class="feature-card reverse">
+                <img src="../images/bronzelecture1.jpg" alt="実践的な授業" class="feature-image">
+                <div class="feature-content">
+                    <h3><i class="fas fa-users"></i> 実践的な授業</h3>
+                    <p>現役クリエイターによる特別講義や、企業と連携したプロジェクトなど、実践的なカリキュラムで即戦力となる人材を育成します。</p>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <img src="../images/phi_st.jpeg" alt="作品制作" class="feature-image">
+                <div class="feature-content">
+                    <h3><i class="fas fa-trophy"></i> 充実した作品制作</h3>
+                    <p>個人制作からチーム制作まで、様々な形態でオリジナル作品を制作。卒業制作展や各種コンテストへの出展機会も豊富です。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-cta" data-aos="fade-up">
+            <h3>3Dアートコースについてもっと知りたい方は</h3>
+            <a href="../index.html#features" class="cta-btn">コース詳細を見る</a>
+        </div>
+    </div>
+</section>
+
+<!-- インタラクティブ3Dセクション -->
+<section class="section" style="background-color: #000; color: #fff;">
+    <div class="container">
+        <h2 class="section-title" style="color: #fff;" data-aos="fade-up">3Dアートを体験しよう</h2>
+        <div class="interactive-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="interactive-text">
+                <p>このキューブを動かしてみよう！<br>ドラッグして回転させたり、スクロールで拡大縮小できます。</p>
+                <p class="interactive-hint">3Dアートコースでは、このような<br>インタラクティブな3Dコンテンツの<br>制作方法を学びます。</p>
+            </div>
+            <div id="3d-canvas" class="interactive-canvas"></div>
+        </div>
+    </div>
+</section>
+
+<!-- 参加申し込みセクション -->
+<section id="registration" class="section" style="background-color: #f0f4f8;">
+    <div class="container">
+        <h2 class="section-title" data-aos="fade-up">オープンキャンパス参加申し込み</h2>
+        <div class="registration-container" data-aos="fade-up" data-aos-delay="200">
+            <div class="registration-info">
+                <h3>参加特典</h3>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-gift"></i> オリジナルグッズプレゼント</li>
+                    <li><i class="fas fa-bus"></i> 無料送迎バス利用可能</li>
+                    <li><i class="fas fa-utensils"></i> ランチ券プレゼント</li>
+                    <li><i class="fas fa-file-alt"></i> 入試対策資料配布</li>
+                </ul>
+                <div class="registration-note">
+                    <p><i class="fas fa-info-circle"></i> 参加は無料です。友達や保護者の方と一緒に参加できます。</p>
+                    <p><i class="fas fa-calendar-alt"></i> 申し込み締切：各開催日の3日前まで</p>
+                </div>
+            </div>
+            <div class="registration-form">
+                <p>以下のボタンから大学公式サイトの申し込みフォームへ移動します。</p>
+                <a href="https://www.sojo-u.ac.jp/examination/opencampus/" class="registration-btn" target="_blank">申し込みフォームへ</a>
+                <p class="form-note">※申し込み時に「3Dアートコース体験希望」と備考欄にご記入ください。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- フッター -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h3>崇城大学</h3>
+                <ul class="footer-links">
+                    <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                    <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                    <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                    <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                    <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>芸術学部</h3>
+                <ul class="footer-links">
+                    <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                    <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                    <li><a href="https://soda3dart.github.io/Soda3DARTWebHP/facilities.html">施設・設備</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>学生作品</h3>
+                <ul class="footer-links">
+                    <li><a href="../gallery.html">ギャラリー</a></li>
+                    <!--
+                    <li><a href="#">卒業制作展</a></li>-->
+                    <li><a href="../temp/temppage.html">講義紹介・プロジェクト</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>お問い合わせ</h3>
+                <ul class="footer-links">
+                    <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                    <li><a href="../index.html#contact">3Dアートコースへのお問い合わせ</a></li>
+                    <li><a href="#">オープンキャンパス</a></li>
+                    <li><a href="../question.html">よくある質問</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<script>
+    // AOS (Animate On Scroll) 初期化
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out',
+        once: false
+    });
+
+    // モバイルメニュートグル
+    const mobileMenu = document.getElementById('mobileMenu');
+    const nav = document.getElementById('nav');
+
+    mobileMenu.addEventListener('click', function() {
+        nav.classList.toggle('active');
+    });
+
+    // インタラクティブ3Dキューブ
+    function init3DCanvas() {
+        // シーン、カメラ、レンダラーの設定
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+        const container = document.getElementById('3d-canvas');
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        renderer.setSize(containerWidth, containerHeight);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+
+        // カメラの位置設定
+        camera.position.z = 5;
+
+        // OrbitControlsの設定
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // ライトの追加
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // テクスチャの作成
+        const textureLoader = new THREE.TextureLoader();
+        const texture1 = new THREE.MeshStandardMaterial({ color: 0x4285f4 });
+        const texture2 = new THREE.MeshStandardMaterial({ color: 0x34a853 });
+        const texture3 = new THREE.MeshStandardMaterial({ color: 0xfbbc05 });
+        const texture4 = new THREE.MeshStandardMaterial({ color: 0xea4335 });
+        const texture5 = new THREE.MeshStandardMaterial({ color: 0x4285f4 });
+        const texture6 = new THREE.MeshStandardMaterial({ color: 0x34a853 });
+
+        const materials = [
+            texture1, texture2, texture3, texture4, texture5, texture6
+        ];
+
+        // キューブの作成
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const cube = new THREE.Mesh(geometry, materials);
+        scene.add(cube);
+
+        // アニメーション関数
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // キューブの自動回転
+            cube.rotation.x += 0.005;
+            cube.rotation.y += 0.01;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // ウィンドウリサイズ対応
+        window.addEventListener('resize', function() {
+            const newWidth = container.clientWidth;
+            const newHeight = container.clientHeight;
+
+            camera.aspect = newWidth / newHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(newWidth, newHeight);
+        });
+
+        // アニメーション開始
+        animate();
+    }
+
+    // ページ読み込み完了時に3D要素を初期化
+    window.addEventListener('load', function() {
+        // インタラクティブ3Dキャンバスの初期化
+        if (document.getElementById('3d-canvas')) {
+            init3DCanvas();
+        }
+
+        // スクロールダウンボタンのスムーススクロール
+        const scrollDownBtn = document.querySelector('.scroll-down');
+        if (scrollDownBtn) {
+            scrollDownBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const scheduleSection = document.getElementById('schedule');
+                if (scheduleSection) {
+                    scheduleSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+
+        // スケジュールカードのホバーエフェクト強化
+        const scheduleCards = document.querySelectorAll('.schedule-card');
+        scheduleCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px)';
+                this.style.boxShadow = '0 20px 50px rgba(66, 133, 244, 0.3)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+            });
+        });
+    });
+</script>
+</body>
+</html>
