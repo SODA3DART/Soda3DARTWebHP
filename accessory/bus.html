@@ -108,10 +108,17 @@
         .countdown {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--accent-color);
+            color: lightgreen;
             display: block;
             margin: 8px 0;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            animation: countdownPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes countdownPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .bus-schedule {
@@ -703,7 +710,24 @@
                     console.log(`次のType ${type}バス: ${bus.departureTime}, ${minutesUntil}分後`);
                     return {
                         time: bus.departureTime,
-                        minutesUntil: minutesUntil
+                        minutesUntil: minutesUntil,
+                        delayed: false
+                    };
+                }
+            }
+
+            // 5分以内に過ぎたバスを探す（遅延対応）
+            for (const bus of typeBuses) {
+                const [hours, minutes] = bus.departureTime.split(':').map(Number);
+                const busTimeInMinutes = hours * 60 + minutes;
+                const timeSinceDeparture = currentTimeInMinutes - busTimeInMinutes;
+
+                if (timeSinceDeparture >= 0 && timeSinceDeparture <= 5) {
+                    console.log(`5分以内に過ぎたType ${type}バス: ${bus.departureTime}, ${timeSinceDeparture}分前に出発予定でした`);
+                    return {
+                        time: bus.departureTime,
+                        minutesUntil: -timeSinceDeparture, // 負の値で、何分前に出発予定だったかを示す
+                        delayed: true
                     };
                 }
             }
@@ -772,16 +796,28 @@
                 const nextBus1 = getNextBus(1);
 
                 if (nextBus1) {
-                    console.log(`Type 1の次のバスが見つかりました: ${nextBus1.time}, ${nextBus1.minutesUntil}分後`);
-                    // バスが10分以内に来る場合は緊急表示
-                    const isUrgent = nextBus1.minutesUntil <= 10;
-                    const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+                    console.log(`Type 1の次のバスが見つかりました: ${nextBus1.time}, ${nextBus1.minutesUntil}分後, 遅延: ${nextBus1.delayed}`);
 
-                    nextBus1Element.innerHTML = `
-                        <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus1.time}</div>
-                        <span class="${countdownClass}"><i class="fas fa-hourglass-half"></i> ${nextBus1.minutesUntil}分後</span>
-                        ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
-                    `;
+                    // 遅延バスの場合（5分以内に過ぎたバス）
+                    if (nextBus1.delayed) {
+                        const minutesAgo = Math.abs(nextBus1.minutesUntil);
+                        nextBus1Element.innerHTML = `
+                            <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus1.time}</div>
+                            <span class="countdown" style="color:orange; animation: countdownPulse 3s ease-in-out infinite;"><i class="fas fa-hourglass-half"></i> ${minutesAgo}分前</span>
+                            <p style="margin:10px 0;font-size:1rem;font-weight:700;color:orange;"><i class="fas fa-exclamation-circle"></i> まだ来ていない場合はバスが遅れている可能性があります</p>
+                        `;
+                    } else {
+                        // 通常のバス（まだ到着していない）
+                        // バスが10分以内に来る場合は緊急表示
+                        const isUrgent = nextBus1.minutesUntil <= 5;
+                        const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+
+                        nextBus1Element.innerHTML = `
+                            <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus1.time}</div>
+                            <span class="${countdownClass}" style="animation: countdownPulse 3s ease-in-out infinite;"><i class="fas fa-hourglass-half"></i> ${nextBus1.minutesUntil}分後</span>
+                            ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
+                        `;
+                    }
 
                     // 今後のバス時刻を表示
                     updateSchedule(1, schedule1Element);
@@ -807,16 +843,28 @@
                 const nextBus2 = getNextBus(2);
 
                 if (nextBus2) {
-                    console.log(`Type 2の次のバスが見つかりました: ${nextBus2.time}, ${nextBus2.minutesUntil}分後`);
-                    // バスが10分以内に来る場合は緊急表示
-                    const isUrgent = nextBus2.minutesUntil <= 10;
-                    const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+                    console.log(`Type 2の次のバスが見つかりました: ${nextBus2.time}, ${nextBus2.minutesUntil}分後, 遅延: ${nextBus2.delayed}`);
 
-                    nextBus2Element.innerHTML = `
-                        <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus2.time}</div>
-                        <span class="${countdownClass}"><i class="fas fa-hourglass-half"></i> ${nextBus2.minutesUntil}分後</span>
-                        ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
-                    `;
+                    // 遅延バスの場合（5分以内に過ぎたバス）
+                    if (nextBus2.delayed) {
+                        const minutesAgo = Math.abs(nextBus2.minutesUntil);
+                        nextBus2Element.innerHTML = `
+                            <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus2.time}</div>
+                            <span class="countdown" style="color:orange; animation: countdownPulse 3s ease-in-out infinite;"><i class="fas fa-hourglass-half"></i> ${minutesAgo}分前</span>
+                            <p style="margin:10px 0;font-size:1rem;font-weight:700;color:orange;"><i class="fas fa-exclamation-circle"></i> バスが遅れている可能性があります</p>
+                        `;
+                    } else {
+                        // 通常のバス（まだ到着していない）
+                        // バスが10分以内に来る場合は緊急表示
+                        const isUrgent = nextBus2.minutesUntil <= 10;
+                        const countdownClass = isUrgent ? 'countdown urgent' : 'countdown';
+
+                        nextBus2Element.innerHTML = `
+                            <div style="margin-bottom:8px;"><i class="fas fa-clock"></i> 次のバス: ${nextBus2.time}</div>
+                            <span class="${countdownClass}" style="animation: countdownPulse 3s ease-in-out infinite;"><i class="fas fa-hourglass-half"></i> ${nextBus2.minutesUntil}分後</span>
+                            ${isUrgent ? '<p style="margin:10px 0;font-size:1rem;font-weight:700;color:var(--accent-color);"><i class="fas fa-exclamation-circle"></i> まもなく到着します！</p>' : ''}
+                        `;
+                    }
 
                     // 今後のバス時刻を表示
                     updateSchedule(2, schedule2Element);
