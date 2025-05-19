@@ -311,9 +311,9 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
         }
 
         @keyframes fadeInUp {
@@ -350,6 +350,55 @@
             width: 80px;
             height: 3px;
             background-color: #4285f4;
+        }
+
+        /* スケジュールセクションのスタイル */
+        .schedule-section {
+            position: relative;
+            background-attachment: fixed;
+            animation: bgChange 20s infinite;
+        }
+
+        @keyframes bgChange {
+            0%, 33% {
+                background-image: url('../images/3DScan1.jpg');
+                background-size: cover;
+                background-position: center;
+            }
+            34%, 66% {
+                background-image: url('../images/newsorien.png');
+                background-size: cover;
+                background-position: center;
+            }
+        }
+
+        .schedule-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            z-index: 1;
+        }
+
+        .schedule-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .schedule-bg-caption {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(66, 133, 244, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 3;
         }
 
         /* スケジュールカードのスタイル */
@@ -826,6 +875,14 @@
                 font-size: 2rem;
             }
 
+            /* モバイル用スケジュールセクションスタイル */
+            .schedule-bg-caption {
+                top: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+
             /* モバイル用スケジュールカードスタイル */
             .schedule-card {
                 flex-direction: column;
@@ -993,7 +1050,7 @@
 </section>
 
 <!-- イベント概要セクション -->
-<section id="schedule" class="section" style="background-color: #fff;">
+<section id="schedule" class="section schedule-section">
     <div class="container">
         <h2 class="section-title" data-aos="fade-up">オープンキャンパススケジュール</h2>
         <div class="schedule-container" data-aos="fade-up" data-aos-delay="200">
@@ -1004,13 +1061,13 @@
                     <span class="year">2025</span>
                 </div>
                 <div class="schedule-content">
-                    <h3>夏のオープンキャンパス 第1回</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <h3>君の粘土がデジタルモンスターに！</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
                     <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> 3DCGモデリング体験</li>
-                        <li><i class="fas fa-check-circle"></i> VR作品体験</li>
-                        <li><i class="fas fa-check-circle"></i> 学生作品展示</li>
-                        <li><i class="fas fa-check-circle"></i> 個別相談会</li>
+                        <li><i class="fas fa-check-circle"></i> 粘土で作った形を3Dスキャン</li>
+                        <li><i class="fas fa-check-circle"></i> ZBrushで細部を仕上げ</li>
+                        <li><i class="fas fa-check-circle"></i> デジタルモンスター制作</li>
+                        <li><i class="fas fa-check-circle"></i> 申込期限：7月13日</li>
                     </ul>
                     <a href="#registration" class="schedule-btn">参加申し込み</a>
                 </div>
@@ -1019,17 +1076,17 @@
             <div class="schedule-card">
                 <div class="schedule-date">
                     <span class="month">8</span>
-                    <span class="day">10</span>
+                    <span class="day">3</span>
                     <span class="year">2025</span>
                 </div>
                 <div class="schedule-content">
-                    <h3>夏のオープンキャンパス 第2回</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <h3>ローポリキャラを動かしてみよう</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
                     <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> モデリングとアニメーション</li>
-                        <li><i class="fas fa-check-circle"></i> ゲーム制作体験</li>
-                        <li><i class="fas fa-check-circle"></i> 在学生との交流会</li>
-                        <li><i class="fas fa-check-circle"></i> 入試対策相談</li>
+                        <li><i class="fas fa-check-circle"></i> ゲームなどで使用されるローポリキャラ制作</li>
+                        <li><i class="fas fa-check-circle"></i> Blenderでキャラクターモデリング</li>
+                        <li><i class="fas fa-check-circle"></i> アニメーション基礎</li>
+                        <li><i class="fas fa-check-circle"></i> 申込期限：7月27日</li>
                     </ul>
                     <a href="#registration" class="schedule-btn">参加申し込み</a>
                 </div>
@@ -1041,13 +1098,13 @@
                     <span class="year">2025</span>
                 </div>
                 <div class="schedule-content">
-                    <h3>夏のオープンキャンパス 第3回</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 - 16:00</p>
+                    <h3>ZBrushで作る　ゲームキャラ!</h3>
+                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
                     <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> 3DCGモデリング体験</li>
-                        <li><i class="fas fa-check-circle"></i> VR作品体験</li>
-                        <li><i class="fas fa-check-circle"></i> 学生作品展示</li>
-                        <li><i class="fas fa-check-circle"></i> 個別相談会</li>
+                        <li><i class="fas fa-check-circle"></i> 本格的なゲームキャラをZBrushで作成</li>
+                        <li><i class="fas fa-check-circle"></i> キャラクターに動きを付ける</li>
+                        <li><i class="fas fa-check-circle"></i> プロ仕様ツールの体験</li>
+                        <li><i class="fas fa-check-circle"></i> 申込期限：8月11日</li>
                     </ul>
                     <a href="#registration" class="schedule-btn">参加申し込み</a>
                 </div>
@@ -1068,30 +1125,23 @@
                 <h3>3DCGモデリング体験</h3>
                 <p>初心者でも簡単に3Dモデルを作れる体験ワークショップ。自分だけのキャラクターやオブジェクトを作ってみよう！</p>
             </div>
+            <div class="experience-card">
+                <div class="experience-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3>3Dアニメーション制作</h3>
+                <p>3DCGを自由に動かす体験を通して、自分だけのアクションをさせてみよう！</p>
+            </div>
 
             <div class="experience-card">
                 <div class="experience-icon">
                     <i class="fas fa-vr-cardboard"></i>
                 </div>
-                <h3>VR体験</h3>
-                <p>最新のVR機器を使って、学生が制作した3D空間を体験。自分の作品がVRで見られる未来を体感しよう！</p>
+                <h3>XR体験</h3>
+                <p>最新のXR機器を使って、学生が制作した3Dアプリケーションを体験。自分の作品がXRで見られる未来を体感しよう！※進行状況によっては体験いただけない場合がございます。</p>
             </div>
 
-            <div class="experience-card">
-                <div class="experience-icon">
-                    <i class="fas fa-gamepad"></i>
-                </div>
-                <h3>ゲーム制作体験</h3>
-                <p>簡単なゲームエンジンを使って、オリジナルゲームの一部を作成。プログラミング初心者でも楽しめる内容です。</p>
-            </div>
 
-            <div class="experience-card">
-                <div class="experience-icon">
-                    <i class="fas fa-paint-brush"></i>
-                </div>
-                <h3>デジタルアート制作</h3>
-                <p>デジタルペンタブレットを使って、プロ仕様のソフトでイラストを描く体験。講師がていねいに指導します。</p>
-            </div>
         </div>
     </div>
 </section>
@@ -1103,7 +1153,7 @@
 
         <div class="course-features" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-card">
-                <img src="../images/3DScan1.jpg" alt="最新設備" class="feature-image">
+                <img src="../images/degitaltop.png" alt="最新設備" class="feature-image">
                 <div class="feature-content">
                     <h3><i class="fas fa-laptop"></i> 最新設備で学ぶ</h3>
                     <p>ハイスペックPC、3Dスキャナー、モーションキャプチャー、VR機器など、業界標準の最新設備を完備。プロと同じ環境で創作活動ができます。</p>
@@ -1114,7 +1164,7 @@
                 <img src="../images/bronzelecture1.jpg" alt="実践的な授業" class="feature-image">
                 <div class="feature-content">
                     <h3><i class="fas fa-users"></i> 実践的な授業</h3>
-                    <p>現役クリエイターによる特別講義や、企業と連携したプロジェクトなど、実践的なカリキュラムで即戦力となる人材を育成します。</p>
+                    <p>従来の彫刻だけでなくゲームやフィギュア、XR技術など現役クリエイターによる特別講義や、企業と連携したプロジェクトなど、実践的なカリキュラムで即戦力となる人材を育成します。</p>
                 </div>
             </div>
 
@@ -1130,23 +1180,11 @@
         <div class="course-cta" data-aos="fade-up">
             <h3>3Dアートコースについてもっと知りたい方は</h3>
             <a href="../index.html#features" class="cta-btn">コース詳細を見る</a>
+            <a href="../question.html" class="cta-btn" style="margin-left: 15px;">コースのよくある質問は</a>
         </div>
     </div>
 </section>
 
-<!-- インタラクティブ3Dセクション -->
-<section class="section" style="background-color: #000; color: #fff;">
-    <div class="container">
-        <h2 class="section-title" style="color: #fff;" data-aos="fade-up">3Dアートを体験しよう</h2>
-        <div class="interactive-container" data-aos="fade-up" data-aos-delay="200">
-            <div class="interactive-text">
-                <p>このキューブを動かしてみよう！<br>ドラッグして回転させたり、スクロールで拡大縮小できます。</p>
-                <p class="interactive-hint">3Dアートコースでは、このような<br>インタラクティブな3Dコンテンツの<br>制作方法を学びます。</p>
-            </div>
-            <div id="3d-canvas" class="interactive-canvas"></div>
-        </div>
-    </div>
-</section>
 
 <!-- 参加申し込みセクション -->
 <section id="registration" class="section" style="background-color: #f0f4f8;">
@@ -1156,14 +1194,11 @@
             <div class="registration-info">
                 <h3>参加特典</h3>
                 <ul class="benefits-list">
-                    <li><i class="fas fa-gift"></i> オリジナルグッズプレゼント</li>
-                    <li><i class="fas fa-bus"></i> 無料送迎バス利用可能</li>
-                    <li><i class="fas fa-utensils"></i> ランチ券プレゼント</li>
                     <li><i class="fas fa-file-alt"></i> 入試対策資料配布</li>
                 </ul>
                 <div class="registration-note">
                     <p><i class="fas fa-info-circle"></i> 参加は無料です。友達や保護者の方と一緒に参加できます。</p>
-                    <p><i class="fas fa-calendar-alt"></i> 申し込み締切：各開催日の3日前まで</p>
+                    <p><i class="fas fa-calendar-alt"></i> 申し込み締切：7/19開催は7/13まで、8/3開催は7/27まで、8/23開催は8/11まで</p>
                 </div>
             </div>
             <div class="registration-form">
@@ -1223,8 +1258,6 @@
 </footer>
 
 <!-- JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
 <script>
     // AOS (Animate On Scroll) 初期化
     AOS.init({
@@ -1241,89 +1274,9 @@
         nav.classList.toggle('active');
     });
 
-    // インタラクティブ3Dキューブ
-    function init3DCanvas() {
-        // シーン、カメラ、レンダラーの設定
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
-        const container = document.getElementById('3d-canvas');
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-
-        renderer.setSize(containerWidth, containerHeight);
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-
-        // カメラの位置設定
-        camera.position.z = 5;
-
-        // OrbitControlsの設定
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-
-        // ライトの追加
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(1, 1, 1);
-        scene.add(directionalLight);
-
-        // テクスチャの作成
-        const textureLoader = new THREE.TextureLoader();
-        const texture1 = new THREE.MeshStandardMaterial({ color: 0x4285f4 });
-        const texture2 = new THREE.MeshStandardMaterial({ color: 0x34a853 });
-        const texture3 = new THREE.MeshStandardMaterial({ color: 0xfbbc05 });
-        const texture4 = new THREE.MeshStandardMaterial({ color: 0xea4335 });
-        const texture5 = new THREE.MeshStandardMaterial({ color: 0x4285f4 });
-        const texture6 = new THREE.MeshStandardMaterial({ color: 0x34a853 });
-
-        const materials = [
-            texture1, texture2, texture3, texture4, texture5, texture6
-        ];
-
-        // キューブの作成
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
-        const cube = new THREE.Mesh(geometry, materials);
-        scene.add(cube);
-
-        // アニメーション関数
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // キューブの自動回転
-            cube.rotation.x += 0.005;
-            cube.rotation.y += 0.01;
-
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        // ウィンドウリサイズ対応
-        window.addEventListener('resize', function() {
-            const newWidth = container.clientWidth;
-            const newHeight = container.clientHeight;
-
-            camera.aspect = newWidth / newHeight;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(newWidth, newHeight);
-        });
-
-        // アニメーション開始
-        animate();
-    }
-
-    // ページ読み込み完了時に3D要素を初期化
+    // ページ読み込み完了時の処理
     window.addEventListener('load', function() {
-        // インタラクティブ3Dキャンバスの初期化
-        if (document.getElementById('3d-canvas')) {
-            init3DCanvas();
-        }
-
         // スクロールダウンボタンのスムーススクロール
         const scrollDownBtn = document.querySelector('.scroll-down');
         if (scrollDownBtn) {

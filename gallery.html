@@ -72,7 +72,15 @@
 
     <!-- Font imports -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'セザンヌ';
+            src: url('https://cdn.jsdelivr.net/npm/@xz/fonts@1/dist/cezanne/cezanne.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -329,11 +337,13 @@
             font-size: 2.5rem;
             margin-bottom: 15px;
             color: #333;
+            font-family: 'IPAex明朝', serif;
         }
 
         .page-title p {
             font-size: 1.1rem;
             color: #777;
+            font-family: 'セザンヌ', sans-serif;
         }
 
         /* ギャラリースタイル */
@@ -351,6 +361,7 @@
             padding-bottom: 10px;
             border-bottom: 2px solid #4285f4;
             display: inline-block;
+            font-family: 'IPAex明朝', serif;
         }
 
         .gallery-grid {
@@ -666,6 +677,18 @@
                             <span class="gallery-tag">立体造形</span>
                         </div>
                     </div>
+                    <div class="gallery-item" data-category="sculpture">
+                        <div class="gallery-image">
+                            <img src="images/negikamoMN.jpg" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 30%">
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">ネギカモ</h3>
+                            <p class="gallery-author">4年生 </p>
+                            <p class="gallery-description"></p>
+                            <span class="gallery-tag">彫刻</span>
+                            <span class="gallery-tag">立体造形</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -675,7 +698,7 @@
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="3dmodel">
                         <div class="gallery-image">
-                            <img src="images/kumayu.heic" alt="くまゆ - 九州熊本の3DCG Vtuberキャラクターモデリング作品" data-position="center 40%">
+                            <img src="images/gallery/icon120.png" alt="くまゆ - 九州熊本の3DCG Vtuberキャラクターモデリング作品" data-position="center 40%">
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">くまゆ</h3>
@@ -737,6 +760,7 @@
             <div class="gallery-section">
                 <h2 class="section-title">アニメーション作品</h2>
                 <div class="gallery-grid">
+                    <!--
                     <div class="gallery-item" data-category="animation">
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -751,6 +775,7 @@
                             <span class="gallery-tag">AfterEffects</span>
                         </div>
                     </div>
+                    -->
                     <div class="gallery-item" data-category="animation">
                         <div class="video-container">
                             <video controls width="100%">
@@ -775,12 +800,15 @@
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="vr">
                         <div class="gallery-image">
-                            <img src="images/funart1.jpg" alt="無限の部屋 - 九州崇城大学のVR・バーチャルリアリティ芸術作品">
+                            <img src="images/gallery/icon120.png" alt=" - 九州崇城大学のVR・バーチャルリアリティ芸術作品">
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">MagicalClay</h3>
                             <p class="gallery-author">グループ製作</p>
-                            <p class="gallery-description">スカルプティングをXR空間で実現するための新たしいアプローチを行ったアプリケーション。最新のVR技術と芸術表現を融合させた創造型コンテンツ。</p>
+                            <p class="gallery-description">スカルプティングをXR空間で実現するための新たしいアプローチを行ったアプリケーション。最新のVR技術と芸術表現を融合させた創造型コンテンツ。<br>
+                            Meta Quest 3を使用し2025年夏にリリース予定。
+                            </p>
+
                             <span class="gallery-tag">XR</span>
                             <span class="gallery-tag">Unity</span>
                             <span class="gallery-tag">芸術</span>
@@ -806,6 +834,7 @@
             </div>
 
             <!-- 3Dプリント作品 -->
+            <!--
             <div class="gallery-section">
                 <h2 class="section-title">3Dプリント作品</h2>
                 <div class="gallery-grid">
@@ -839,6 +868,7 @@
                     </div>
                 </div>
             </div>
+            -->
 
             <!-- 教員作品 -->
             <div class="gallery-section">
@@ -861,7 +891,9 @@
                     </div>
                     <div class="gallery-item" data-category="faculty">
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <!--<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            -->
+                            <img src="images/gallery/HarmonyKeys.png" alt="坂元旭 - 九州崇城大学の3DCG・芸術作" data-position="center 50%" sizes="100vw">
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">Harmony Keys</h3>
@@ -872,9 +904,10 @@
                             <span class="gallery-tag">Python</span>
                         </div>
                     </div>
+                    <!--
                     <div class="gallery-item" data-category="faculty">
                         <div class="gallery-image">
-                            <img src="/api/placeholder/600/400" alt="教員作品3">
+                            <img src="images/profkiyosima.png" alt="教員作品3">
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">準備中です。</h3>
@@ -885,6 +918,7 @@
                             <span class="gallery-tag">Oculus Medium</span>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -1021,7 +1055,7 @@
         const lightboxDescription = document.getElementById('lightboxDescription');
 
         // Get all gallery images
-        const galleryImages = document.querySelectorAll('.gallery-image img');
+        const galleryImages = document.querySelectorAll('.gallery-image img, .video-container img');
 
         // Data structure for artworks with multiple images and descriptions
         const specialArtworks = {

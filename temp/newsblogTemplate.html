@@ -442,8 +442,11 @@
             </div>
 
             <div class="editor-content">
-                <label for="blog-content">本文</label>
+                <label for="blog-content">本文 <span style="color: #777; font-size: 0.8rem;">(最大2000文字)</span></label>
                 <textarea id="blog-content" placeholder="ニュースの内容を入力してください"></textarea>
+                <div id="content-warning" style="color: #dc3545; font-size: 0.8rem; margin-top: 5px; display: none;">
+                    文字数が制限を超えています。エクスポート時に2000文字に切り詰められます。
+                </div>
             </div>
 
             <div class="button-container">
@@ -457,12 +460,24 @@
             <div class="news-management-header">
                 <h3>既存ニュースの管理</h3>
                 <p>削除したいニュースを選択して「選択したニュースを削除」ボタンをクリックしてください。</p>
+                <div style="margin-top: 15px; padding: 10px; background-color: #f8f9fa; border-left: 4px solid #4285f4; border-radius: 4px;">
+                    <p style="margin-bottom: 5px; font-weight: bold;">ストレージ容量について</p>
+                    <p style="font-size: 0.9rem;">ブラウザのローカルストレージには容量制限（約5MB）があります。容量を節約するため、以下の制限が設けられています：</p>
+                    <ul style="font-size: 0.9rem; margin-left: 20px; margin-top: 5px;">
+                        <li>記事は最新の5件のみ保存されます</li>
+                        <li>記事の内容は最大2000文字に制限されます</li>
+                        <li>アップロードした画像はニュース一覧には表示されません</li>
+                        <li>画像は最新の5枚のみ保存されます</li>
+                    </ul>
+                    <p style="font-size: 0.9rem; margin-top: 5px;">それでも容量制限を超える場合は、古い記事を削除するか「ストレージをクリア」ボタンを使用してください。</p>
+                </div>
             </div>
             <div id="existing-news-list" class="news-list">
                 <!-- 既存のニュース記事はJavaScriptで動的に生成されます -->
             </div>
             <div class="button-container">
                 <button id="delete-news-btn" class="button danger-button">選択したニュースを削除</button>
+                <button id="clear-storage-btn" class="button danger-button" style="background-color: #dc3545;">ストレージをクリア</button>
             </div>
         </div>
 
@@ -626,7 +641,11 @@
             const imagePaths = [];
             const imageElements = document.querySelectorAll('#image-preview-container .image-preview img');
             imageElements.forEach(img => {
-                imagePaths.push(img.getAttribute('data-path'));
+                const path = img.getAttribute('data-path');
+                // データURLの場合は保存しない（容量削減のため）
+                if (!path.startsWith('data:')) {
+                    imagePaths.push(path);
+                }
             });
 
             // 画像のHTMLを生成（スタンドアロンHTMLファイル用）
@@ -637,14 +656,14 @@
 
             // news_event.html用のニュース記事データを作成
             const newsArticle = {
-                id: new Date().getTime(),
                 date: date,
                 title: title,
                 excerpt: content.length > 100 ? content.substring(0, 100) + '...' : content,
-                content: content.replace(/\n/g, '<br>'),
-                image: imagePaths.length > 0 ? imagePaths[0] : '/api/placeholder/600/400',
-                fullArticle: null,
-                images: imagePaths
+                // 長すぎるコンテンツを制限して容量オーバーを防止（最大2000文字）
+                content: content.length > 2000 ? content.substring(0, 2000) + '...(続きは省略されました)' : content.replace(/\n/g, '<br>'),
+                // データURLは保存せず、常にデフォルト画像を使用（容量削減のため）
+                image: 'images/logo.png',
+                fullArticle: null
             };
 
             // ニュース記事をローカルストレージに保存
@@ -653,11 +672,27 @@
                 let storedNews = localStorage.getItem('newsArticles');
                 let newsArticles = storedNews ? JSON.parse(storedNews) : [];
 
+                // 新しいニュース記事のIDを設定（既存の最大ID + 1）
+                const maxId = newsArticles.length > 0 ? Math.max(...newsArticles.map(news => news.id)) : 0;
+                newsArticle.id = maxId + 1;
+
                 // 新しいニュース記事を追加
                 newsArticles.unshift(newsArticle);
 
+                // 記事数を制限して容量オーバーを防止（最新の5件のみ保持）
+                if (newsArticles.length > 5) {
+                    newsArticles = newsArticles.slice(0, 5);
+                }
+
                 // ローカルストレージに保存
                 localStorage.setItem('newsArticles', JSON.stringify(newsArticles));
+
+                // 最終更新時間を更新
+                localStorage.setItem('newsLastUpdated', Date.now().toString());
+
+                // ローカルストレージの使用状況をコンソールに表示（デバッグ用）
+                const usedSpace = JSON.stringify(localStorage).length;
+                console.log(`ローカルストレージの使用状況: ${Math.round(usedSpace / 1024)} KB`);
 
                 alert('ニュース記事が保存されました。news_event.htmlで確認できます。');
 
@@ -1059,6 +1094,10 @@
             // 画像リストを再読み込み
             loadUploadedImages();
 
+            // ローカルストレージの使用状況をコンソールに表示（デバッグ用）
+            const usedSpace = JSON.stringify(localStorage).length;
+            console.log(`ローカルストレージの使用状況: ${Math.round(usedSpace / 1024)} KB`);
+
             alert(`画像「${imageName}」が削除されました`);
         }
 
@@ -1109,9 +1148,9 @@
                 return;
             }
 
-            // ファイルサイズチェック (10MB以下)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('ファイルサイズは10MB以下にしてください');
+            // ファイルサイズチェック (5MB以下に制限)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('ファイルサイズは5MB以下にしてください');
                 return;
             }
 
@@ -1135,8 +1174,17 @@
                     imageList.push({ name: imageName, path: imagePath });
                 }
 
+                // 画像数を制限して容量オーバーを防止（最新の5件のみ保持）
+                if (imageList.length > 5) {
+                    imageList = imageList.slice(-5);
+                }
+
                 // ローカルストレージに保存
                 localStorage.setItem('uploadedImages', JSON.stringify(imageList));
+
+                // ローカルストレージの使用状況をコンソールに表示（デバッグ用）
+                const usedSpace = JSON.stringify(localStorage).length;
+                console.log(`ローカルストレージの使用状況: ${Math.round(usedSpace / 1024)} KB`);
 
                 // 画像をプレビューに追加
                 addImageToPreview(imagePath, imageName);
@@ -1156,8 +1204,34 @@
             reader.readAsDataURL(file);
         }
 
+        // ローカルストレージをクリアする関数
+        function clearLocalStorage() {
+            if (confirm('すべてのニュース記事と画像データをクリアしますか？この操作は元に戻せません。')) {
+                localStorage.removeItem('newsArticles');
+                localStorage.removeItem('uploadedImages');
+                localStorage.removeItem('newsLastUpdated');
+                alert('ローカルストレージがクリアされました。ページをリロードします。');
+                location.reload();
+            }
+        }
+
+        // コンテンツの長さをチェックして警告を表示する関数
+        function checkContentLength() {
+            const content = document.getElementById('blog-content').value;
+            const contentWarning = document.getElementById('content-warning');
+
+            if (content.length > 2000) {
+                contentWarning.style.display = 'block';
+            } else {
+                contentWarning.style.display = 'none';
+            }
+        }
+
         // イベントリスナーの設定
         document.addEventListener('DOMContentLoaded', () => {
+            // コンテンツ入力欄のイベントリスナー
+            document.getElementById('blog-content').addEventListener('input', checkContentLength);
+
             // 画像選択ボタンのイベントリスナー
             document.getElementById('show-images-btn').addEventListener('click', () => {
                 const imageList = document.getElementById('image-list');
@@ -1181,9 +1255,16 @@
             // 削除ボタンのイベントリスナー
             document.getElementById('delete-news-btn').addEventListener('click', deleteSelectedNews);
 
+            // ストレージクリアボタンのイベントリスナー
+            document.getElementById('clear-storage-btn').addEventListener('click', clearLocalStorage);
+
             // ページ読み込み時に既存のニュース記事と画像を表示
             loadExistingNews();
             loadUploadedImages();
+
+            // ローカルストレージの使用状況をコンソールに表示（デバッグ用）
+            const usedSpace = JSON.stringify(localStorage).length;
+            console.log(`初期ローカルストレージの使用状況: ${Math.round(usedSpace / 1024)} KB`);
         });
     </script>
 </body>
