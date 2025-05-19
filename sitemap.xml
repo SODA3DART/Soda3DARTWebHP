@@ -10,7 +10,7 @@
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/courseinfo.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/gallery.html</loc>
@@ -22,48 +22,48 @@
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/facilities.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.1</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/news_event.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/message.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/question.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/project.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/special/SpecialSecretGame.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/special/SpecialSecretGame2.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0</priority>
   </url>
   <url>
     <loc>https://soda3dart.github.io/Soda3DARTWebHP/special/WebGL/soda3dart_webGPUgallery.html</loc>
     <lastmod>2023-11-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0</priority>
   </url>
 </urlset>

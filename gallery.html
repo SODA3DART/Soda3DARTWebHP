@@ -104,19 +104,66 @@
             transition: background-color 0.5s ease, opacity 0.5s ease, visibility 0s linear;
         }
 
-        .lightbox-content {
-            display: block;
+        .lightbox-container {
+            display: flex;
+            flex-direction: column;
             max-width: 90%;
             max-height: 90%;
             margin: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
             transform: scale(0.8);
             opacity: 0;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
         }
 
-        .lightbox.active .lightbox-content {
+        .lightbox.active .lightbox-container {
             transform: scale(1);
             opacity: 1;
+        }
+
+        .lightbox-content {
+            display: block;
+            max-width: 100%;
+            max-height: 70vh;
+            margin: 0 auto 15px;
+            border-radius: 5px;
+        }
+
+        .lightbox-gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .lightbox-gallery img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .lightbox-gallery img:hover {
+            transform: scale(1.1);
+        }
+
+        .lightbox-gallery img.active {
+            border-color: #4285f4;
+        }
+
+        .lightbox-description {
+            color: white;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         .lightbox-close {
@@ -574,7 +621,7 @@
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">彫刻作品</h3>
-                            <p class="gallery-author">4年生 S.T</p>
+                            <p class="gallery-author">4年生 </p>
                             <p class="gallery-description"></p>
                             <span class="gallery-tag">彫刻</span>
                             <span class="gallery-tag">美術</span>
@@ -586,8 +633,8 @@
                             <img src="images/phi_st2.jpeg" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 20%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">彫刻作品2</h3>
-                            <p class="gallery-author">4年生 S.T</p>
+                            <h3 class="gallery-title">彫刻作品</h3>
+                            <p class="gallery-author">4年生 </p>
                             <p class="gallery-description"></p>
                             <span class="gallery-tag">彫刻</span>
                             <span class="gallery-tag">立体造形</span>
@@ -600,7 +647,7 @@
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">観察</h3>
-                            <p class="gallery-author">3年生 Y.U</p>
+                            <p class="gallery-author">3年生 </p>
                             <p class="gallery-description"></p>
                             <span class="gallery-tag">彫刻</span>
                             <span class="gallery-tag">立体造形</span>
@@ -613,7 +660,7 @@
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">彫刻作品4</h3>
-                            <p class="gallery-author">4年生 M.N</p>
+                            <p class="gallery-author">4年生 </p>
                             <p class="gallery-description"></p>
                             <span class="gallery-tag">彫刻</span>
                             <span class="gallery-tag">立体造形</span>
@@ -624,7 +671,7 @@
 
             <!-- 3Dモデリング作品 -->
             <div class="gallery-section">
-                <h2 class="section-title">3Dモデリング作品</h2>
+                <h2 class="section-title">3DCG作品</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="3dmodel">
                         <div class="gallery-image">
@@ -643,14 +690,14 @@
                     </div>
                     <div class="gallery-item" data-category="3dmodel">
                         <div class="gallery-image">
-                            <img src="images/kansatu_yu.png" alt="Mermaid - 九州崇城大学の3DCG ZBrush彫刻作品" data-position="center 10%">
+                            <img src="images/sendousya.png" alt="Mermaid - 九州崇城大学の3DCG ZBrush彫刻作品" data-position="center 10%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">Mermaid</h3>
-                            <p class="gallery-author">2年生 WI</p>
+                            <h3 class="gallery-title">先導者</h3>
+                            <p class="gallery-author">3年生 </p>
                             <p class="gallery-description">ZBrushを使用したデジタル彫刻作品。3DCGの技術を活かした芸術表現。</p>
                             <span class="gallery-tag">3Dモデリング</span>
-                            <span class="gallery-tag">ZBrush</span>
+                            <span class="gallery-tag">UnrealEngine, ZBrush</span>
                             <span class="gallery-tag">デジタル彫刻</span>
                             <span class="gallery-tag">芸術</span>
                         </div>
@@ -661,8 +708,22 @@
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">メラン・リリオン</h3>
-                            <p class="gallery-author">4年生 IY</p>
-                            <p class="gallery-description">2050年の都市交通をテーマにしたコンセプトモビリティのモデリング。ゲーム開発やVR環境での活用を想定した3DCG作品。</p>
+                            <p class="gallery-author">4年生 </p>
+                            <p class="gallery-description">キャラクターデザインの課題として作成したラスボス</p>
+                            <span class="gallery-tag">プロダクトデザイン</span>
+                            <span class="gallery-tag">Fusion 360</span>
+                            <span class="gallery-tag">ゲーム</span>
+                            <span class="gallery-tag">3DCG</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-category="3dmodel">
+                        <div class="gallery-image">
+                            <img src="images/negikamoMN.jpg" alt="ポピー - 九州崇城大学の3DCGキャラクターデザイン・ゲーム用モデリング" data-position="center 50%">
+                        </div>
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">ポピー</h3>
+                            <p class="gallery-author">4年生 </p>
+                            <p class="gallery-description">キャラクターデザインの課題として作成したオリジナルゲームのキャラクター</p>
                             <span class="gallery-tag">プロダクトデザイン</span>
                             <span class="gallery-tag">Fusion 360</span>
                             <span class="gallery-tag">ゲーム</span>
@@ -699,7 +760,7 @@
                         </div>
                         <div class="gallery-info">
                             <h3 class="gallery-title">けん玉</h3>
-                            <p class="gallery-author">2年生 WI</p>
+                            <p class="gallery-author">2年生</p>
                             <p class="gallery-description">さまざまなキャラクターモーションを集めたアニメーションリール。歩行、走行、戦闘モーションなど。</p>
                             <span class="gallery-tag">キャラクターアニメーション</span>
                             <span class="gallery-tag">Blender</span>
@@ -939,7 +1000,15 @@
     <!-- Lightbox Modal -->
     <div id="imageLightbox" class="lightbox">
         <span class="lightbox-close">&times;</span>
-        <img class="lightbox-content" id="lightboxImage">
+        <div class="lightbox-container">
+            <img class="lightbox-content" id="lightboxImage">
+            <div class="lightbox-gallery" id="lightboxGallery">
+                <!-- Additional images will be added here dynamically -->
+            </div>
+            <div class="lightbox-description" id="lightboxDescription">
+                <!-- Additional description will be added here dynamically -->
+            </div>
+        </div>
     </div>
 
     <!-- Lightbox JavaScript -->
@@ -948,14 +1017,86 @@
         const lightbox = document.getElementById('imageLightbox');
         const lightboxImg = document.getElementById('lightboxImage');
         const lightboxClose = document.querySelector('.lightbox-close');
+        const lightboxGallery = document.getElementById('lightboxGallery');
+        const lightboxDescription = document.getElementById('lightboxDescription');
 
         // Get all gallery images
         const galleryImages = document.querySelectorAll('.gallery-image img');
 
+        // Data structure for artworks with multiple images and descriptions
+        const specialArtworks = {
+            // ポピー artwork
+            "ポピー": {
+                images: [
+                    "images/negikamoMN.jpg", // Main image
+                    "images/phi_st.jpeg", // Additional image 1
+                    "images/phi_st2.jpeg", // Additional image 2
+                ],
+                description: `
+                    <h3>ポピー - キャラクター設定</h3>
+                    <p>キャラクターデザインの課題として作成したオリジナルゲームのキャラクター「ポピー」です。</p>
+                    <p>ポピーは架空のRPGゲームの主人公で、魔法と剣術を使いこなす少女戦士です。</p>
+                    <p>赤い髪と青い瞳が特徴的で、冒険の中で様々な仲間と出会いながら成長していきます。</p>
+                    <p>このモデルはFusion 360とBlenderを使用して作成し、ゲームエンジンへの実装も行いました。</p>
+                `
+            }
+            // Add more special artworks here as needed
+        };
+
+        // Function to check if an artwork is special (has multiple images)
+        function isSpecialArtwork(title) {
+            return specialArtworks.hasOwnProperty(title);
+        }
+
+        // Function to get artwork title from image element
+        function getArtworkTitle(imageElement) {
+            const galleryItem = imageElement.closest('.gallery-item');
+            if (galleryItem) {
+                const titleElement = galleryItem.querySelector('.gallery-title');
+                return titleElement ? titleElement.textContent : null;
+            }
+            return null;
+        }
+
         // Function to open the lightbox with animation
-        function openLightbox(imageSrc) {
-            // Set the image source
+        function openLightbox(imageSrc, artworkTitle) {
+            // Clear previous gallery and description
+            lightboxGallery.innerHTML = '';
+            lightboxDescription.innerHTML = '';
+
+            // Set the main image source
             lightboxImg.src = imageSrc;
+
+            // Check if this is a special artwork with multiple images
+            if (artworkTitle && isSpecialArtwork(artworkTitle)) {
+                const artwork = specialArtworks[artworkTitle];
+
+                // Add thumbnail gallery
+                artwork.images.forEach((imgSrc, index) => {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = imgSrc;
+                    thumbnail.alt = `${artworkTitle} - Image ${index + 1}`;
+                    if (imgSrc === imageSrc) {
+                        thumbnail.classList.add('active');
+                    }
+
+                    thumbnail.addEventListener('click', function() {
+                        // Update main image
+                        lightboxImg.src = imgSrc;
+
+                        // Update active state
+                        lightboxGallery.querySelectorAll('img').forEach(img => {
+                            img.classList.remove('active');
+                        });
+                        thumbnail.classList.add('active');
+                    });
+
+                    lightboxGallery.appendChild(thumbnail);
+                });
+
+                // Add description
+                lightboxDescription.innerHTML = artwork.description;
+            }
 
             // Force a reflow before adding the active class for the animation to work properly
             void lightbox.offsetWidth;
@@ -979,7 +1120,8 @@
         // Add click event to all gallery images
         galleryImages.forEach(image => {
             image.addEventListener('click', function() {
-                openLightbox(this.src);
+                const artworkTitle = getArtworkTitle(this);
+                openLightbox(this.src, artworkTitle);
             });
         });
 
@@ -1016,6 +1158,48 @@
                 } else {
                     // Default position if not specified
                     image.style.objectPosition = 'center 30%';
+                }
+            });
+        });
+    </script>
+
+    <!-- Hover Image Change for Special Artworks -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all gallery items
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            galleryItems.forEach(item => {
+                const titleElement = item.querySelector('.gallery-title');
+                if (!titleElement) return;
+
+                const title = titleElement.textContent;
+
+                // Check if this is a special artwork with multiple images
+                if (isSpecialArtwork(title)) {
+                    const imgElement = item.querySelector('.gallery-image img');
+                    if (!imgElement) return;
+
+                    // Store the original image source
+                    const originalSrc = imgElement.src;
+
+                    // Get the artwork data
+                    const artwork = specialArtworks[title];
+
+                    // If there are additional images (more than just the main one)
+                    if (artwork.images.length > 1) {
+                        // Use the second image (index 1) for hover
+                        const hoverSrc = artwork.images[1];
+
+                        // Add hover event listeners
+                        item.addEventListener('mouseenter', function() {
+                            imgElement.src = hoverSrc;
+                        });
+
+                        item.addEventListener('mouseleave', function() {
+                            imgElement.src = originalSrc;
+                        });
+                    }
                 }
             });
         });
