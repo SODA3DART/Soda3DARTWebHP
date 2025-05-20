@@ -2132,140 +2132,9 @@
         });
     </script>
 
-    <!-- News Dialog Styles -->
-    <style>
-        .news-dialog-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .news-dialog-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .news-dialog {
-            background-color: white;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-            padding: 30px;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .news-dialog-overlay.active .news-dialog {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .news-dialog-header {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .news-dialog-header h2 {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .news-dialog-content {
-            margin-bottom: 20px;
-        }
-
-        .news-dialog-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .news-dialog-item:last-child {
-            border-bottom: none;
-        }
-
-        .news-dialog-date {
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 5px;
-        }
-
-        .news-dialog-title {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #4285f4;
-        }
-
-        .news-dialog-excerpt {
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .news-dialog-footer {
-            text-align: center;
-        }
-
-        .news-dialog-close {
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        .news-dialog-close:hover {
-            background-color: #3367d6;
-        }
-
-    </style>
 
     <!-- News Synchronization Script -->
     <script>
-        // キャッシュ検出のためのフラグ
-        let isFirstVisit = false;
-
-        // ページの初回訪問を検出する関数
-        function checkFirstVisit() {
-            // localStorage を使用してページの訪問を確認
-            if (!localStorage.getItem('visited_index')) {
-                // 初回訪問
-                isFirstVisit = true;
-                // 訪問フラグを設定（24時間有効）
-                const now = new Date();
-                localStorage.setItem('visited_index', now.toString());
-                localStorage.setItem('visited_index_expires', now.getTime() + (24 * 60 * 60 * 1000));
-            } else {
-                // 有効期限をチェック
-                const expires = parseInt(localStorage.getItem('visited_index_expires'));
-                if (expires && new Date().getTime() > expires) {
-                    // 有効期限切れ - 新しい訪問として扱う
-                    isFirstVisit = true;
-                    const now = new Date();
-                    localStorage.setItem('visited_index', now.toString());
-                    localStorage.setItem('visited_index_expires', now.getTime() + (24 * 60 * 60 * 1000));
-                } else {
-                    isFirstVisit = false;
-                }
-            }
-            return isFirstVisit;
-        }
 
         // news_event.htmlからニュースデータを取得して表示する関数
         async function fetchNewsFromNewsEvent() {
@@ -2389,12 +2258,6 @@
                     link.textContent = readMoreText;
                 });
 
-                // 初回訪問の場合、ニュースダイアログを表示
-                if (checkFirstVisit()) {
-                    setTimeout(() => {
-                        showNewsDialog(newsItems);
-                    }, 1000); // ページ読み込み後1秒後に表示
-                }
             } catch (error) {
                 console.error('Error rendering news:', error);
                 newsListElement.innerHTML = `
@@ -2405,80 +2268,6 @@
             }
         }
 
-        // ニュースダイアログを表示する関数
-        function showNewsDialog(newsItems) {
-            // すでにダイアログが存在する場合は削除
-            const existingDialog = document.querySelector('.news-dialog-overlay');
-            if (existingDialog) {
-                existingDialog.remove();
-            }
-
-            // ダイアログのHTML作成
-            const dialogOverlay = document.createElement('div');
-            dialogOverlay.className = 'news-dialog-overlay';
-
-            const dialog = document.createElement('div');
-            dialog.className = 'news-dialog';
-
-            // ダイアログヘッダー
-            const dialogHeader = document.createElement('div');
-            dialogHeader.className = 'news-dialog-header';
-            dialogHeader.innerHTML = `
-                <h2>最新ニュース</h2>
-                <p>3Dアートコースの最新情報をお届けします</p>
-            `;
-
-
-            // ダイアログコンテンツ
-            const dialogContent = document.createElement('div');
-            dialogContent.className = 'news-dialog-content';
-
-            // ニュース項目を追加
-            newsItems.forEach(news => {
-                const newsItem = document.createElement('div');
-                newsItem.className = 'news-dialog-item';
-                newsItem.innerHTML = `
-                    <div class="news-dialog-date">${news.date}</div>
-                    <h3 class="news-dialog-title">${news.title}</h3>
-                    <p class="news-dialog-excerpt">${news.excerpt}</p>
-                `;
-                dialogContent.appendChild(newsItem);
-            });
-
-            // ダイアログフッター
-            const dialogFooter = document.createElement('div');
-            dialogFooter.className = 'news-dialog-footer';
-            const closeButton = document.createElement('button');
-            closeButton.className = 'news-dialog-close';
-            closeButton.textContent = '閉じる';
-            closeButton.addEventListener('click', () => {
-                closeNewsDialog(dialogOverlay);
-            });
-            dialogFooter.appendChild(closeButton);
-
-            // ダイアログを組み立てる
-            dialog.appendChild(dialogHeader);
-            dialog.appendChild(dialogContent);
-            dialog.appendChild(dialogFooter);
-            dialogOverlay.appendChild(dialog);
-
-            // ダイアログをページに追加
-            document.body.appendChild(dialogOverlay);
-
-            // ダイアログを表示
-            setTimeout(() => {
-                dialogOverlay.classList.add('active');
-            }, 10);
-        }
-
-        // ダイアログを閉じる関数
-        function closeNewsDialog(dialogOverlay) {
-            // ダイアログを非表示にしてから削除
-            dialogOverlay.classList.remove('active');
-            setTimeout(() => {
-                dialogOverlay.remove();
-            }, 300);
-        }
 
 
         // ページ読み込み時にニュース記事を生成
