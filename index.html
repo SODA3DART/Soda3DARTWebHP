@@ -221,13 +221,34 @@
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/api/placeholder/1200/800') center/cover no-repeat;
             color: #fff;
             text-align: center;
-            margin-top: 80px;
+            margin-top: 0;
             /* Set dimensions to help browser allocate space before image loads */
             width: 100%;
             min-height: 600px;
             /* Improve performance with hardware acceleration */
             will-change: background-image;
             transform: translateZ(0);
+            position: relative; /* Added for absolute positioning of hero-update-box */
+        }
+
+        /* Hero update box styles */
+        .hero-update-box {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            max-width: 90%;
+            border-left: 4px solid #4285f4;
+            z-index: 100;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .hero-content {
@@ -980,6 +1001,104 @@
                 grid-template-columns: 1fr;
             }
         }
+
+
+        /* 更新情報セクションのスタイル */
+        .updates {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 80px; /* ヘッダーの高さに合わせる */
+            position: relative;
+            z-index: 10;
+        }
+
+        .update-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            border-left: 4px solid #4285f4;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .update-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: #4285f4;
+            animation: pulse 2s infinite;
+            text-align: center;
+        }
+
+        .update-content {
+            text-align: center;
+        }
+
+        .update-content h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .update-content p {
+            margin: 0;
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .update-content p a {
+            color: #4285f4;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .update-content p a:hover {
+            color: #3367d6;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .update-box {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .update-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            /* Mobile styles for hero-update-box */
+            .hero-update-box {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px;
+                bottom: 10px;
+                width: fit-content;
+                max-width: 95%;
+                justify-content: center;
+            }
+
+            .hero-update-box .update-icon {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1015,12 +1134,20 @@
         </div>
     </header>
 
+
     <!-- ヒーロー部分 -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1 class="magic-text-effect">3Dアートで新しい世界を創造する</h1>
             <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
             <a href="#features" class="cta-button">詳しく見る</a>
+        </div>
+        <div class="hero-update-box">
+            <div class="update-icon">🆕</div>
+            <div class="update-content">
+                <h3>最新情報 </h3>
+                <p><a href="special/OpenCampus.html">5.20更新！ オープンキャンパス情報を追加しました。</a></p>
+            </div>
         </div>
     </section>
 
@@ -1031,7 +1158,7 @@
                 <h2>フィジカルとデジタル<br>
                 伝統と最先端が融合するハイブリッドな学習内容</h2>
 
-                <p>従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を教養を身に着けます。</p>
+                <p>従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身に着けます。</p>
                 <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
                     <a href="message.html" class="cta-button" style="background-color: #3367d6;">コース担当教員からのメッセージ</a>
                 </div>
@@ -1088,49 +1215,49 @@
                         <img src="images/ahiru_fh.jpg" alt="学生作品2">
                         <div class="gallery-overlay">
                             <h3>アヒル</h3>
-                            <p>2年生 F.H</p>
+                            <p>2年生</p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/pocket_game_fh.jpg" alt="学生作品3">
                         <div class="gallery-overlay">
                             <h3>ポケットゲーム</h3>
-                            <p>2年生 F.H</p>
+                            <p>2年生 </p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/kansatu_yu.png" alt="学生作品4">
                         <div class="gallery-overlay">
                             <h3>観察</h3>
-                            <p>3年生 Y.U</p>
+                            <p>3年生</p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/phi_st.jpeg" alt="学生作品5">
                         <div class="gallery-overlay">
                             <h3></h3>
-                            <p>4年生 S.T </p>
+                            <p>4年生  </p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/bos_AY.png" alt="学生作品6">
                         <div class="gallery-overlay">
                             <h3>メラン・リリオン</h3>
-                            <p>4年生 A.Y</p>
+                            <p>4年生 </p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/edi＿AK.jpg" alt="学生作品7">
                         <div class="gallery-overlay">
                             <h3></h3>
-                            <p>3年生 A.K</p>
+                            <p>3年生 </p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/Coffee_mil_FH.jpg" alt="学生作品8">
                         <div class="gallery-overlay">
                             <h3>コーヒーミル</h3>
-                            <p>2年生 H.F</p>
+                            <p>2年生 </p>
                         </div>
                     </a>
                     <!-- Duplicate the first 4 items to create a seamless loop -->
@@ -1138,14 +1265,14 @@
                         <img src="images/Fight.jpeg" alt="学生作品1">
                         <div class="gallery-overlay">
                             <h3>Fight!</h3>
-                            <p>4年生 A.Y</p>
+                            <p>4年生 </p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
                         <img src="images/ahiru_fh.jpg" alt="学生作品2">
                         <div class="gallery-overlay">
                             <h3>アヒル</h3>
-                            <p>2年生 F.H</p>
+                            <p>2年生</p>
                         </div>
                     </a>
                     <a href="gallery.html" class="gallery-item">
@@ -1338,7 +1465,7 @@
                     <ul class="footer-links">
                         <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
                         <li><a href="#contact">3Dアートコースへのお問い合わせ</a></li>
-                        <li><a href="https://soda3dart.github.io/Soda3DARTWebHP/temp/temppage.html">オープンキャンパス</a></li>
+                        <li><a href="special/OpenCampus.html">オープンキャンパス</a></li>
                         <li><a href="question.html">よくある質問</a></li>
                     </ul>
                 </div>
@@ -1351,6 +1478,7 @@
         </div>
     </footer>
 
+
     <!-- JavaScript -->
     <script>
         // モバイルメニュートグル
@@ -1360,6 +1488,7 @@
         mobileMenu.addEventListener('click', function() {
             nav.classList.toggle('active');
         });
+
 
         // スムーズスクロール
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -2003,8 +2132,141 @@
         });
     </script>
 
+    <!-- News Dialog Styles -->
+    <style>
+        .news-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .news-dialog-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .news-dialog {
+            background-color: white;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .news-dialog-overlay.active .news-dialog {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .news-dialog-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .news-dialog-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .news-dialog-content {
+            margin-bottom: 20px;
+        }
+
+        .news-dialog-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .news-dialog-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-dialog-date {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .news-dialog-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #4285f4;
+        }
+
+        .news-dialog-excerpt {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .news-dialog-footer {
+            text-align: center;
+        }
+
+        .news-dialog-close {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .news-dialog-close:hover {
+            background-color: #3367d6;
+        }
+
+    </style>
+
     <!-- News Synchronization Script -->
     <script>
+        // キャッシュ検出のためのフラグ
+        let isFirstVisit = false;
+
+        // ページの初回訪問を検出する関数
+        function checkFirstVisit() {
+            // localStorage を使用してページの訪問を確認
+            if (!localStorage.getItem('visited_index')) {
+                // 初回訪問
+                isFirstVisit = true;
+                // 訪問フラグを設定（24時間有効）
+                const now = new Date();
+                localStorage.setItem('visited_index', now.toString());
+                localStorage.setItem('visited_index_expires', now.getTime() + (24 * 60 * 60 * 1000));
+            } else {
+                // 有効期限をチェック
+                const expires = parseInt(localStorage.getItem('visited_index_expires'));
+                if (expires && new Date().getTime() > expires) {
+                    // 有効期限切れ - 新しい訪問として扱う
+                    isFirstVisit = true;
+                    const now = new Date();
+                    localStorage.setItem('visited_index', now.toString());
+                    localStorage.setItem('visited_index_expires', now.getTime() + (24 * 60 * 60 * 1000));
+                } else {
+                    isFirstVisit = false;
+                }
+            }
+            return isFirstVisit;
+        }
+
         // news_event.htmlからニュースデータを取得して表示する関数
         async function fetchNewsFromNewsEvent() {
             try {
@@ -2126,6 +2388,13 @@
                 readMoreLinks.forEach(link => {
                     link.textContent = readMoreText;
                 });
+
+                // 初回訪問の場合、ニュースダイアログを表示
+                if (checkFirstVisit()) {
+                    setTimeout(() => {
+                        showNewsDialog(newsItems);
+                    }, 1000); // ページ読み込み後1秒後に表示
+                }
             } catch (error) {
                 console.error('Error rendering news:', error);
                 newsListElement.innerHTML = `
@@ -2135,6 +2404,82 @@
                 `;
             }
         }
+
+        // ニュースダイアログを表示する関数
+        function showNewsDialog(newsItems) {
+            // すでにダイアログが存在する場合は削除
+            const existingDialog = document.querySelector('.news-dialog-overlay');
+            if (existingDialog) {
+                existingDialog.remove();
+            }
+
+            // ダイアログのHTML作成
+            const dialogOverlay = document.createElement('div');
+            dialogOverlay.className = 'news-dialog-overlay';
+
+            const dialog = document.createElement('div');
+            dialog.className = 'news-dialog';
+
+            // ダイアログヘッダー
+            const dialogHeader = document.createElement('div');
+            dialogHeader.className = 'news-dialog-header';
+            dialogHeader.innerHTML = `
+                <h2>最新ニュース</h2>
+                <p>3Dアートコースの最新情報をお届けします</p>
+            `;
+
+
+            // ダイアログコンテンツ
+            const dialogContent = document.createElement('div');
+            dialogContent.className = 'news-dialog-content';
+
+            // ニュース項目を追加
+            newsItems.forEach(news => {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-dialog-item';
+                newsItem.innerHTML = `
+                    <div class="news-dialog-date">${news.date}</div>
+                    <h3 class="news-dialog-title">${news.title}</h3>
+                    <p class="news-dialog-excerpt">${news.excerpt}</p>
+                `;
+                dialogContent.appendChild(newsItem);
+            });
+
+            // ダイアログフッター
+            const dialogFooter = document.createElement('div');
+            dialogFooter.className = 'news-dialog-footer';
+            const closeButton = document.createElement('button');
+            closeButton.className = 'news-dialog-close';
+            closeButton.textContent = '閉じる';
+            closeButton.addEventListener('click', () => {
+                closeNewsDialog(dialogOverlay);
+            });
+            dialogFooter.appendChild(closeButton);
+
+            // ダイアログを組み立てる
+            dialog.appendChild(dialogHeader);
+            dialog.appendChild(dialogContent);
+            dialog.appendChild(dialogFooter);
+            dialogOverlay.appendChild(dialog);
+
+            // ダイアログをページに追加
+            document.body.appendChild(dialogOverlay);
+
+            // ダイアログを表示
+            setTimeout(() => {
+                dialogOverlay.classList.add('active');
+            }, 10);
+        }
+
+        // ダイアログを閉じる関数
+        function closeNewsDialog(dialogOverlay) {
+            // ダイアログを非表示にしてから削除
+            dialogOverlay.classList.remove('active');
+            setTimeout(() => {
+                dialogOverlay.remove();
+            }, 300);
+        }
+
 
         // ページ読み込み時にニュース記事を生成
         document.addEventListener('DOMContentLoaded', function() {
