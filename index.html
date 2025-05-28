@@ -22,6 +22,16 @@
     <meta property="twitter:description" content="九州・熊本の崇城大学芸術学部美術学科3Dアートコースでは、3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを学べます。最新技術と芸術を融合した教育で未来のクリエイターを育成します。">
     <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FRSVB211GG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FRSVB211GG');
+    </script>
+
     <!-- Schema.org structured data -->
     <script type="application/ld+json">
     {
@@ -428,6 +438,8 @@
             max-width: 850px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
+            z-index: 200;
         }
 
         .hero h1 {
@@ -1325,6 +1337,11 @@
 
     <!-- ヒーロー部分 -->
     <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="magic-text-effect">3Dアートで新しい世界を創造する</h1>
+            <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
+            <a href="#features" class="cta-button">詳しく見る</a>
+        </div>
         <div class="opencampus-counter" id="opencampus-counter">
             <a href="special/OpenCampus.html" style="text-decoration: none;">
                 <div class="counter-circle">
@@ -1336,11 +1353,6 @@
                     </div>
                 </div>
             </a>
-        </div>
-        <div class="hero-content">
-            <h1 class="magic-text-effect">3Dアートで新しい世界を創造する</h1>
-            <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
-            <a href="#features" class="cta-button">詳しく見る</a>
         </div>
         <div class="hero-update-box">
             <div class="update-icon">🆕</div>
