@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブログ作成 - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <link rel="icon" href="../images/logohedder.png" type="image/png">
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
+    <!-- Markdown-it for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* エディタースタイル */
+        .editor-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editor-title {
+            margin-bottom: 20px;
+        }
+
+        .editor-title input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .editor-date {
+            margin-bottom: 20px;
+        }
+
+        .editor-date input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .editor-content {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .markdown-editor {
+            flex: 1;
+        }
+
+        .markdown-editor textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        .markdown-preview {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            min-height: 400px;
+            overflow-y: auto;
+            background-color: #fff;
+        }
+
+        .markdown-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .image-upload-container {
+            margin-bottom: 20px;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #ff4444;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .button {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+
+        .primary-button {
+            background-color: #4285f4;
+            color: #fff;
+        }
+
+        .primary-button:hover {
+            background-color: #3367d6;
+        }
+
+        .secondary-button {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .secondary-button:hover {
+            background-color: #e9ecef;
+        }
+
+        /* マークダウンヘルプ */
+        .markdown-help {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .markdown-help h3 {
+            margin-bottom: 15px;
+        }
+
+        .markdown-help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .markdown-help-item {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .markdown-help-item h4 {
+            margin-bottom: 10px;
+            color: #4285f4;
+        }
+
+        .markdown-help-item pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 10px;
+        }
+
+        .markdown-help-item .result {
+            border-top: 1px dashed #ddd;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        /* フッター */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-text span {
+                font-size: 12px;
+            }
+
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+
+            nav.active {
+                transform: translateY(0);
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .editor-content {
+                flex-direction: column;
+            }
+
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="../index.html#home">ホーム</a></li>
+                    <li><a href="../index.html#features">コース紹介</a></li>
+                    <li><a href="../index.html#gallery">ギャラリー</a></li>
+                    <li><a href="../index.html#news">ニュース</a></li>
+                    <li><a href="../index.html#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="container main-content">
+        <div class="section-header">
+            <h2>ブログ作成</h2>
+            <p>マークダウン形式でブログを作成し、写真を追加できます。</p>
+        </div>
+
+        <!-- エディター部分 -->
+        <div class="editor-container">
+            <div class="editor-title">
+                <label for="blog-title">タイトル</label>
+                <input type="text" id="blog-title" placeholder="ブログのタイトルを入力してください">
+            </div>
+
+            <div class="editor-date">
+                <label for="blog-date">日付</label>
+                <input type="date" id="blog-date">
+            </div>
+
+            <div class="image-upload-container">
+                <h3>画像のアップロード</h3>
+                <p>ブログに追加する画像をアップロードしてください</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <label for="image-upload" class="button primary-button" style="cursor: pointer; display: inline-block;">
+                        画像をアップロード
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    </label>
+                </div>
+                <div id="image-preview-container" class="image-preview-container">
+                    <!-- 選択された画像のプレビューがここに表示されます -->
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <div class="markdown-editor">
+                    <label for="blog-content">マークダウンエディタ</label>
+                    <textarea id="blog-content" placeholder="マークダウン形式でブログの内容を入力してください"></textarea>
+                </div>
+                <div class="markdown-preview">
+                    <label>プレビュー</label>
+                    <div id="preview-content"></div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="save-btn" class="button primary-button">保存する</button>
+            </div>
+        </div>
+
+        <!-- マークダウンヘルプ -->
+        <div class="markdown-help">
+            <h3>マークダウン記法ガイド</h3>
+            <div class="markdown-help-grid">
+                <div class="markdown-help-item">
+                    <h4>見出し</h4>
+                    <pre># 見出し1
+## 見出し2
+### 見出し3</pre>
+                    <div class="result">
+                        <h1>見出し1</h1>
+                        <h2>見出し2</h2>
+                        <h3>見出し3</h3>
+                    </div>
+                </div>
+                <div class="markdown-help-item">
+                    <h4>テキストスタイル</h4>
+                    <pre>**太字**
+*斜体*
+~~取り消し線~~</pre>
+                    <div class="result">
+                        <strong>太字</strong><br>
+                        <em>斜体</em><br>
+                        <del>取り消し線</del>
+                    </div>
+                </div>
+                <div class="markdown-help-item">
+                    <h4>リスト</h4>
+                    <pre>- 項目1
+- 項目2
+  - ネスト項目
+
+1. 番号付き項目1
+2. 番号付き項目2</pre>
+                    <div class="result">
+                        <ul>
+                            <li>項目1</li>
+                            <li>項目2
+                                <ul>
+                                    <li>ネスト項目</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ol>
+                            <li>番号付き項目1</li>
+                            <li>番号付き項目2</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="markdown-help-item">
+                    <h4>リンク</h4>
+                    <pre>[リンクテキスト](https://example.com)</pre>
+                    <div class="result">
+                        <a href="https://example.com">リンクテキスト</a>
+                    </div>
+                </div>
+                <div class="markdown-help-item">
+                    <h4>画像</h4>
+                    <pre>![代替テキスト](画像のURL)</pre>
+                    <div class="result">
+                        <p>アップロードした画像は自動的にプレビューに表示されます。</p>
+                    </div>
+                </div>
+                <div class="markdown-help-item">
+                    <h4>引用</h4>
+                    <pre>> これは引用です
+> 複数行にわたる引用</pre>
+                    <div class="result">
+                        <blockquote>
+                            <p>これは引用です<br>複数行にわたる引用</p>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="../facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="../gallery.html">ギャラリー</a></li>
+                        <li><a href="../temp/temppage.html">講義紹介・プロジェクト</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="../index.html#contact">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="../special/OpenCampus.html">オープンキャンパス</a></li>
+                        <li><a href="../question.html">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // モバイルメニュートグル
+        const mobileMenu = document.getElementById('mobileMenu');
+        const nav = document.getElementById('nav');
+
+        mobileMenu.addEventListener('click', function() {
+            nav.classList.toggle('active');
+        });
+
+        // Markdown-itインスタンスの作成
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true
+        });
+
+        // アップロードされた画像の配列
+        let uploadedImages = [];
+
+        // マークダウンエディタの内容が変更されたときにプレビューを更新
+        document.getElementById('blog-content').addEventListener('input', updatePreview);
+
+        // 初期プレビューの更新
+        updatePreview();
+
+        // プレビューを更新する関数
+        function updatePreview() {
+            const markdownContent = document.getElementById('blog-content').value;
+            const htmlContent = md.render(markdownContent);
+            document.getElementById('preview-content').innerHTML = htmlContent;
+        }
+
+        // 画像をアップロードして処理する関数
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 画像ファイルかどうかチェック
+            if (!file.type.match('image.*')) {
+                alert('画像ファイルを選択してください');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imagePath = e.target.result; // データURL
+                const imageName = file.name;
+
+                // 画像情報を配列に追加
+                uploadedImages.push({
+                    name: imageName,
+                    path: imagePath
+                });
+
+                // 画像をプレビューに追加
+                addImageToPreview(imagePath, imageName);
+
+                // マークダウンエディタに画像の参照を追加
+                const imageMarkdown = `![${imageName}](${imageName})\n`;
+                const textarea = document.getElementById('blog-content');
+                const cursorPos = textarea.selectionStart;
+                const textBefore = textarea.value.substring(0, cursorPos);
+                const textAfter = textarea.value.substring(cursorPos);
+                textarea.value = textBefore + imageMarkdown + textAfter;
+                
+                // プレビューを更新
+                updatePreview();
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // 画像をプレビューに追加する関数
+        function addImageToPreview(imagePath, imageName) {
+            const previewContainer = document.getElementById('image-preview-container');
+            const imagePreview = document.createElement('div');
+            imagePreview.className = 'image-preview';
+            imagePreview.innerHTML = `
+                <img src="${imagePath}" alt="${imageName}" data-name="${imageName}">
+                <div class="remove-image">×</div>
+            `;
+
+            // 削除ボタンのイベントリスナー
+            imagePreview.querySelector('.remove-image').addEventListener('click', function() {
+                // プレビューから削除
+                previewContainer.removeChild(imagePreview);
+                
+                // 配列から削除
+                const index = uploadedImages.findIndex(img => img.name === imageName);
+                if (index !== -1) {
+                    uploadedImages.splice(index, 1);
+                }
+                
+                // マークダウンエディタから画像の参照を削除
+                const textarea = document.getElementById('blog-content');
+                const imageMarkdown = `![${imageName}](${imageName})`;
+                textarea.value = textarea.value.replace(imageMarkdown, '');
+                
+                // プレビューを更新
+                updatePreview();
+            });
+
+            previewContainer.appendChild(imagePreview);
+        }
+
+        // ブログを保存する関数
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const title = document.getElementById('blog-title').value || 'タイトルなし';
+            const date = document.getElementById('blog-date').value 
+                ? new Date(document.getElementById('blog-date').value).toLocaleDateString('ja-JP') 
+                : new Date().toLocaleDateString('ja-JP');
+            const markdownContent = document.getElementById('blog-content').value;
+            
+            // マークダウンをHTMLに変換
+            let htmlContent = md.render(markdownContent);
+            
+            // アップロードされた画像のパスを実際のデータURLに置換
+            uploadedImages.forEach(image => {
+                const regex = new RegExp(`src="${image.name}"`, 'g');
+                htmlContent = htmlContent.replace(regex, `src="${image.path}"`);
+            });
+            
+            // ブログHTMLを生成
+            const blogHTML = generateBlogHTML(title, date, htmlContent);
+            
+            // ファイル名を生成（日付とタイトルから）
+            const fileName = generateFileName(title);
+            
+            // HTMLファイルを保存
+            saveHTMLFile(fileName, blogHTML);
+        });
+
+        // ファイル名を生成する関数
+        function generateFileName(title) {
+            // 現在の日時を取得
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            
+            // タイトルから有効なファイル名を生成
+            let sanitizedTitle = title
+                .replace(/[^\w\s]/gi, '') // 特殊文字を削除
+                .replace(/\s+/g, '-')     // スペースをハイフンに置換
+                .toLowerCase();
+            
+            // 日付とタイトルを組み合わせてファイル名を生成
+            return `${year}${month}${day}-${sanitizedTitle}.html`;
+        }
+
+        // HTMLファイルを保存する関数
+        function saveHTMLFile(fileName, htmlContent) {
+            // Blobオブジェクトを作成
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            
+            // ダウンロードリンクを作成
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            
+            // リンクをクリックしてダウンロードを開始
+            document.body.appendChild(a);
+            a.click();
+            
+            // クリーンアップ
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+            
+            alert(`ブログが保存されました: ${fileName}\n\nこのファイルを blog/bloglist/ ディレクトリに配置してください。`);
+        }
+
+        // ブログHTMLを生成する関数
+        function generateBlogHTML(title, date, content) {
+            // HTMLの各部分を個別に作成
+            const htmlStart = '<!DOCTYPE html>\n<html lang="ja">\n<head>\n';
+            const htmlHead = `    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>${title} - 崇城大学芸術学部美術学科 3Dアートコース</title>\n    <link rel="icon" href="../../images/logohedder.png" type="image/png">\n    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">\n    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">\n`;
+            
+            // スタイル
+            const htmlStyle = `    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        /* ブログコンテンツスタイル */
+        .blog-content {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-header {
+            margin-bottom: 30px;
+        }
+
+        .blog-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .blog-date {
+            color: #777;
+            font-size: 1rem;
+        }
+
+        .blog-body {
+            line-height: 1.8;
+        }
+
+        .blog-body img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .blog-body h1, .blog-body h2, .blog-body h3, .blog-body h4, .blog-body h5, .blog-body h6 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .blog-body p {
+            margin-bottom: 20px;
+        }
+
+        .blog-body ul, .blog-body ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .blog-body blockquote {
+            border-left: 4px solid #4285f4;
+            padding-left: 20px;
+            margin-left: 0;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* フッタースタイル */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="../../index.html#home">ホーム</a></li>
+                    <li><a href="../../index.html#features">コース紹介</a></li>
+                    <li><a href="../../index.html#gallery">ギャラリー</a></li>
+                    <li><a href="../../index.html#news">ニュース</a></li>
+                    <li><a href="../../index.html#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ブログコンテンツ -->
+    <div class="container">
+        <div class="blog-content">
+            <div class="blog-header">
+                <h1 class="blog-title">${title}</h1>
+                <p class="blog-date">${date}</p>
+            </div>
+            <div class="blog-body">
+                ${content}
+            </div>
+            <a href="../bloglist/" class="back-link">← ブログ一覧に戻る</a>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="../../facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="../../gallery.html">ギャラリー</a></li>
+                        <li><a href="../../temp/temppage.html">講義紹介・プロジェクト</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="../../index.html#contact">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="../../special/OpenCampus.html">オープンキャンパス</a></li>
+                        <li><a href="../../question.html">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>`;
+
+            // 変数を置換
+            const result = htmlStyle
+                .replace('${title}', title)
+                .replace('${date}', date)
+                .replace('${content}', content);
+
+            return result;
+        }
+    </script>
+</body>
+</html>
