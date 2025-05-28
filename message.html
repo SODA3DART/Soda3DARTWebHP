@@ -413,16 +413,31 @@
 
                 <div class="message-content">
                     <p>
-                        3Dアートコースのウェブサイトをご覧いただき、誠にありがとうございます。本コースでは、従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身につけることができます。
+                        <span style="font-size: 18px; font-weight: bold; float: left; margin-right: 5px;">お</span>ママ、3Dアートコースのウェブサイトをご覧いただき、誠にありがとうございます。本コースでは、従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身につけることができます。
                     </p>
+
+                    <!-- 教授作品1 -->
+                    <div class="professor-work" style="float: right; width: 40%; margin: 0 0 15px 20px; text-align: center;">
+                        <img src="images/prof,kiyoshima/profwork.png"  style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <p style="margin-top: 10px; font-style: italic; font-size: 13px; color: #555;"></p>
+                    </div>
+
                     <p>
                         現代のアート表現において、デジタルとフィジカルの境界は急速に曖昧になりつつあります。私たちのコースでは、この二つの世界を自由に行き来できる柔軟な思考と技術を持ったクリエイターの育成を目指しています。伝統的な造形の基礎をしっかりと学びながら、最新のデジタル技術も習得することで、未来のアート表現を切り拓く力を養います。
                     </p>
+
                     <p>
                         本コースの特徴は、少人数制の丁寧な指導と、実践的なプロジェクトベースの学習にあります。学生一人ひとりの個性や関心に合わせたカリキュラムを提供し、創造性を最大限に引き出すサポートを行っています。また、企業や地域との連携プロジェクトを通じて、実社会での経験を積む機会も豊富に用意しています。
                     </p>
+
+                    <!-- 教授作品2 -->
+                    <div class="professor-work" style="float: left; width: 40%; margin: 0 20px 15px 0; text-align: center;">
+                        <img src="images/prof,kiyoshima/profwork2.png" alt="清島教授の作品2" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <p style="margin-top: 10px; font-style: italic; font-size: 13px; color: #555;">清島教授の作品2</p>
+                    </div>
+
                     <p>
-                        芸術とテクノロジーの融合に興味を持つ皆さん、ぜひ私たちと一緒に新しい表現の可能性を探求しましょう。オープンキャンパスや個別相談会も随時開催していますので、お気軽にお問い合わせください。皆さんとお会いできることを心より楽しみにしています。
+                        <span style="white-space: nowrap;">芸術とテクノロジーの融合に興味を持つ皆さん</span>、ぜひ私たちと一緒に新しい表現の可能性を探求しましょう。オープンキャンパスや個別相談会も随時開催していますので、お気軽にお問い合わせください。皆さんとお会いできることを心より楽しみにしています。
                     </p>
                     <div class="message-signature">
                         崇城大学芸術学部美術学科 教授<br>
@@ -514,7 +529,9 @@
                 // 教授プロフィール
                 'professor-name': '清島 浩徳',
                 'professor-position': '崇城大学芸術学部美術学科 教授',
-                'professor-bio': 'hogehoge',
+                'professor-bio': '',
+                'professor-work-caption': '清島教授の作品',
+
 
                 // メッセージ内容
                 'message-p1': '3Dアートコースのウェブサイトをご覧いただき、誠にありがとうございます。本コースでは、従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身につけることができます。',
@@ -565,6 +582,9 @@
                 'professor-name': 'Hironori Kiyoshima',
                 'professor-position': 'Professor, Department of Art, Faculty of Art, Sojo University',
                 'professor-bio': 'hogehoge',
+                'professor-work-caption': 'Professor Kiyoshima\'s Work',
+                'work1-caption': 'Professor Kiyoshima\'s Work 1',
+                'work2-caption': 'Professor Kiyoshima\'s Work 2',
 
                 // Message content
                 'message-p1': 'Thank you for visiting the 3D Art Course website. In this course, you can learn not only traditional three-dimensional expressions such as sculpture, but also cutting-edge digital three-dimensional expressions such as 3DCG, and acquire a wide range of expression methods utilizing figure modeling, game design, AI, and XR.',
@@ -655,12 +675,54 @@
             document.querySelector('.professor-position').textContent = languageData[lang]['professor-position'];
             document.querySelector('.professor-bio').textContent = languageData[lang]['professor-bio'];
 
+            // 教授作品キャプションの翻訳
+            const professorWorks = document.querySelectorAll('.professor-work p');
+            if (professorWorks.length >= 1) professorWorks[0].textContent = languageData[lang]['work1-caption'];
+            if (professorWorks.length >= 2) professorWorks[1].textContent = languageData[lang]['work2-caption'];
+
             // メッセージ内容の翻訳
-            const messagePs = document.querySelectorAll('.message-content p');
-            messagePs[0].textContent = languageData[lang]['message-p1'];
-            messagePs[1].textContent = languageData[lang]['message-p2'];
-            messagePs[2].textContent = languageData[lang]['message-p3'];
-            messagePs[3].textContent = languageData[lang]['message-p4'];
+            // 直接の子要素のpタグのみを選択（画像のキャプションは含まない）
+            const messagePs = document.querySelectorAll('.message-content > p');
+
+            // 最初の段落には特別な処理（おママの装飾を保持）
+            if (lang === 'ja') {
+                messagePs[0].innerHTML = '<span style="font-size: 18px; font-weight: bold; float: left; margin-right: 5px;">お</span>ママ、' + languageData[lang]['message-p1'].substring(2);
+            } else {
+                messagePs[0].textContent = languageData[lang]['message-p1'];
+            }
+
+            // 残りの段落
+            if (messagePs.length > 1) messagePs[1].textContent = languageData[lang]['message-p2'];
+            if (messagePs.length > 2) messagePs[2].textContent = languageData[lang]['message-p3'];
+
+            // 最後の段落 - 特別な処理（芸術とテクノロジーの融合に興味を持つ皆さんの部分を改行させない）
+            if (messagePs.length > 3) {
+                const messageText = languageData[lang]['message-p4'];
+                if (lang === 'ja') {
+                    // 日本語の場合、「芸術とテクノロジーの融合に興味を持つ皆さん」を span で囲む
+                    const phraseToWrap = '芸術とテクノロジーの融合に興味を持つ皆さん';
+                    const index = messageText.indexOf(phraseToWrap);
+                    if (index !== -1) {
+                        const before = messageText.substring(0, index);
+                        const after = messageText.substring(index + phraseToWrap.length);
+                        messagePs[3].innerHTML = before + '<span style="white-space: nowrap;">' + phraseToWrap + '</span>' + after;
+                    } else {
+                        messagePs[3].textContent = messageText;
+                    }
+                } else {
+                    // 英語の場合、"those interested in the fusion of art and technology" を span で囲む
+                    const phraseToWrap = 'those interested in the fusion of art and technology';
+                    const index = messageText.toLowerCase().indexOf(phraseToWrap.toLowerCase());
+                    if (index !== -1) {
+                        const before = messageText.substring(0, index);
+                        const actualPhrase = messageText.substring(index, index + phraseToWrap.length);
+                        const after = messageText.substring(index + phraseToWrap.length);
+                        messagePs[3].innerHTML = before + '<span style="white-space: nowrap;">' + actualPhrase + '</span>' + after;
+                    } else {
+                        messagePs[3].textContent = messageText;
+                    }
+                }
+            }
 
             // 署名の翻訳
             const signatureLines = document.querySelector('.message-signature').innerHTML.split('<br>');
