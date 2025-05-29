@@ -1,0 +1,288 @@
+/* Blog-specific CSS styles for Soda3DARTWebHP
+ * This file contains styles for blog pages, including the blog editor and blog posts
+ */
+
+/* Main content styles */
+body {
+    padding-top: 80px;
+}
+
+.main-content {
+    padding: 40px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #777;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Editor styles */
+.editor-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.editor-title {
+    margin-bottom: 20px;
+}
+
+.editor-title input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.editor-date {
+    margin-bottom: 20px;
+}
+
+.editor-date input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.editor-content {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.markdown-editor {
+    flex: 1;
+}
+
+.markdown-editor textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    font-family: monospace;
+}
+
+.markdown-preview {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    min-height: 400px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.markdown-preview img {
+    max-width: 100%;
+    height: auto;
+}
+
+.image-upload-container {
+    margin-bottom: 20px;
+}
+
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview .remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ff4444;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+/* Markdown help styles */
+.markdown-help {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.markdown-help h3 {
+    margin-bottom: 15px;
+}
+
+.markdown-help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.markdown-help-item {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.markdown-help-item h4 {
+    margin-bottom: 10px;
+    color: #4285f4;
+}
+
+.markdown-help-item pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+
+.markdown-help-item .result {
+    border-top: 1px dashed #ddd;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+/* Blog post styles */
+.blog-content {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.blog-header {
+    margin-bottom: 30px;
+}
+
+.blog-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.blog-date {
+    color: #777;
+    font-size: 1rem;
+}
+
+.blog-body {
+    line-height: 1.8;
+}
+
+.blog-body img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 5px;
+}
+
+.blog-body h1, .blog-body h2, .blog-body h3, .blog-body h4, .blog-body h5, .blog-body h6 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.blog-body p {
+    margin-bottom: 20px;
+}
+
+.blog-body p.empty-line {
+    height: 1em;
+    margin: 0;
+}
+
+.blog-body ul, .blog-body ol {
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+
+.blog-body blockquote {
+    border-left: 4px solid #4285f4;
+    padding-left: 20px;
+    margin-left: 0;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    color: #4285f4;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Formatting buttons */
+.formatting-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .editor-content {
+        flex-direction: column;
+    }
+
+    .button-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .button {
+        width: 100%;
+    }
+}

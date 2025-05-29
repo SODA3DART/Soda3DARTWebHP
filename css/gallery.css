@@ -1,0 +1,296 @@
+/* Gallery-specific CSS styles for Soda3DARTWebHP
+ * This file contains styles specific to the gallery page
+ */
+
+/* Main content styles */
+.main-content {
+    padding: 120px 0 80px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #333;
+    font-family: 'IPAex明朝', serif;
+}
+
+.page-title p {
+    font-size: 1.1rem;
+    color: #777;
+    font-family: 'セザンヌ', sans-serif;
+}
+
+/* Gallery styles */
+.gallery-container {
+    margin-bottom: 60px;
+}
+
+.gallery-section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #4285f4;
+    display: inline-block;
+    font-family: 'IPAex明朝', serif;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.gallery-item {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.gallery-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+    cursor: pointer;
+}
+
+.gallery-item:hover .gallery-image img {
+    transform: scale(1.05);
+}
+
+.gallery-info {
+    padding: 20px;
+}
+
+.gallery-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.gallery-author {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.gallery-description {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.gallery-tag {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+/* Video gallery styles */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+/* Filter controls */
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.filter-button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.filter-button:hover, .filter-button.active {
+    background-color: #4285f4;
+    color: #fff;
+}
+
+/* Lightbox styles */
+.lightbox {
+    display: flex;
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: background-color 0.5s ease, opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+
+.lightbox.active {
+    opacity: 1;
+    visibility: visible;
+    transition: background-color 0.5s ease, opacity 0.5s ease, visibility 0s linear;
+}
+
+.lightbox-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 90%;
+    max-height: 90%;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+}
+
+.lightbox.active .lightbox-container {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.lightbox-content {
+    display: block;
+    max-width: 100%;
+    max-height: 70vh;
+    margin: 0 auto 15px;
+    border-radius: 5px;
+}
+
+.lightbox-gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.lightbox-gallery img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.lightbox-gallery img:hover {
+    transform: scale(1.1);
+}
+
+.lightbox-gallery img.active {
+    border-color: #4285f4;
+}
+
+.lightbox-description {
+    color: white;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transform: rotate(-90deg);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.lightbox.active .lightbox-close {
+    opacity: 1;
+    transform: rotate(0);
+    transition-delay: 0.3s;
+}
+
+/* Artistic effects for lightbox */
+@keyframes artistic-bg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body.viewing-art {
+    overflow: hidden; /* Prevent scrolling when lightbox is open */
+}
+
+.lightbox.active {
+    background-color: rgba(0, 0, 0, 0.9);
+    background-image: radial-gradient(circle at center, rgba(40, 40, 40, 0.3) 0%, rgba(0, 0, 0, 0.9) 70%);
+    background-size: 200% 200%;
+    animation: artistic-bg 15s ease infinite;
+}
+
+.lightbox-content {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes float {
+    0% { transform: scale(1) translateY(0px); }
+    50% { transform: scale(1.01) translateY(-5px); }
+    100% { transform: scale(1) translateY(0px); }
+}
+
+.lightbox.active .lightbox-content {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
