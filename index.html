@@ -13,14 +13,14 @@
     <meta property="og:url" content="https://soda3dart.github.io/Soda3DARTWebHP/index.html">
     <meta property="og:title" content="崇城大学芸術学部美術学科 3Dアートコース | 3DCG・VR・Vtuber・ゲーム制作">
     <meta property="og:description" content="九州・熊本の崇城大学芸術学部美術学科3Dアートコースでは、3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを学べます。最新技術と芸術を融合した教育で未来のクリエイターを育成します。">
-    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://soda3dart.github.io/Soda3DARTWebHP/index.html">
     <meta property="twitter:title" content="崇城大学芸術学部美術学科 3Dアートコース | 3DCG・VR・Vtuber・ゲーム制作">
     <meta property="twitter:description" content="九州・熊本の崇城大学芸術学部美術学科3Dアートコースでは、3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを学べます。最新技術と芸術を融合した教育で未来のクリエイターを育成します。">
-    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FRSVB211GG"></script>
@@ -59,10 +59,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
     <!-- Preload top images for faster loading -->
-    <link rel="preload" href="images/TopImage/topimage1.png" as="image" type="image/png" media="(min-width: 800px)" fetchpriority="high">
-    <link rel="preload" href="images/TopImage/topimage2.png" as="image" type="image/png" media="(min-width: 800px)" fetchpriority="high">
-    <link rel="preload" href="images/TopImage/topimage3.png" as="image" type="image/png" media="(min-width: 800px)" fetchpriority="high">
-    <link rel="preload" href="images/TopImage/topimage4.png" as="image" type="image/png" media="(min-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="images/TopImage/topimage1.webp" as="image" type="image/webp" media="(min-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="images/TopImage/topimage2.webp" as="image" type="image/webp" media="(min-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="images/TopImage/topimage3.webp" as="image" type="image/webp" media="(min-width: 800px)" fetchpriority="high">
+    <link rel="preload" href="images/TopImage/topimage4.webp" as="image" type="image/webp" media="(min-width: 800px)" fetchpriority="high">
     <style>
         @font-face {
             font-family: 'セザンヌ';
@@ -2297,9 +2297,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Known top images - using a static list instead of dynamic detection for better performance
             const topImages = [
-                'images/TopImage/topimage1.png',
-                'images/TopImage/topimage2.png',
-                'images/TopImage/topimage3.png'
+                'images/TopImage/topimage1.webp',
+                'images/TopImage/topimage2.webp',
+                'images/TopImage/topimage3.webp',
+                'images/TopImage/topimage4.webp'
                 // Add more images here if needed
             ];
 
@@ -2339,7 +2340,7 @@
                     // Fallback to a default image if there's an error
                     const heroSection = document.querySelector('.hero');
                     if (heroSection) {
-                        heroSection.style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/TopImage/topimage1.png') center/cover no-repeat`;
+                        heroSection.style.background = `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/TopImage/topimage1.webp') center/cover no-repeat`;
                     }
                 });
         });

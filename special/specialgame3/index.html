@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>モバイル3Dゲーム | 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <meta name="description" content="崇城大学3Dアートコースのモバイルデバイス向け3Dゲーム。スマートフォンやタブレットで楽しめる3D体験です。">
+    <link rel="icon" href="../../images/logohedder.png" type="image/png">
+
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+
+    <!-- Three.js ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <!-- Three.js 拡張ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <!-- GLTFLoader for loading 3D models -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Post-processing -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/shaders/LuminosityHighPassShader.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ゲームキャンバス */
+        #game-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            touch-action: none;
+        }
+
+        /* ゲームUI要素 */
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .score {
+            font-weight: bold;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 36px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .restart-button {
+            margin-top: 20px;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .restart-button:hover {
+            background-color: #3367d6;
+            box-shadow: 0 0 30px rgba(66, 133, 244, 0.8);
+            transform: scale(1.05);
+        }
+
+        .back-to-site {
+            margin-top: 10px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .back-to-site:hover {
+            background-color: #555;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* コントロール */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .joystick-area {
+            width: 120px;
+            height: 120px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: relative;
+            touch-action: none;
+        }
+
+        .joystick {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            touch-action: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-button {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(66, 133, 244, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            touch-action: none;
+            user-select: none;
+        }
+
+        /* ローディング画面 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #333;
+            border-top: 5px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 開始画面 */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4285f4;
+            text-shadow: 0 0 10px rgba(66, 133, 244, 0.7);
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .start-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+            max-width: 600px;
+        }
+
+        .start-button {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            background-color: #3367d6;
+            box-shadow: 0 0 30px rgba(66, 133, 244, 0.8);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- ローディング画面 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">ゲームを読み込み中...</div>
+    </div>
+
+    <!-- 開始画面 -->
+    <div class="start-screen" id="startScreen">
+        <h1>モバイル3Dゲーム</h1>
+        <p>宝石を集めながら障害物を避けるゲームです。左側の仮想ジョイスティックで移動し、右側のボタンでジャンプします。</p>
+        <button class="start-button" id="startButton">ゲームスタート</button>
+    </div>
+
+    <!-- ゲームキャンバス -->
+    <div id="game-container"></div>
+
+    <!-- ゲームUI -->
+    <div class="game-ui">
+        <div class="score">スコア: <span id="scoreValue">0</span></div>
+    </div>
+
+    <!-- ゲームオーバー画面 -->
+    <div class="game-over" id="gameOverScreen">
+        <h2>ゲームオーバー</h2>
+        <p>スコア: <span id="finalScore">0</span></p>
+        <button class="restart-button" id="restartButton">もう一度プレイ</button>
+        <a href="../../index.html" class="back-to-site">サイトに戻る</a>
+    </div>
+
+    <!-- モバイルコントロール -->
+    <div class="controls">
+        <div class="joystick-area" id="joystickArea">
+            <div class="joystick" id="joystick"></div>
+        </div>
+        <div class="action-buttons">
+            <div class="action-button" id="jumpButton">Jump</div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        /*
+         * Z-fighting修正のための変更点:
+         * 1. カメラのnear/farプレーンを調整 (0.5, 100) - 深度バッファの精度向上
+         * 2. 対数深度バッファの有効化 - 深度精度の大幅な向上
+         * 3. マテリアルにポリゴンオフセットを追加 - 重なるオブジェクト間の深度競合を防止
+         * 4. 装飾要素の位置調整 - オブジェクト間の重なりを防止
+         * 5. 透明オブジェクトのdepthWrite設定の最適化
+         */
+
+        // ゲーム変数
+        let scene, camera, renderer, clock;
+        let composer, bloomPass; // ポストプロセッシング用
+        let player, playerBox;
+        let platforms = [];
+        let gems = [];
+        let obstacles = [];
+        let score = 0;
+        let isGameOver = false;
+        let isGameStarted = false;
+        let playerVelocity = new THREE.Vector3();
+        let gravity = 0.005;
+        let jumpPower = 0.2;
+        let isJumping = false;
+        let canJump = false;
+        let joystickDelta = { x: 0, y: 0 };
+        let joystickActive = false;
+        let joystickTouchId = null;
+        let jumpButtonTouchId = null;
+
+        // パフォーマンス最適化用変数
+        let qualityLevel = 'high'; // 'low', 'medium', 'high'
+        let targetFPS = 60;
+        let lastFrameTime = 0;
+        let frameCounter = 0;
+        let lastFPSUpdate = 0;
+        let currentFPS = 0;
+        let frustum = new THREE.Frustum(); // 視錐台カリング用
+        let frustumMatrix = new THREE.Matrix4(); // 視錐台行列
+        let particleSystems = []; // パーティクルシステム
+
+        // DOM要素
+        const loadingScreen = document.getElementById('loadingScreen');
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const restartButton = document.getElementById('restartButton');
+        const scoreValue = document.getElementById('scoreValue');
+        const finalScore = document.getElementById('finalScore');
+        const joystickArea = document.getElementById('joystickArea');
+        const joystick = document.getElementById('joystick');
+        const jumpButton = document.getElementById('jumpButton');
+
+        // デバイスのパフォーマンスを検出して品質設定を調整
+        function detectPerformance() {
+            // モバイルデバイスの検出
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            // GPUの性能を推測（WebGLのパラメータから）
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+            if (!gl) {
+                // WebGLが利用できない場合は低品質
+                return 'low';
+            }
+
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            let renderer = 'unknown';
+
+            if (debugInfo) {
+                renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toLowerCase();
+            }
+
+            // デバイスメモリの取得（利用可能な場合）
+            const deviceMemory = navigator.deviceMemory || 4; // デフォルト4GB
+
+            // 品質レベルの決定
+            if (isMobile) {
+                // モバイルデバイスの場合
+                if (renderer.includes('adreno') || renderer.includes('mali') || renderer.includes('apple')) {
+                    // 高性能なモバイルGPU
+                    return deviceMemory >= 4 ? 'medium' : 'low';
+                } else {
+                    return 'low';
+                }
+            } else {
+                // デスクトップの場合
+                if (renderer.includes('nvidia') || renderer.includes('amd') || renderer.includes('intel')) {
+                    return 'high';
+                } else {
+                    return 'medium';
+                }
+            }
+        }
+
+        // 初期化関数
+        function init() {
+            // パフォーマンスレベルの検出
+            qualityLevel = detectPerformance();
+            console.log('Detected quality level:', qualityLevel);
+
+            // 品質レベルに応じてターゲットFPSを設定
+            if (qualityLevel === 'low') {
+                targetFPS = 30;
+            } else if (qualityLevel === 'medium') {
+                targetFPS = 45;
+            } else {
+                targetFPS = 60;
+            }
+
+            // シーンの作成
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB); // 空色の背景
+
+            // フォグの追加（遠くのオブジェクトをフェードアウト）
+            scene.fog = new THREE.FogExp2(0x87CEEB, 0.02);
+
+            // カメラの作成
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 100);
+            camera.position.set(0, 5, 10);
+            camera.lookAt(0, 0, 0);
+
+            // レンダラーの作成と高品質設定
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: qualityLevel !== 'low', // 低品質ではアンチエイリアスを無効化
+                powerPreference: 'high-performance',
+                alpha: false,
+                // Z-fighting防止のための設定
+                logarithmicDepthBuffer: true // 対数深度バッファを有効化して深度精度を向上
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // デバイスピクセル比の設定（低品質では下げる）
+            const pixelRatio = qualityLevel === 'low' ? 
+                Math.min(1.0, window.devicePixelRatio) : 
+                window.devicePixelRatio;
+            renderer.setPixelRatio(pixelRatio);
+
+            // シャドウマップの設定
+            renderer.shadowMap.enabled = qualityLevel !== 'low';
+            if (qualityLevel === 'high') {
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            } else {
+                renderer.shadowMap.type = THREE.BasicShadowMap;
+            }
+
+            // 物理ベースレンダリングの有効化
+            renderer.physicallyCorrectLights = qualityLevel === 'high';
+            renderer.gammaOutput = true;
+            renderer.gammaFactor = 2.2;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+
+            document.getElementById('game-container').appendChild(renderer.domElement);
+
+            // ポストプロセッシングの設定
+            if (qualityLevel !== 'low') {
+                // エフェクトコンポーザーの作成
+                composer = new THREE.EffectComposer(renderer);
+
+                // レンダーパスの追加
+                const renderPass = new THREE.RenderPass(scene, camera);
+                composer.addPass(renderPass);
+
+                // ブルームエフェクトの追加（宝石を輝かせる）
+                bloomPass = new THREE.UnrealBloomPass(
+                    new THREE.Vector2(window.innerWidth, window.innerHeight),
+                    0.5,  // 強度
+                    0.4,  // 半径
+                    0.85  // しきい値
+                );
+                composer.addPass(bloomPass);
+            }
+
+            // 時間管理
+            clock = new THREE.Clock();
+
+            // 光源の追加
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+            scene.add(ambientLight);
+
+            // 半球光の追加（より自然な環境光）
+            const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x444444, 0.6);
+            scene.add(hemisphereLight);
+
+            // メインの指向性光源
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+
+            // シャドウマップの品質設定
+            if (qualityLevel === 'high') {
+                directionalLight.shadow.mapSize.width = 2048;
+                directionalLight.shadow.mapSize.height = 2048;
+                directionalLight.shadow.camera.near = 0.5;
+                directionalLight.shadow.camera.far = 50;
+                directionalLight.shadow.camera.left = -20;
+                directionalLight.shadow.camera.right = 20;
+                directionalLight.shadow.camera.top = 20;
+                directionalLight.shadow.camera.bottom = -20;
+                directionalLight.shadow.bias = -0.0005;
+            } else if (qualityLevel === 'medium') {
+                directionalLight.shadow.mapSize.width = 1024;
+                directionalLight.shadow.mapSize.height = 1024;
+                directionalLight.shadow.camera.near = 0.5;
+                directionalLight.shadow.camera.far = 50;
+                directionalLight.shadow.camera.left = -15;
+                directionalLight.shadow.camera.right = 15;
+                directionalLight.shadow.camera.top = 15;
+                directionalLight.shadow.camera.bottom = -15;
+                directionalLight.shadow.bias = -0.0005;
+            } else {
+                directionalLight.shadow.mapSize.width = 512;
+                directionalLight.shadow.mapSize.height = 512;
+            }
+
+            scene.add(directionalLight);
+
+            // プレイヤーの作成
+            createPlayer();
+
+            // 初期プラットフォームの作成
+            createInitialPlatforms();
+
+            // イベントリスナーの設定
+            window.addEventListener('resize', onWindowResize, false);
+            setupMobileControls();
+
+            // ボタンイベントリスナー
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', restartGame);
+
+            // ローディング画面を非表示
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+
+            // アニメーションループの開始
+            animate();
+        }
+
+        // パーティクルシステムの作成
+        function createParticleSystem(position, color, count = 15, speed = 0.2, size = 0.1, duration = 1000) {
+            const particles = new THREE.Group();
+            particles.userData = {
+                particles: [],
+                startTime: Date.now(),
+                duration: duration
+            };
+
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.SphereGeometry(size * Math.random() * 0.5 + size * 0.5, 8, 8);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: color,
+                    transparent: true,
+                    opacity: 1
+                });
+
+                const particle = new THREE.Mesh(geometry, material);
+
+                // ランダムな方向に飛ばす
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 0.5 + 0.5;
+                const velocityY = Math.random() * speed * 2;
+
+                particle.userData = {
+                    velocity: new THREE.Vector3(
+                        Math.cos(angle) * radius * speed,
+                        velocityY,
+                        Math.sin(angle) * radius * speed
+                    ),
+                    gravity: 0.01
+                };
+
+                particle.position.copy(position);
+                particles.add(particle);
+                particles.userData.particles.push(particle);
+            }
+
+            scene.add(particles);
+            particleSystems.push(particles);
+
+            return particles;
+        }
+
+        // パーティクルシステムの更新
+        function updateParticleSystems(deltaTime) {
+            const now = Date.now();
+
+            for (let i = particleSystems.length - 1; i >= 0; i--) {
+                const system = particleSystems[i];
+                const elapsed = now - system.userData.startTime;
+
+                // 期間が過ぎたらパーティクルシステムを削除
+                if (elapsed > system.userData.duration) {
+                    scene.remove(system);
+                    particleSystems.splice(i, 1);
+                    continue;
+                }
+
+                // 残り時間の割合
+                const remainingFactor = 1 - (elapsed / system.userData.duration);
+
+                // パーティクルの更新
+                system.userData.particles.forEach(particle => {
+                    // 重力の適用
+                    particle.userData.velocity.y -= particle.userData.gravity;
+
+                    // 位置の更新
+                    particle.position.x += particle.userData.velocity.x;
+                    particle.position.y += particle.userData.velocity.y;
+                    particle.position.z += particle.userData.velocity.z;
+
+                    // 透明度の更新（徐々にフェードアウト）
+                    particle.material.opacity = remainingFactor;
+
+                    // サイズの更新（徐々に小さく）
+                    const scale = remainingFactor * 0.5 + 0.5;
+                    particle.scale.set(scale, scale, scale);
+                });
+            }
+        }
+
+        // プレイヤーの作成
+        function createPlayer() {
+            // 品質に応じたジオメトリの詳細度
+            let geometry;
+            if (qualityLevel === 'high') {
+                // 高品質: より詳細な立方体
+                geometry = new THREE.BoxGeometry(1, 1, 1, 8, 8, 8);
+            } else if (qualityLevel === 'medium') {
+                geometry = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4);
+            } else {
+                geometry = new THREE.BoxGeometry(1, 1, 1);
+            }
+
+            // PBRマテリアルの作成
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0x4285f4,
+                metalness: 0.7,
+                roughness: 0.3,
+                envMapIntensity: 1.0
+            });
+
+            player = new THREE.Mesh(geometry, material);
+            player.position.set(0, 2, 0);
+            player.castShadow = true;
+            player.receiveShadow = true;
+
+            // 高品質の場合、プレイヤーに発光効果を追加
+            if (qualityLevel === 'high') {
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x4285f4,
+                    transparent: true,
+                    opacity: 0.2
+                });
+                const glowMesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.6, 16, 16),
+                    glowMaterial
+                );
+                player.add(glowMesh);
+            }
+
+            scene.add(player);
+
+            // 当たり判定用のバウンディングボックス
+            playerBox = new THREE.Box3().setFromObject(player);
+        }
+
+        // 初期プラットフォームの作成
+        function createInitialPlatforms() {
+            // メインプラットフォーム
+            createPlatform(0, 0, 0, 10, 1, 10);
+
+            // 追加のプラットフォーム
+            createPlatform(-8, 1, -3, 4, 1, 4);
+            createPlatform(8, 2, 3, 4, 1, 4);
+            createPlatform(0, 3, -8, 4, 1, 4);
+
+            // 宝石の配置
+            createGem(-8, 3, -3);
+            createGem(8, 4, 3);
+            createGem(0, 5, -8);
+
+            // 障害物の配置
+            createObstacle(4, 1.5, 0, 1, 2, 1);
+            createObstacle(-4, 1.5, -4, 1, 2, 1);
+        }
+
+        // プラットフォームの作成
+        function createPlatform(x, y, z, width, height, depth) {
+            // 品質に応じたジオメトリの詳細度
+            let geometry;
+            if (qualityLevel === 'high') {
+                geometry = new THREE.BoxGeometry(width, height, depth, 2, 2, 2);
+            } else {
+                geometry = new THREE.BoxGeometry(width, height, depth);
+            }
+
+            // 木材のようなPBRマテリアル
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0x8B4513, // 茶色
+                metalness: 0.1,
+                roughness: 0.8,
+                // 高品質の場合はテクスチャマッピングを追加
+                flatShading: qualityLevel === 'low',
+                // Z-fighting防止のためのポリゴンオフセット
+                polygonOffset: true,
+                polygonOffsetFactor: 1,
+                polygonOffsetUnits: 1
+            });
+
+            const platform = new THREE.Mesh(geometry, material);
+            platform.position.set(x, y, z);
+            platform.receiveShadow = true;
+            platform.castShadow = qualityLevel !== 'low';
+
+            // 高品質の場合、プラットフォームに装飾を追加
+            if (qualityLevel === 'high') {
+                // プラットフォームの縁を強調
+                const edgeGeometry = new THREE.BoxGeometry(width + 0.1, height * 0.2, depth + 0.1);
+                const edgeMaterial = new THREE.MeshStandardMaterial({ 
+                    color: 0x654321, 
+                    metalness: 0.2,
+                    roughness: 0.7,
+                    // Z-fighting防止のためのポリゴンオフセット
+                    polygonOffset: true,
+                    polygonOffsetFactor: 2,
+                    polygonOffsetUnits: 1
+                });
+                const edge = new THREE.Mesh(edgeGeometry, edgeMaterial);
+                // Z-fighting防止のため、位置を調整
+                edge.position.y = height * 0.6;
+                edge.castShadow = true;
+                edge.receiveShadow = true;
+                platform.add(edge);
+            }
+
+            scene.add(platform);
+
+            // 当たり判定用のバウンディングボックス
+            const platformBox = new THREE.Box3().setFromObject(platform);
+            platforms.push({ 
+                mesh: platform, 
+                box: platformBox,
+                inFrustum: true // 視錐台内かどうかのフラグ
+            });
+
+            return platform;
+        }
+
+        // 宝石の作成
+        function createGem(x, y, z) {
+            // 品質に応じたジオメトリの詳細度
+            let geometry;
+            if (qualityLevel === 'high') {
+                geometry = new THREE.OctahedronGeometry(0.5, 2);
+            } else if (qualityLevel === 'medium') {
+                geometry = new THREE.OctahedronGeometry(0.5, 1);
+            } else {
+                geometry = new THREE.OctahedronGeometry(0.5, 0);
+            }
+
+            // 金色の輝くマテリアル
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0xFFD700, // 金色
+                metalness: 0.9,
+                roughness: 0.1,
+                emissive: 0xFFD700,
+                emissiveIntensity: 0.4,
+                // Z-fighting防止のためのポリゴンオフセット
+                polygonOffset: true,
+                polygonOffsetFactor: 1,
+                polygonOffsetUnits: 1
+            });
+
+            const gem = new THREE.Mesh(geometry, material);
+            gem.position.set(x, y, z);
+            gem.castShadow = true;
+            gem.receiveShadow = true;
+
+            // 高品質の場合、宝石に発光エフェクトを追加
+            if (qualityLevel !== 'low') {
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xFFD700,
+                    transparent: true,
+                    opacity: 0.4,
+                    // Z-fighting防止のためのデプスライティングを無効化
+                    depthWrite: false
+                });
+                const glowMesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.65, 16, 16), // サイズを少し大きくして確実に宝石を包む
+                    glowMaterial
+                );
+                gem.add(glowMesh);
+            }
+
+            scene.add(gem);
+
+            // 当たり判定用のバウンディングボックス
+            const gemBox = new THREE.Box3().setFromObject(gem);
+            gems.push({ 
+                mesh: gem, 
+                box: gemBox, 
+                collected: false,
+                inFrustum: true // 視錐台内かどうかのフラグ
+            });
+
+            return gem;
+        }
+
+        // 障害物の作成
+        function createObstacle(x, y, z, width, height, depth) {
+            // 品質に応じたジオメトリの詳細度
+            let geometry;
+            if (qualityLevel === 'high') {
+                geometry = new THREE.BoxGeometry(width, height, depth, 2, 2, 2);
+            } else {
+                geometry = new THREE.BoxGeometry(width, height, depth);
+            }
+
+            // 危険な赤色のマテリアル
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0xFF0000, // 赤色
+                metalness: 0.5,
+                roughness: 0.4,
+                emissive: 0xFF0000,
+                emissiveIntensity: 0.2,
+                // Z-fighting防止のためのポリゴンオフセット
+                polygonOffset: true,
+                polygonOffsetFactor: 1,
+                polygonOffsetUnits: 1
+            });
+
+            const obstacle = new THREE.Mesh(geometry, material);
+            obstacle.position.set(x, y, z);
+            obstacle.castShadow = true;
+            obstacle.receiveShadow = true;
+
+            // 高品質の場合、障害物に警告エフェクトを追加
+            if (qualityLevel === 'high') {
+                // 警告パターンの追加
+                const warningGeometry = new THREE.BoxGeometry(width * 1.05, height * 0.1, depth * 1.05);
+                const warningMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0xFFFF00,
+                    // Z-fighting防止のためのデプスライティングを調整
+                    depthWrite: true,
+                    polygonOffset: true,
+                    polygonOffsetFactor: 2,
+                    polygonOffsetUnits: 1
+                });
+
+                // 上部の警告バー - 位置を少し上に調整してZ-fightingを防止
+                const warningTop = new THREE.Mesh(warningGeometry, warningMaterial);
+                warningTop.position.y = height * 0.48;
+                obstacle.add(warningTop);
+
+                // 下部の警告バー - 位置を少し下に調整してZ-fightingを防止
+                const warningBottom = new THREE.Mesh(warningGeometry, warningMaterial);
+                warningBottom.position.y = -height * 0.48;
+                obstacle.add(warningBottom);
+            }
+
+            scene.add(obstacle);
+
+            // 当たり判定用のバウンディングボックス
+            const obstacleBox = new THREE.Box3().setFromObject(obstacle);
+            obstacles.push({ 
+                mesh: obstacle, 
+                box: obstacleBox,
+                inFrustum: true // 視錐台内かどうかのフラグ
+            });
+
+            return obstacle;
+        }
+
+        // 視錐台カリングの実行（画面外のオブジェクトの表示/非表示を切り替え）
+        function updateFrustumCulling() {
+            // カメラの視錐台行列を更新
+            frustumMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+            frustum.setFromProjectionMatrix(frustumMatrix);
+
+            // プラットフォームの視錐台チェック
+            platforms.forEach(platform => {
+                const inFrustum = frustum.intersectsBox(platform.box);
+                if (inFrustum !== platform.inFrustum) {
+                    platform.mesh.visible = inFrustum;
+                    platform.inFrustum = inFrustum;
+                }
+            });
+
+            // 宝石の視錐台チェック
+            gems.forEach(gem => {
+                if (!gem.collected) {
+                    const inFrustum = frustum.intersectsBox(gem.box);
+                    if (inFrustum !== gem.inFrustum) {
+                        gem.mesh.visible = inFrustum;
+                        gem.inFrustum = inFrustum;
+                    }
+                }
+            });
+
+            // 障害物の視錐台チェック
+            obstacles.forEach(obstacle => {
+                const inFrustum = frustum.intersectsBox(obstacle.box);
+                if (inFrustum !== obstacle.inFrustum) {
+                    obstacle.mesh.visible = inFrustum;
+                    obstacle.inFrustum = inFrustum;
+                }
+            });
+        }
+
+        // モバイルコントロールの設定
+        function setupMobileControls() {
+            // ジョイスティックの初期位置
+            const joystickRect = joystickArea.getBoundingClientRect();
+            const joystickCenterX = joystickRect.left + joystickRect.width / 2;
+            const joystickCenterY = joystickRect.top + joystickRect.height / 2;
+
+            // タッチイベント - ジョイスティック
+            joystickArea.addEventListener('touchstart', function(e) {
+                if (joystickActive) return;
+
+                const touch = e.touches[0];
+                joystickTouchId = touch.identifier;
+                joystickActive = true;
+
+                updateJoystickPosition(touch.clientX, touch.clientY);
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!joystickActive) return;
+
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === joystickTouchId) {
+                        updateJoystickPosition(e.touches[i].clientX, e.touches[i].clientY);
+                        e.preventDefault();
+                        break;
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', function(e) {
+                if (!joystickActive) return;
+
+                let touchFound = false;
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === joystickTouchId) {
+                        touchFound = true;
+                        break;
+                    }
+                }
+
+                if (!touchFound) {
+                    resetJoystick();
+                }
+            });
+
+            document.addEventListener('touchcancel', function(e) {
+                resetJoystick();
+            });
+
+            // ジョイスティック位置の更新
+            function updateJoystickPosition(touchX, touchY) {
+                const joystickRect = joystickArea.getBoundingClientRect();
+                const centerX = joystickRect.left + joystickRect.width / 2;
+                const centerY = joystickRect.top + joystickRect.height / 2;
+
+                let deltaX = touchX - centerX;
+                let deltaY = touchY - centerY;
+
+                // ジョイスティックの最大移動距離
+                const maxDistance = joystickRect.width / 2;
+                const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                if (distance > maxDistance) {
+                    deltaX = deltaX * maxDistance / distance;
+                    deltaY = deltaY * maxDistance / distance;
+                }
+
+                // ジョイスティックの位置を更新
+                joystick.style.transform = `translate(calc(-50% + ${deltaX}px), calc(-50% + ${deltaY}px))`;
+
+                // 移動方向の計算 (正規化)
+                joystickDelta.x = deltaX / maxDistance;
+                joystickDelta.y = -deltaY / maxDistance; // Y軸は反転
+            }
+
+            // ジョイスティックのリセット
+            function resetJoystick() {
+                joystick.style.transform = 'translate(-50%, -50%)';
+                joystickDelta.x = 0;
+                joystickDelta.y = 0;
+                joystickActive = false;
+                joystickTouchId = null;
+            }
+
+            // ジャンプボタン
+            jumpButton.addEventListener('touchstart', function(e) {
+                if (isGameStarted && !isJumping && canJump) {
+                    jump();
+                }
+                jumpButtonTouchId = e.touches[0].identifier;
+                e.preventDefault();
+            });
+
+            jumpButton.addEventListener('touchend', function(e) {
+                let touchFound = false;
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === jumpButtonTouchId) {
+                        touchFound = true;
+                        break;
+                    }
+                }
+
+                if (!touchFound) {
+                    jumpButtonTouchId = null;
+                }
+                e.preventDefault();
+            });
+        }
+
+        // ジャンプ処理
+        function jump() {
+            if (canJump) {
+                playerVelocity.y = jumpPower;
+                isJumping = true;
+                canJump = false;
+            }
+        }
+
+        // ウィンドウリサイズ時の処理
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // ポストプロセッシングのリサイズ
+            if (composer && qualityLevel !== 'low') {
+                composer.setSize(window.innerWidth, window.innerHeight);
+
+                // ブルームパスのリサイズ
+                if (bloomPass) {
+                    bloomPass.resolution.set(window.innerWidth, window.innerHeight);
+                }
+            }
+        }
+
+        // ゲーム開始
+        function startGame() {
+            startScreen.style.display = 'none';
+            isGameStarted = true;
+            score = 0;
+            updateScore();
+        }
+
+        // ゲームリスタート
+        function restartGame() {
+            // ゲームオーバー画面を非表示
+            gameOverScreen.style.display = 'none';
+
+            // プレイヤーの位置をリセット
+            player.position.set(0, 2, 0);
+            playerVelocity.set(0, 0, 0);
+
+            // ゲーム状態をリセット
+            isGameOver = false;
+            isJumping = false;
+            canJump = false;
+            score = 0;
+            updateScore();
+
+            // 宝石をリセット
+            gems.forEach(gem => {
+                gem.collected = false;
+                gem.mesh.visible = true;
+            });
+
+            isGameStarted = true;
+        }
+
+        // スコア更新
+        function updateScore() {
+            scoreValue.textContent = score;
+            finalScore.textContent = score;
+        }
+
+        // ゲームオーバー処理
+        function gameOver() {
+            isGameOver = true;
+            isGameStarted = false;
+            gameOverScreen.style.display = 'block';
+        }
+
+        // 当たり判定の更新
+        function updateCollisions() {
+            // プレイヤーのバウンディングボックスを更新
+            playerBox.setFromObject(player);
+
+            // 地面との当たり判定
+            canJump = false;
+            platforms.forEach(platform => {
+                if (playerBox.intersectsBox(platform.box)) {
+                    // プレイヤーが上から落ちてきた場合
+                    if (playerVelocity.y < 0 && 
+                        player.position.y > platform.mesh.position.y) {
+                        player.position.y = platform.mesh.position.y + 1; // プラットフォームの上に配置
+                        playerVelocity.y = 0;
+                        isJumping = false;
+                        canJump = true;
+                    }
+                }
+            });
+
+            // 宝石との当たり判定
+            gems.forEach(gem => {
+                if (!gem.collected && playerBox.intersectsBox(gem.box)) {
+                    gem.collected = true;
+                    gem.mesh.visible = false;
+                    score += 100;
+                    updateScore();
+
+                    // 宝石を集めた時のパーティクルエフェクト
+                    if (qualityLevel !== 'low') {
+                        createParticleSystem(
+                            gem.mesh.position.clone(),
+                            0xFFD700, // 金色
+                            qualityLevel === 'high' ? 20 : 10, // パーティクル数
+                            0.2,      // 速度
+                            0.1,      // サイズ
+                            1500      // 持続時間（ミリ秒）
+                        );
+                    }
+                }
+            });
+
+            // 障害物との当たり判定
+            obstacles.forEach(obstacle => {
+                if (playerBox.intersectsBox(obstacle.box)) {
+                    gameOver();
+                }
+            });
+
+            // 落下判定
+            if (player.position.y < -10) {
+                gameOver();
+            }
+        }
+
+        // ゲーム更新
+        function updateGame(deltaTime) {
+            if (!isGameStarted || isGameOver) return;
+
+            // プレイヤーの移動
+            const moveSpeed = 0.1;
+            player.position.x += joystickDelta.x * moveSpeed;
+            player.position.z -= joystickDelta.y * moveSpeed;
+
+            // 重力の適用
+            playerVelocity.y -= gravity;
+            player.position.y += playerVelocity.y;
+
+            // 当たり判定の更新
+            updateCollisions();
+
+            // カメラの追従
+            camera.position.x = player.position.x;
+            camera.position.z = player.position.z + 10;
+            camera.lookAt(player.position);
+
+            // 宝石の回転
+            gems.forEach(gem => {
+                if (!gem.collected) {
+                    gem.mesh.rotation.y += 0.02;
+                }
+            });
+        }
+
+        // アニメーションループ
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            // フレームレート制限の実装
+            if (timestamp) {
+                // 前回のフレームからの経過時間
+                const elapsed = timestamp - lastFrameTime;
+
+                // 目標フレームレートに基づく最小フレーム時間
+                const fpsInterval = 1000 / targetFPS;
+
+                // 経過時間が最小フレーム時間より短い場合はスキップ
+                if (elapsed < fpsInterval) {
+                    return;
+                }
+
+                // FPS計測
+                frameCounter++;
+                if (timestamp - lastFPSUpdate > 1000) {
+                    currentFPS = Math.round((frameCounter * 1000) / (timestamp - lastFPSUpdate));
+                    console.log('Current FPS:', currentFPS);
+
+                    // FPSが低すぎる場合は品質を下げる自動調整
+                    if (currentFPS < targetFPS * 0.7 && qualityLevel !== 'low') {
+                        if (qualityLevel === 'high') {
+                            console.log('Reducing quality to medium due to low FPS');
+                            qualityLevel = 'medium';
+
+                            // ブルームエフェクトの強度を下げる
+                            if (bloomPass) {
+                                bloomPass.strength = 0.3;
+                                bloomPass.radius = 0.3;
+                            }
+                        } else if (qualityLevel === 'medium') {
+                            console.log('Reducing quality to low due to low FPS');
+                            qualityLevel = 'low';
+
+                            // ポストプロセッシングを無効化
+                            if (composer) {
+                                composer = null;
+                            }
+                        }
+                    }
+
+                    frameCounter = 0;
+                    lastFPSUpdate = timestamp;
+                }
+
+                lastFrameTime = timestamp;
+            }
+
+            const deltaTime = clock.getDelta();
+
+            // 視錐台カリングの更新
+            updateFrustumCulling();
+
+            // ゲーム状態の更新
+            updateGame(deltaTime);
+
+            // パーティクルシステムの更新
+            updateParticleSystems(deltaTime);
+
+            // レンダリング
+            if (composer && qualityLevel !== 'low') {
+                composer.render();
+            } else {
+                renderer.render(scene, camera);
+            }
+        }
+
+        // 初期化
+        init();
+    </script>
+</body>
+</html>
