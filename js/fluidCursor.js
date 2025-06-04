@@ -49,10 +49,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let pointers = [new pointerPrototype()];
 
-  const { gl, ext } = getWebGLContext(canvas);
-  if (!ext.supportLinearFiltering) {
-    config.DYE_RESOLUTION = 256;
-    config.SHADING = false;
+  // Try to get WebGL context, but don't fail if it's not available
+  let gl, ext;
+  try {
+    const result = getWebGLContext(canvas);
+    gl = result.gl;
+    ext = result.ext;
+
+    // If we got a WebGL context but linear filtering is not supported,
+    // adjust the configuration
+    if (gl && ext && !ext.supportLinearFiltering) {
+      config.DYE_RESOLUTION = 256;
+      config.SHADING = false;
+    }
+  } catch (e) {
+    console.error('WebGL error:', e);
+    // Continue without WebGL - the canvas will still be created
+    // but the fluid effect won't work
   }
 
   function getWebGLContext(canvas) {
@@ -747,11 +760,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateFrame() {
     const dt = calcDeltaTime();
-    if (resizeCanvas()) initFramebuffers();
+    if (resizeCanvas()) {
+      // Only initialize framebuffers if WebGL is available
+      if (gl) {
+        initFramebuffers();
+      }
+    }
     updateColors(dt);
     applyInputs();
-    step(dt);
-    render(null);
+
+    // Only perform WebGL operations if gl is available
+    if (gl) {
+      step(dt);
+      render(null);
+    }
+
     requestAnimationFrame(updateFrame);
   }
 
@@ -785,12 +808,22 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function applyInputs() {
-    pointers.forEach((p) => {
-      if (p.moved) {
-        p.moved = false;
-        splatPointer(p);
-      }
-    });
+    // Only apply inputs if WebGL is available
+    if (gl) {
+      pointers.forEach((p) => {
+        if (p.moved) {
+          p.moved = false;
+          splatPointer(p);
+        }
+      });
+    } else {
+      // Reset moved flag even if we don't apply the splat
+      pointers.forEach((p) => {
+        if (p.moved) {
+          p.moved = false;
+        }
+      });
+    }
   }
 
   function step(dt) {
