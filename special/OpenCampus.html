@@ -13,14 +13,14 @@
     <meta property="og:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">
     <meta property="og:title" content="オープンキャンパス - 崇城大学芸術学部美術学科 3Dアートコース">
     <meta property="og:description" content="崇城大学芸術学部美術学科3Dアートコースのオープンキャンパス情報。3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを体験できます。">
-    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">
     <meta property="twitter:title" content="オープンキャンパス - 崇城大学芸術学部美術学科 3Dアートコース">
     <meta property="twitter:description" content="崇城大学芸術学部美術学科3Dアートコースのオープンキャンパス情報。3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを体験できます。">
-    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.png">
+    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
 
     <!-- Font imports -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -30,6 +30,14 @@
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- React Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- ProfileCard Component Styles -->
+    <link rel="stylesheet" href="ProfileCard.css">
 
     <style>
         * {
@@ -199,18 +207,18 @@
         }
 
         .hero-bg:nth-child(1) {
-            background-image: url('../images/TopImage/topimage1.png');
+            background-image: url('../images/TopImage/topimage1.webp');
             animation-delay: 0s;
         }
 
         .hero-bg:nth-child(2) {
-            background-image: url('../images/TopImage/topimage2.png');
+            background-image: url('../images/TopImage/topimage2.webp');
             opacity: 0;
             animation-delay: 5s;
         }
 
         .hero-bg:nth-child(3) {
-            background-image: url('../images/TopImage/topimage3.png');
+            background-image: url('../images/TopImage/topimage3.webp');
             opacity: 0;
             animation-delay: 10s;
         }
@@ -341,6 +349,12 @@
             color: #333;
         }
 
+        .schedule-section .section-title {
+            color: #fff;
+            font-size: 3rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
         .section-title:after {
             content: '';
             position: absolute;
@@ -357,6 +371,7 @@
             position: relative;
             background-attachment: fixed;
             animation: bgChange 20s infinite;
+            padding: 120px 0;
         }
 
         @keyframes bgChange {
@@ -370,6 +385,11 @@
                 background-size: cover;
                 background-position: center;
             }
+            67%, 100% {
+                background-image: url('../images/gallery/Kumayuiru.png');
+                background-size: cover;
+                background-position: center;
+            }
         }
 
         .schedule-section::before {
@@ -379,7 +399,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.85);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1;
         }
 
@@ -1053,63 +1073,7 @@
 <section id="schedule" class="section schedule-section">
     <div class="container">
         <h2 class="section-title" data-aos="fade-up">オープンキャンパススケジュール</h2>
-        <div class="schedule-container" data-aos="fade-up" data-aos-delay="200">
-            <div class="schedule-card">
-                <div class="schedule-date">
-                    <span class="month">7</span>
-                    <span class="day">19</span>
-                    <span class="year">2025</span>
-                </div>
-                <div class="schedule-content">
-                    <h3>君の粘土がデジタルモンスターに！</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
-                    <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> 粘土で作った形を3Dスキャン</li>
-                        <li><i class="fas fa-check-circle"></i> ZBrushで細部を仕上げ</li>
-                        <li><i class="fas fa-check-circle"></i> デジタルモンスター制作</li>
-                        <li><i class="fas fa-check-circle"></i> 申込期限：7月13日</li>
-                    </ul>
-                    <a href="#registration" class="schedule-btn">参加申し込み</a>
-                </div>
-            </div>
-
-            <div class="schedule-card">
-                <div class="schedule-date">
-                    <span class="month">8</span>
-                    <span class="day">3</span>
-                    <span class="year">2025</span>
-                </div>
-                <div class="schedule-content">
-                    <h3>ローポリキャラを動かしてみよう</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
-                    <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> ゲームなどで使用されるローポリキャラ制作</li>
-                        <li><i class="fas fa-check-circle"></i> Blenderでキャラクターモデリング</li>
-                        <li><i class="fas fa-check-circle"></i> アニメーション基礎</li>
-                        <li><i class="fas fa-check-circle"></i> 申込期限：7月27日</li>
-                    </ul>
-                    <a href="#registration" class="schedule-btn">参加申し込み</a>
-                </div>
-            </div>
-            <div class="schedule-card">
-                <div class="schedule-date">
-                    <span class="month">8</span>
-                    <span class="day">23</span>
-                    <span class="year">2025</span>
-                </div>
-                <div class="schedule-content">
-                    <h3>ZBrushで作る　ゲームキャラ!</h3>
-                    <p class="schedule-time"><i class="fas fa-clock"></i> 12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ</p>
-                    <ul class="schedule-highlights">
-                        <li><i class="fas fa-check-circle"></i> 本格的なゲームキャラをZBrushで作成</li>
-                        <li><i class="fas fa-check-circle"></i> キャラクターに動きを付ける</li>
-                        <li><i class="fas fa-check-circle"></i> プロ仕様ツールの体験</li>
-                        <li><i class="fas fa-check-circle"></i> 申込期限：8月11日</li>
-                    </ul>
-                    <a href="#registration" class="schedule-btn">参加申し込み</a>
-                </div>
-            </div>
-        </div>
+        <div id="schedule-container" data-aos="fade-up" data-aos-delay="200"></div>
     </div>
 </section>
 
@@ -1257,6 +1221,535 @@
     </div>
 </footer>
 
+<!-- React Components -->
+<script type="text/babel">
+    // Advanced Profile Card Component
+    const ProfileCardComponent = ({
+        avatarUrl = "../images/course/OpenCampus.png",
+        iconUrl,
+        grainUrl,
+        behindGradient,
+        innerGradient,
+        showBehindGradient = true,
+        className = "",
+        enableTilt = true,
+        miniAvatarUrl,
+        name = "イベント名",
+        title = "詳細",
+        handle = "日程",
+        status = "申込期限",
+        contactText = "参加申し込み",
+        showUserInfo = true,
+        onContactClick,
+        date,
+        schedule,
+        highlights,
+        deadline
+    }) => {
+        const wrapRef = React.useRef(null);
+        const cardRef = React.useRef(null);
+
+        const animationHandlers = React.useMemo(() => {
+            if (!enableTilt) return null;
+
+            let rafId = null;
+
+            const updateCardTransform = (
+                offsetX,
+                offsetY,
+                card,
+                wrap
+            ) => {
+                const width = card.clientWidth;
+                const height = card.clientHeight;
+
+                const percentX = Math.min(Math.max((100 / width) * offsetX, 0), 100);
+                const percentY = Math.min(Math.max((100 / height) * offsetY, 0), 100);
+
+                const centerX = percentX - 50;
+                const centerY = percentY - 50;
+
+                const properties = {
+                    "--pointer-x": `${percentX}%`,
+                    "--pointer-y": `${percentY}%`,
+                    "--background-x": `${adjustValue(percentX, 0, 100, 35, 65)}%`,
+                    "--background-y": `${adjustValue(percentY, 0, 100, 35, 65)}%`,
+                    "--pointer-from-center": `${Math.min(Math.hypot(percentY - 50, percentX - 50) / 50, 1)}`,
+                    "--pointer-from-top": `${percentY / 100}`,
+                    "--pointer-from-left": `${percentX / 100}`,
+                    "--rotate-x": `${roundValue(-(centerX / 5))}deg`,
+                    "--rotate-y": `${roundValue(centerY / 4)}deg`,
+                };
+
+                Object.entries(properties).forEach(([property, value]) => {
+                    wrap.style.setProperty(property, value);
+                });
+            };
+
+            const createSmoothAnimation = (
+                duration,
+                startX,
+                startY,
+                card,
+                wrap
+            ) => {
+                const startTime = performance.now();
+                const targetX = wrap.clientWidth / 2;
+                const targetY = wrap.clientHeight / 2;
+
+                const animationLoop = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easedProgress = easeInOutCubic(progress);
+
+                    const currentX = adjustValue(easedProgress, 0, 1, startX, targetX);
+                    const currentY = adjustValue(easedProgress, 0, 1, startY, targetY);
+
+                    updateCardTransform(currentX, currentY, card, wrap);
+
+                    if (progress < 1) {
+                        rafId = requestAnimationFrame(animationLoop);
+                    }
+                };
+
+                rafId = requestAnimationFrame(animationLoop);
+            };
+
+            return {
+                updateCardTransform,
+                createSmoothAnimation,
+                cancelAnimation: () => {
+                    if (rafId) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                    }
+                },
+            };
+        }, [enableTilt]);
+
+        const handlePointerMove = React.useCallback(
+            (event) => {
+                const card = cardRef.current;
+                const wrap = wrapRef.current;
+
+                if (!card || !wrap || !animationHandlers) return;
+
+                const rect = card.getBoundingClientRect();
+                animationHandlers.updateCardTransform(
+                    event.clientX - rect.left,
+                    event.clientY - rect.top,
+                    card,
+                    wrap
+                );
+            },
+            [animationHandlers]
+        );
+
+        const handlePointerEnter = React.useCallback(() => {
+            const card = cardRef.current;
+            const wrap = wrapRef.current;
+
+            if (!card || !wrap || !animationHandlers) return;
+
+            animationHandlers.cancelAnimation();
+            wrap.classList.add("active");
+            card.classList.add("active");
+        }, [animationHandlers]);
+
+        const handlePointerLeave = React.useCallback(
+            (event) => {
+                const card = cardRef.current;
+                const wrap = wrapRef.current;
+
+                if (!card || !wrap || !animationHandlers) return;
+
+                animationHandlers.createSmoothAnimation(
+                    600, // SMOOTH_DURATION
+                    event.offsetX,
+                    event.offsetY,
+                    card,
+                    wrap
+                );
+                wrap.classList.remove("active");
+                card.classList.remove("active");
+            },
+            [animationHandlers]
+        );
+
+        React.useEffect(() => {
+            if (!enableTilt || !animationHandlers) return;
+
+            const card = cardRef.current;
+            const wrap = wrapRef.current;
+
+            if (!card || !wrap) return;
+
+            const pointerMoveHandler = handlePointerMove;
+            const pointerEnterHandler = handlePointerEnter;
+            const pointerLeaveHandler = handlePointerLeave;
+
+            card.addEventListener("pointerenter", pointerEnterHandler);
+            card.addEventListener("pointermove", pointerMoveHandler);
+            card.addEventListener("pointerleave", pointerLeaveHandler);
+
+            const initialX = wrap.clientWidth - 70; // INITIAL_X_OFFSET
+            const initialY = 60; // INITIAL_Y_OFFSET
+
+            animationHandlers.updateCardTransform(initialX, initialY, card, wrap);
+            animationHandlers.createSmoothAnimation(
+                1500, // INITIAL_DURATION
+                initialX,
+                initialY,
+                card,
+                wrap
+            );
+
+            return () => {
+                card.removeEventListener("pointerenter", pointerEnterHandler);
+                card.removeEventListener("pointermove", pointerMoveHandler);
+                card.removeEventListener("pointerleave", pointerLeaveHandler);
+                animationHandlers.cancelAnimation();
+            };
+        }, [
+            enableTilt,
+            animationHandlers,
+            handlePointerMove,
+            handlePointerEnter,
+            handlePointerLeave,
+        ]);
+
+        const cardStyle = React.useMemo(
+            () => ({
+                "--icon": iconUrl ? `url(${iconUrl})` : "none",
+                "--grain": grainUrl ? `url(${grainUrl})` : "none",
+                "--behind-gradient": showBehindGradient
+                    ? (behindGradient || "radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(266,100%,90%,var(--card-opacity)) 4%,hsla(266,50%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(266,25%,70%,calc(var(--card-opacity)*0.5)) 50%,hsla(266,0%,60%,0) 100%),radial-gradient(35% 52% at 55% 20%,#00ffaac4 0%,#073aff00 100%),radial-gradient(100% 100% at 50% 50%,#00c1ffff 1%,#073aff00 76%),conic-gradient(from 124deg at 50% 50%,#c137ffff 0%,#07c6ffff 40%,#07c6ffff 60%,#c137ffff 100%)")
+                    : "none",
+                "--inner-gradient": innerGradient || "linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)",
+            }),
+            [iconUrl, grainUrl, showBehindGradient, behindGradient, innerGradient]
+        );
+
+        const handleContactClick = React.useCallback(() => {
+            if (onContactClick) {
+                onContactClick();
+            } else {
+                window.location.href = "#registration";
+            }
+        }, [onContactClick]);
+
+        // Helper functions
+        function roundValue(value, precision = 3) {
+            return parseFloat(value.toFixed(precision));
+        }
+
+        function adjustValue(value, fromMin, fromMax, toMin, toMax) {
+            return roundValue(toMin + ((toMax - toMin) * (value - fromMin)) / (fromMax - fromMin));
+        }
+
+        function easeInOutCubic(x) {
+            return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        }
+
+        // Format the date for display
+        const formattedName = date ? `${date.month}月${date.day}日` : name;
+        const formattedTitle = title;
+        const formattedHandle = schedule || handle;
+        const formattedStatus = deadline ? `申込期限：${deadline}` : status;
+
+        return (
+            <div
+                ref={wrapRef}
+                className={`pc-card-wrapper ${className}`.trim()}
+                style={cardStyle}
+            >
+                <section ref={cardRef} className="pc-card">
+                    <div className="pc-inside">
+                        <div className="pc-shine" />
+                        <div className="pc-glare" />
+                        <div className="pc-content pc-avatar-content">
+                            <img
+                                className="avatar"
+                                src={avatarUrl}
+                                alt={`${formattedName} イベント画像`}
+                                loading="lazy"
+                                onError={(e) => {
+                                    const target = e.target;
+                                    target.style.display = "none";
+                                }}
+                            />
+                            {showUserInfo && (
+                                <div className="pc-user-info">
+                                    <div className="pc-user-details">
+                                        <div className="pc-mini-avatar">
+                                            <img
+                                                src={miniAvatarUrl || avatarUrl}
+                                                alt={`${formattedName} ミニ画像`}
+                                                loading="lazy"
+                                                onError={(e) => {
+                                                    const target = e.target;
+                                                    target.style.opacity = "0.5";
+                                                    target.src = avatarUrl;
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="pc-user-text">
+                                            <div className="pc-handle">{formattedHandle}</div>
+                                            <div className="pc-status">{formattedStatus}</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="pc-contact-btn"
+                                        onClick={handleContactClick}
+                                        style={{ pointerEvents: "auto" }}
+                                        type="button"
+                                        aria-label="参加申し込み"
+                                    >
+                                        {contactText}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div className="pc-content">
+                            <div className="pc-details">
+                                <h3>{formattedName}</h3>
+                                <p>{formattedTitle}</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        );
+    };
+
+    const ProfileCard = React.memo(ProfileCardComponent);
+
+    // Schedule Container Component
+    const ScheduleContainer = () => {
+        // Get current window width for responsive design
+        const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+        // State to track the active card index
+        const [activeIndex, setActiveIndex] = React.useState(0);
+        const events = [
+            {
+                date: { month: '7', day: '19', year: '2025' },
+                title: '君の粘土がデジタルモンスターに！',
+                schedule: '12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ',
+                highlights: [
+                    '粘土で作った形を3Dスキャン',
+                    'ZBrushで細部を仕上げ',
+                    'デジタルモンスター制作'
+                ],
+                deadline: '7月13日',
+                avatarUrl: "../images/3DScan1.jpg"
+            },
+            {
+                date: { month: '8', day: '3', year: '2025' },
+                title: 'ローポリキャラを動かしてみよう',
+                schedule: '12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ',
+                highlights: [
+                    'ゲームなどで使用されるローポリキャラ制作',
+                    'Blenderでキャラクターモデリング',
+                    'アニメーション基礎'
+                ],
+                deadline: '7月27日',
+                avatarUrl: "../images/gallery/Poppy.png"
+            },
+            {
+                date: { month: '8', day: '23', year: '2025' },
+                title: 'ZBrushで作る　ゲームキャラ!',
+                schedule: '12:00 受付　13:00～コース講習　15:20 施設見学　個別相談※希望者のみ',
+                highlights: [
+                    '本格的なゲームキャラをZBrushで作成',
+                    'キャラクターに動きを付ける',
+                    'プロ仕様ツールの体験'
+                ],
+                deadline: '8月11日',
+                avatarUrl: "../images/gallery/Kumayuiru.png"
+            }
+        ];
+
+        React.useEffect(() => {
+            const handleResize = () => setWindowWidth(window.innerWidth);
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }, []);
+
+        // Handle next and previous card navigation
+        const handleNext = () => {
+            setActiveIndex((prevIndex) => (prevIndex + 1) % events.length);
+        };
+
+        const handlePrev = () => {
+            setActiveIndex((prevIndex) => (prevIndex - 1 + events.length) % events.length);
+        };
+
+        // Calculate position and style for each card based on its index relative to the active card
+        const getCardStyle = (index) => {
+            const totalCards = events.length;
+            const angle = 360 / totalCards;
+            const rotationAngle = ((index - activeIndex) * angle) % 360;
+
+            // Calculate the radius based on window width
+            const radius = windowWidth <= 768 ? 150 : 250;
+
+            // Calculate position using trigonometry
+            const zIndex = index === activeIndex ? 10 : 5;
+            const opacity = index === activeIndex ? 1 : 0.7;
+            const scale = index === activeIndex ? 1.05 : 0.9;
+
+            // Convert angle to radians for Math.sin and Math.cos
+            const angleRad = (rotationAngle * Math.PI) / 180;
+
+            // Calculate x and y position
+            const x = Math.sin(angleRad) * radius;
+            const z = Math.cos(angleRad) * radius - radius;
+
+            // Create transform string with scale included
+            const transformStr = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
+
+            return {
+                transform: transformStr,
+                opacity,
+                zIndex,
+                transition: 'all 0.5s ease-out',
+                filter: 'none'
+            };
+        };
+
+        // Container style for the carousel
+        const carouselContainerStyle = {
+            position: 'relative',
+            height: windowWidth <= 768 ? '600px' : '700px',
+            perspective: '1000px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0 auto 50px',
+            maxWidth: '1200px',
+            padding: windowWidth <= 480 ? '0 10px' : '0'
+        };
+
+        // Style for the carousel stage (where cards rotate)
+        const carouselStageStyle = {
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            transformStyle: 'preserve-3d',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+        };
+
+        // Style for navigation buttons
+        const navButtonStyle = {
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 20,
+            background: 'rgba(66, 133, 244, 0.8)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50%',
+            width: windowWidth <= 768 ? '40px' : '50px',
+            height: windowWidth <= 768 ? '40px' : '50px',
+            fontSize: windowWidth <= 768 ? '18px' : '24px',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            transition: 'all 0.3s ease'
+        };
+
+        // Style for indicators
+        const indicatorsStyle = {
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '10px',
+            zIndex: 20
+        };
+
+        const indicatorStyle = (isActive) => ({
+            width: isActive ? '12px' : '10px',
+            height: isActive ? '12px' : '10px',
+            borderRadius: '50%',
+            background: isActive ? 'rgba(66, 133, 244, 1)' : 'rgba(255, 255, 255, 0.5)',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+        });
+
+        return (
+            <div style={carouselContainerStyle}>
+                {/* Previous button */}
+                <button 
+                    style={{...navButtonStyle, left: windowWidth <= 768 ? '10px' : '20px'}}
+                    onClick={handlePrev}
+                    aria-label="Previous card"
+                >
+                    <i className="fas fa-chevron-left"></i>
+                </button>
+
+                {/* Carousel stage */}
+                <div style={carouselStageStyle}>
+                    {events.map((event, index) => (
+                        <div 
+                            key={index} 
+                            style={{
+                                position: 'absolute',
+                                ...getCardStyle(index)
+                            }}
+                        >
+                            <ProfileCard 
+                                name={event.title}
+                                title={event.highlights.join(' • ')}
+                                handle={event.schedule}
+                                status={`申込期限：${event.deadline}`}
+                                date={event.date}
+                                avatarUrl={event.avatarUrl}
+                                miniAvatarUrl={event.avatarUrl}
+                                contactText="参加申し込み"
+                                enableTilt={index === activeIndex}
+                                showUserInfo={true}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Next button */}
+                <button 
+                    style={{...navButtonStyle, right: windowWidth <= 768 ? '10px' : '20px'}}
+                    onClick={handleNext}
+                    aria-label="Next card"
+                >
+                    <i className="fas fa-chevron-right"></i>
+                </button>
+
+                {/* Indicators */}
+                <div style={indicatorsStyle}>
+                    {events.map((_, index) => (
+                        <div 
+                            key={index}
+                            style={indicatorStyle(index === activeIndex)}
+                            onClick={() => setActiveIndex(index)}
+                            aria-label={`Go to card ${index + 1}`}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    // Render the Schedule Container
+    ReactDOM.render(
+        <ScheduleContainer />,
+        document.getElementById('schedule-container')
+    );
+</script>
+
 <!-- JavaScript -->
 <script>
     // AOS (Animate On Scroll) 初期化
@@ -1288,20 +1781,6 @@
                 }
             });
         }
-
-        // スケジュールカードのホバーエフェクト強化
-        const scheduleCards = document.querySelectorAll('.schedule-card');
-        scheduleCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-15px)';
-                this.style.boxShadow = '0 20px 50px rgba(66, 133, 244, 0.3)';
-            });
-
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
-            });
-        });
     });
 </script>
 </body>
