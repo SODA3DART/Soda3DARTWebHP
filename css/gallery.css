@@ -88,6 +88,16 @@
     color: #333;
 }
 
+.gallery-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.gallery-title a:hover {
+    color: #4285f4;
+}
+
 .gallery-author {
     font-size: 0.9rem;
     color: #777;

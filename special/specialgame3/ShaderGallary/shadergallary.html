@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLSLシェーダーギャラリー | 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <meta name="description" content="GLSLシェーダーで作成された様々な視覚効果を展示するギャラリーページです。">
+    <link rel="icon" href="../../../images/logohedder.png" type="image/png">
+
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+
+    <!-- Three.js ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <!-- OrbitControls for camera manipulation -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #111;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4285f4;
+            text-shadow: 0 0 10px rgba(66, 133, 244, 0.7);
+        }
+
+        .description {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            font-size: 1.1rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .shader-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .shader-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .shader-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .shader-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .shader-info {
+            padding: 15px;
+        }
+
+        .shader-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: #4285f4;
+        }
+
+        .shader-description {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .shader-code-btn {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .shader-code-btn:hover {
+            background-color: #4285f4;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #222;
+            margin: 50px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .code-display {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        pre {
+            color: #f8f8f2;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .fullscreen-shader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+        }
+
+        .fullscreen-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 60;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .code-overlay-btn {
+            position: fixed;
+            top: 20px;
+            right: 100px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 60;
+            display: none;
+        }
+
+        .code-overlay-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .code-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            overflow: auto;
+            z-index: 55;
+            display: none;
+            padding: 20px;
+        }
+
+        .code-overlay pre {
+            color: #f8f8f2;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-top: 60px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #000;
+            margin-top: 40px;
+        }
+
+        .back-to-site {
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        .back-to-site:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GLSLシェーダーギャラリー</h1>
+        <p class="description">
+            GLSLシェーダーを使用して作成された様々な視覚効果を3Dオブジェクトに適用して展示しています。各シェーダーのサムネイルをクリックすると全画面表示になります。マウスドラッグで視点を自由に変更でき、ホイールでズームイン・アウトができます。「コードを見る」ボタンでシェーダーコードを確認できます。
+        </p>
+    </header>
+
+    <div class="gallery" id="shader-gallery">
+        <!-- シェーダーカードはJavaScriptで動的に生成されます -->
+    </div>
+
+    <div class="modal" id="code-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div class="code-display">
+                <pre id="shader-code"></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-shader" id="fullscreen-container">
+        <!-- 全画面シェーダー表示用 -->
+        <div class="code-overlay" id="code-overlay">
+            <pre id="overlay-shader-code"></pre>
+        </div>
+    </div>
+
+    <button class="back-btn" id="back-button">戻る</button>
+    <button class="code-overlay-btn" id="code-overlay-btn">コードを表示</button>
+
+    <footer>
+        <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース</p>
+        <p><a href="../../../index.html" class="back-to-site">サイトに戻る</a></p>
+    </footer>
+
+    <script>
+        // シェーダーギャラリーのデータ
+        const shaderGallery = [
+            {
+                id: 'wave-shader',
+                title: '波紋シェーダー (3D)',
+                description: '動的な波紋パターンを3Dオブジェクトに適用したシェーダー',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    void main() {
+                        vec2 uv = vUv;
+                        vec2 center = vec2(0.5, 0.5);
+                        float dist = distance(uv, center);
+
+                        // 3D効果を強化するために法線を使用
+                        float normalEffect = dot(vNormal, vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+
+                        // 波紋効果
+                        float wave = sin(dist * 50.0 - time * 2.0) * 0.5 + 0.5;
+
+                        // 3D位置に基づいた効果を追加
+                        float posEffect = sin(vPosition.x * 5.0 + time) * 0.2 + 0.8;
+
+                        // 色の計算
+                        vec3 color = vec3(0.0, 0.5, 1.0) * wave * posEffect;
+                        color += vec3(0.0, 0.1, 0.2) * normalEffect;
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'gradient-noise',
+                title: 'グラデーションノイズ (3D)',
+                description: 'パーリンノイズを使用したカラフルなグラデーションを3Dオブジェクトに適用',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    // 2D Random
+                    float random(in vec2 st) {
+                        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+                    }
+
+                    // 2D Noise based on Morgan McGuire
+                    float noise(in vec2 st) {
+                        vec2 i = floor(st);
+                        vec2 f = fract(st);
+
+                        // Four corners in 2D of a tile
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+
+                        // Smooth Interpolation
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+
+                        // Mix 4 corners percentages
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+
+                    void main() {
+                        // UVを使用
+                        vec2 uv = vUv;
+
+                        // 3D位置を使用して座標系をスケーリング
+                        vec2 pos = vec2(uv * 10.0);
+                        pos.x += time * 0.5;
+
+                        // 法線を使用して追加のノイズ変調を作成
+                        float normalNoise = dot(vNormal, vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1))) * 0.5 + 0.5;
+
+                        // 3D位置に基づいた効果
+                        float posEffect = sin(vPosition.x * 2.0 + vPosition.y * 2.0 + vPosition.z * 2.0 + time) * 0.2 + 0.8;
+
+                        // 複数のノイズオクターブを使用
+                        float n = noise(pos * 0.5 + vPosition.xy);
+                        n += noise(pos * 1.0) * 0.5;
+                        n += noise(pos * 2.0) * 0.25;
+                        n += noise(pos * 4.0) * 0.125;
+
+                        // 法線ノイズを適用
+                        n = mix(n, normalNoise, 0.3);
+
+                        // 3D位置効果を適用
+                        n *= posEffect;
+
+                        // カラーリング
+                        vec3 color = vec3(0.0);
+                        color.r = sin(n * 3.1415 + time) * 0.5 + 0.5;
+                        color.g = sin(n * 3.1415 + time + 2.094) * 0.5 + 0.5;
+                        color.b = sin(n * 3.1415 + time + 4.188) * 0.5 + 0.5;
+
+                        gl_FragColor = vec4(color, 1.0);
+
+                    }
+                `
+            },
+            {
+                id: 'fire-shader',
+                title: '地球',
+                description: '地球を再現したシェーダー',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    float random(vec2 st) {
+                        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+                    }
+
+                    float noise(vec2 st) {
+                        vec2 i = floor(st);
+                        vec2 f = fract(st);
+
+                        float a = random(i);
+                        float b = random(i + vec2(1.0, 0.0));
+                        float c = random(i + vec2(0.0, 1.0));
+                        float d = random(i + vec2(1.0, 1.0));
+
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+
+                    void main() {
+                        // UVを使用
+                        vec2 uv = vUv;
+
+                        // 法線を使用して炎の強度を変調
+                        float normalIntensity = dot(normalize(vNormal), normalize(vec3(0.0, 1.0, 0.0))) * 0.5 + 0.5;
+
+                        // 3D位置を使用して炎の動きを変調
+                        float positionEffect = sin(vPosition.x * 3.0 + vPosition.z * 3.0 + time) * 0.2 + 0.8;
+
+                        // UV座標の調整
+                        uv.y = 1.0 - uv.y;
+
+                        // 炎のベース形状を作成
+                        float y = pow(uv.y, 2.0);
+
+                        // 炎のエフェクト用のノイズを追加
+                        vec2 noisePos = uv * vec2(3.0, 10.0) + vec2(time * 0.5, -time * 2.0);
+                        // 3D位置を使用してノイズを変調
+                        noisePos += vPosition.xy * 0.5;
+
+                        float n = noise(noisePos) * 0.5;
+                        n += noise(noisePos * 2.0) * 0.25;
+
+                        // 炎の形状を作成
+                        float flame = y - n * (1.0 - y);
+                        flame = max(flame, 0.0);
+
+                        // 法線と位置に基づいて炎を変調
+                        flame *= normalIntensity * positionEffect;
+
+                        // 黄色から赤へのカラーグラデーション
+                        vec3 color = vec3(1.5, 0.5, 0.0) * flame;
+                        color = mix(color, vec3(1.0, 0.5, 0.0), flame * 0.7);
+                        color = mix(color, vec3(0.0, 0.0, 0.0), 1.0 - flame * 1.2);
+
+                        // 3D効果を強化するために法線に基づいて色を調整
+                        color *= vec3(0.8 + 0.2 * vNormal.x, 0.8 + 0.2 * vNormal.y, 0.8 + 0.2 * vNormal.z);
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'circle-pattern',
+                title: '円形パターン (3D)',
+                description: '同心円と時間変化するパターンを3Dオブジェクトに適用したシェーダー',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    void main() {
+                        // UVを中心に合わせる
+                        vec2 uv = vUv * 2.0 - 1.0;
+
+                        // 3D位置と法線を使用してパターンを変調
+                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1)));
+                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+
+                        float dist = length(uv);
+                        float angle = atan(uv.y, uv.x);
+
+                        // 3D効果を強化するために位置を使用して距離を変調
+                        dist += posEffect * 0.2;
+
+                        // リングを作成
+                        float rings = fract(dist * 10.0 - time * 0.1);
+
+                        // 放射状の線を追加
+                        float lines = 0.5 + 0.5 * sin(angle * 20.0 + time);
+
+                        // 法線に基づいて線を変調
+                        lines *= normalEffect;
+
+                        // パターンを組み合わせる
+                        float pattern = rings * lines;
+
+                        // 3D位置に基づいてパターンを強化
+                        pattern *= 0.8 + 0.2 * sin(vPosition.x * 5.0 + vPosition.y * 5.0 + vPosition.z * 5.0 + time);
+
+                        // カラーマッピング
+                        vec3 color = vec3(0.0);
+                        color.r = pattern * (0.5 + 0.5 * sin(time));
+                        color.g = pattern * (0.5 + 0.5 * sin(time + 2.0));
+                        color.b = pattern * (0.5 + 0.5 * sin(time + 4.0));
+
+                        // 法線に基づいて色を調整して3D効果を強化
+                        color *= vec3(0.8 + 0.2 * vNormal.x, 0.8 + 0.2 * vNormal.y, 0.8 + 0.2 * vNormal.z);
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'plasma-effect',
+                title: 'プラズマエフェクト (3D)',
+                description: 'クラシックなプラズマエフェクトを3Dオブジェクトに適用したシェーダー',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    void main() {
+                        // UVを使用
+                        vec2 uv = vUv;
+                        vec2 p = uv * 2.0 - 1.0;
+
+                        // 3D位置と法線を使用してプラズマを変調
+                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.3), cos(time * 0.2), sin(time * 0.1)));
+                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+
+                        // 3D位置を使用してプラズマパターンを変調
+                        float v1 = sin((p.x * 10.0 + vPosition.x) + time);
+                        float v2 = sin((p.y * 10.0 + vPosition.y) + time);
+                        float v3 = sin((p.x + p.y + vPosition.z) * 5.0 + time);
+                        float v4 = sin(sqrt(p.x * p.x + p.y * p.y) * 10.0 - time);
+
+                        // 法線を使用して追加の変調を作成
+                        float v5 = sin(vNormal.x * 5.0 + time) * 0.5;
+                        float v6 = sin(vNormal.y * 5.0 + time) * 0.5;
+
+                        // プラズマ効果を組み合わせる
+                        float plasma = (v1 + v2 + v3 + v4 + v5 + v6) / 6.0;
+
+                        // 3D位置と法線効果を適用
+                        plasma = mix(plasma, plasma * posEffect, 0.3);
+                        plasma = mix(plasma, plasma * normalEffect, 0.3);
+
+                        // カラーマッピング
+                        vec3 color = vec3(0.0);
+                        color.r = 0.5 + 0.5 * sin(plasma * 6.28 + 0.0);
+                        color.g = 0.5 + 0.5 * sin(plasma * 6.28 + 2.09);
+                        color.b = 0.5 + 0.5 * sin(plasma * 6.28 + 4.19);
+
+                        // 法線に基づいて色を調整して3D効果を強化
+                        color = mix(color, color * vec3(vNormal * 0.5 + 0.5), 0.2);
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'voronoi-pattern',
+                title: 'ボロノイパターン (3D)',
+                description: 'ボロノイ図形を使用した幾何学的なパターンを3Dオブジェクトに適用',
+                fragmentShader: `
+                    precision mediump float;
+                    uniform float time;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    varying vec3 vNormal;
+
+                    // 2D Random vector
+                    vec2 random2(vec2 p) {
+                        return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+                    }
+
+                    // Cellular noise ("Voronoi")
+                    vec2 voronoi(vec2 x) {
+                        vec2 n = floor(x);
+                        vec2 f = fract(x);
+
+                        vec2 mg, mr;
+                        float md = 8.0;
+
+                        for(int j = -1; j <= 1; j++) {
+                            for(int i = -1; i <= 1; i++) {
+                                vec2 g = vec2(float(i), float(j));
+                                vec2 o = random2(n + g);
+                                o = 0.5 + 0.5 * sin(time * 0.5 + 6.2831 * o);
+
+                                vec2 r = g + o - f;
+                                float d = dot(r, r);
+
+                                if(d < md) {
+                                    md = d;
+                                    mr = r;
+                                    mg = g;
+                                }
+                            }
+                        }
+
+                        return vec2(md, dot(mr, mg));
+                    }
+
+                    void main() {
+                        // UVを使用
+                        vec2 uv = vUv;
+
+                        // 3D位置と法線を使用してパターンを変調
+                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1)));
+                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+
+                        // 3D位置を使用してUVを変調
+                        uv += vec2(vPosition.x, vPosition.y) * 0.1;
+
+                        // スケール
+                        uv *= 5.0;
+
+                        // 3D位置に基づいてスケールを変調
+                        uv *= 0.8 + 0.4 * posEffect;
+
+                        // ボロノイ
+                        vec2 v = voronoi(uv);
+
+                        // 法線と位置に基づいてボロノイパターンを変調
+                        v.x = mix(v.x, v.x * normalEffect, 0.3);
+                        v.y = mix(v.y, v.y * posEffect, 0.3);
+
+                        // カラーリング
+                        vec3 color = vec3(0.0);
+                        color = mix(vec3(0.0, 0.0, 0.2), vec3(0.0, 0.5, 1.0), v.x);
+                        color = mix(color, vec3(1.0, 0.5, 0.0), 1.0 - v.y * 0.5);
+
+                        // 法線に基づいて色を調整して3D効果を強化
+                        color = mix(color, color * vec3(vNormal * 0.5 + 0.5), 0.3);
+
+                        // 3D位置に基づいて色を調整
+                        color *= vec3(0.8 + 0.2 * sin(vPosition.x * 3.0 + time),
+                                     0.8 + 0.2 * sin(vPosition.y * 3.0 + time),
+                                     0.8 + 0.2 * sin(vPosition.z * 3.0 + time));
+
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            }
+        ];
+
+        // DOM要素
+        const gallery = document.getElementById('shader-gallery');
+        const codeModal = document.getElementById('code-modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const shaderCode = document.getElementById('shader-code');
+        const fullscreenContainer = document.getElementById('fullscreen-container');
+        const backButton = document.getElementById('back-button');
+        const codeOverlayBtn = document.getElementById('code-overlay-btn');
+        const codeOverlay = document.getElementById('code-overlay');
+        const overlayShaderCode = document.getElementById('overlay-shader-code');
+
+        // シェーダーカードの生成
+        function createShaderCards() {
+            shaderGallery.forEach(shader => {
+                // カードの作成
+                const card = document.createElement('div');
+                card.className = 'shader-card';
+                card.id = `card-${shader.id}`;
+
+                // キャンバスコンテナ
+                const canvasContainer = document.createElement('div');
+                canvasContainer.className = 'shader-canvas-container';
+
+                // キャンバス
+                const canvas = document.createElement('canvas');
+                canvas.className = 'shader-canvas';
+                canvas.id = `canvas-${shader.id}`;
+                canvasContainer.appendChild(canvas);
+
+                // シェーダー情報
+                const info = document.createElement('div');
+                info.className = 'shader-info';
+
+                const title = document.createElement('h3');
+                title.className = 'shader-title';
+                title.textContent = shader.title;
+
+                const description = document.createElement('p');
+                description.className = 'shader-description';
+                description.textContent = shader.description;
+
+                const codeBtn = document.createElement('button');
+                codeBtn.className = 'shader-code-btn';
+                codeBtn.textContent = 'コードを見る';
+                codeBtn.dataset.shaderId = shader.id;
+
+                info.appendChild(title);
+                info.appendChild(description);
+                info.appendChild(codeBtn);
+
+                card.appendChild(canvasContainer);
+                card.appendChild(info);
+
+                gallery.appendChild(card);
+
+                // シェーダーの初期化
+                initShader(canvas, shader.fragmentShader);
+
+                // キャンバスクリックイベント（全画面表示）
+                canvasContainer.addEventListener('click', () => {
+                    showFullscreenShader(shader);
+                });
+
+                // コードボタンクリックイベント
+                codeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showShaderCode(shader);
+                });
+            });
+        }
+
+        // シェーダーの初期化 (Three.jsを使用した3D実装)
+        function initShader(canvas, fragmentShaderSource) {
+            // キャンバスサイズの設定
+            resizeCanvas(canvas);
+
+            // Three.jsのシーン、カメラ、レンダラーの設定
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+            camera.position.z = 2;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(canvas.width, canvas.height);
+            renderer.setClearColor(0x000000, 1);
+
+            // OrbitControlsの設定（マウスによる視点操作）
+            const controls = new THREE.OrbitControls(camera, canvas);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.25;
+            controls.enableZoom = true;
+            controls.autoRotate = false;
+
+            // 頂点シェーダーのソース
+            const vertexShaderSource = `
+                varying vec2 vUv;
+                varying vec3 vPosition;
+                varying vec3 vNormal;
+
+                void main() {
+                    vUv = uv;
+                    vPosition = position;
+                    vNormal = normal;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `;
+
+            // マテリアルの作成
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0.0 },
+                    resolution: { value: new THREE.Vector2(canvas.width, canvas.height) }
+                },
+                vertexShader: vertexShaderSource,
+                fragmentShader: fragmentShaderSource
+            });
+
+            // 3Dジオメトリの作成（球体）
+            const geometry = new THREE.SphereGeometry(1, 64, 64);
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // アニメーションの開始時間
+            const startTime = Date.now();
+
+            // ウィンドウリサイズ時の処理
+            window.addEventListener('resize', () => {
+                if (resizeCanvas(canvas)) {
+                    renderer.setSize(canvas.width, canvas.height);
+                    camera.aspect = canvas.width / canvas.height;
+                    camera.updateProjectionMatrix();
+                    material.uniforms.resolution.value.set(canvas.width, canvas.height);
+                }
+            });
+
+            // アニメーションループ
+            function render() {
+                // 現在の時間
+                const time = (Date.now() - startTime) / 1000;
+
+                // キャンバスのリサイズ確認
+                if (resizeCanvas(canvas)) {
+                    renderer.setSize(canvas.width, canvas.height);
+                    camera.aspect = canvas.width / canvas.height;
+                    camera.updateProjectionMatrix();
+                    material.uniforms.resolution.value.set(canvas.width, canvas.height);
+                }
+
+                // ユニフォーム変数の更新
+                material.uniforms.time.value = time;
+
+                // コントロールの更新
+                controls.update();
+
+                // レンダリング
+                renderer.render(scene, camera);
+
+                // 次のフレームをリクエスト
+                requestAnimationFrame(render);
+            }
+
+            // レンダリング開始
+            render();
+
+            // リソース管理のためにオブジェクトを返す
+            return {
+                scene: scene,
+                camera: camera,
+                controls: controls,
+                renderer: renderer,
+                material: material,
+                mesh: mesh
+            };
+        }
+
+        // シェーダーのコンパイル
+        function compileShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('シェーダーのコンパイルエラー:', gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader);
+                return null;
+            }
+
+            return shader;
+        }
+
+        // シェーダープログラムの作成
+        function createProgram(gl, vertexShader, fragmentShader) {
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('プログラムのリンクエラー:', gl.getProgramInfoLog(program));
+                return null;
+            }
+
+            return program;
+        }
+
+        // キャンバスのリサイズ
+        function resizeCanvas(canvas) {
+            const displayWidth = canvas.clientWidth;
+            const displayHeight = canvas.clientHeight;
+
+            if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+                canvas.width = displayWidth;
+                canvas.height = displayHeight;
+                return true;
+            }
+
+            return false;
+        }
+
+        // シェーダーコードの表示
+        function showShaderCode(shader) {
+            modalTitle.textContent = shader.title;
+            shaderCode.textContent = shader.fragmentShader;
+            codeModal.style.display = 'block';
+
+            // コードのシンタックスハイライト（簡易版）
+            highlightCode();
+        }
+
+        // 全画面シェーダーの表示
+        function showFullscreenShader(shader) {
+            // 全画面コンテナをクリア
+            fullscreenContainer.innerHTML = '';
+
+            // コードオーバーレイを再作成
+            const codeOverlayDiv = document.createElement('div');
+            codeOverlayDiv.className = 'code-overlay';
+            codeOverlayDiv.id = 'code-overlay';
+
+            const preElement = document.createElement('pre');
+            preElement.id = 'overlay-shader-code';
+            codeOverlayDiv.appendChild(preElement);
+
+            fullscreenContainer.appendChild(codeOverlayDiv);
+
+            // 新しいキャンバスを作成
+            const canvas = document.createElement('canvas');
+            canvas.className = 'fullscreen-canvas';
+            fullscreenContainer.appendChild(canvas);
+
+            // 全画面表示
+            fullscreenContainer.style.display = 'block';
+            backButton.style.display = 'block';
+            codeOverlayBtn.style.display = 'block';
+
+            // シェーダーの初期化
+            initShader(canvas, shader.fragmentShader);
+
+            // シェーダーコードを保存（オーバーレイ用）
+            overlayShaderCode.textContent = shader.fragmentShader;
+
+            // コードのシンタックスハイライト
+            highlightCodeElement(overlayShaderCode);
+
+            // コードオーバーレイの参照を更新
+            codeOverlay = document.getElementById('code-overlay');
+
+            // コードオーバーレイを自動的に表示
+            codeOverlay.style.display = 'block';
+            codeOverlayBtn.textContent = 'コードを隠す';
+
+            // コードオーバーレイボタンのイベントリスナーを設定
+            codeOverlayBtn.addEventListener('click', () => {
+                if (getComputedStyle(codeOverlay).display !== 'none') {
+                    codeOverlay.style.display = 'none';
+                    codeOverlayBtn.textContent = 'コードを表示';
+                } else {
+                    codeOverlay.style.display = 'block';
+                    codeOverlayBtn.textContent = 'コードを隠す';
+                }
+            });
+        }
+
+        // 簡易的なシンタックスハイライト
+        function highlightCode() {
+            highlightCodeElement(shaderCode);
+        }
+
+        // 指定された要素のコードをハイライト
+        function highlightCodeElement(element) {
+            let code = element.textContent;
+
+            // キーワードの色付け
+            const keywords = ['void', 'float', 'vec2', 'vec3', 'vec4', 'uniform', 'varying', 'precision', 'mediump', 'highp', 'lowp', 'if', 'else', 'for', 'return'];
+
+            keywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+                code = code.replace(regex, `<span style="color: #569CD6;">${keyword}</span>`);
+            });
+
+            // 関数の色付け
+            const functions = ['sin', 'cos', 'tan', 'mix', 'smoothstep', 'length', 'distance', 'dot', 'cross', 'normalize', 'fract', 'floor', 'ceil', 'abs', 'min', 'max', 'clamp', 'pow', 'sqrt', 'exp', 'log'];
+
+            functions.forEach(func => {
+                const regex = new RegExp(`\\b${func}\\b`, 'g');
+                code = code.replace(regex, `<span style="color: #DCDCAA;">${func}</span>`);
+            });
+
+            // コメントの色付け
+            code = code.replace(/\/\/.*$/gm, match => `<span style="color: #6A9955;">${match}</span>`);
+
+            // 数値の色付け
+            code = code.replace(/\b\d+(\.\d+)?\b/g, match => `<span style="color: #B5CEA8;">${match}</span>`);
+
+            element.innerHTML = code;
+        }
+
+        // イベントリスナー
+        closeModal.addEventListener('click', () => {
+            codeModal.style.display = 'none';
+        });
+
+        backButton.addEventListener('click', () => {
+            fullscreenContainer.style.display = 'none';
+            backButton.style.display = 'none';
+            codeOverlayBtn.style.display = 'none';
+            codeOverlay.style.display = 'none';
+            codeOverlayBtn.textContent = 'コードを表示';
+        });
+
+        // 元のイベントリスナーは削除（showFullscreenShader内で設定するため）
+        // codeOverlayBtn.addEventListener('click', () => {
+        //     if (codeOverlay.style.display === 'block') {
+        //         codeOverlay.style.display = 'none';
+        //         codeOverlayBtn.textContent = 'コードを表示';
+        //     } else {
+        //         codeOverlay.style.display = 'block';
+        //         codeOverlayBtn.textContent = 'コードを隠す';
+        //     }
+        // });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === codeModal) {
+                codeModal.style.display = 'none';
+            }
+        });
+
+        // ページ読み込み時にシェーダーカードを生成
+        document.addEventListener('DOMContentLoaded', createShaderCards);
+    </script>
+</body>
+</html>

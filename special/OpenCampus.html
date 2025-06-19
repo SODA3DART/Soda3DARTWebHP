@@ -1223,6 +1223,12 @@
 
 <!-- React Components -->
 <script type="text/babel">
+    // Function to detect mobile devices
+    const isMobileDevice = () => {
+        return window.innerWidth <= 768 || 
+               /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
+
     // Advanced Profile Card Component
     const ProfileCardComponent = ({
         avatarUrl = "../images/course/OpenCampus.png",
@@ -1232,7 +1238,7 @@
         innerGradient,
         showBehindGradient = true,
         className = "",
-        enableTilt = true,
+        enableTilt = !isMobileDevice(), // Disable tilt on mobile devices
         miniAvatarUrl,
         name = "イベント名",
         title = "詳細",
