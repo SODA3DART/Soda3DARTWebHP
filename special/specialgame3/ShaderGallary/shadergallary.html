@@ -413,7 +413,7 @@
             {
                 id: 'fire-shader',
                 title: '地球',
-                description: '地球を再現したシェーダー',
+                description: 'レイマーチングを用いた地球を再現したシェーダー',
                 fragmentShader: `
                     precision mediump float;
                     uniform float time;
@@ -422,64 +422,172 @@
                     varying vec3 vPosition;
                     varying vec3 vNormal;
 
-                    float random(vec2 st) {
-                        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+                    #define PI 3.14159265359
+                    #define MAX_STEPS 100
+                    #define MAX_DIST 100.0
+                    #define SURF_DIST 0.001
+
+                    // ノイズ関数
+                    float hash(float n) {
+                        return fract(sin(n) * 43758.5453);
                     }
 
-                    float noise(vec2 st) {
-                        vec2 i = floor(st);
-                        vec2 f = fract(st);
+                    float noise(vec3 x) {
+                        vec3 p = floor(x);
+                        vec3 f = fract(x);
+                        f = f * f * (3.0 - 2.0 * f);
 
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
+                        float n = p.x + p.y * 157.0 + 113.0 * p.z;
+                        return mix(
+                            mix(
+                                mix(hash(n + 0.0), hash(n + 1.0), f.x),
+                                mix(hash(n + 157.0), hash(n + 158.0), f.x),
+                                f.y),
+                            mix(
+                                mix(hash(n + 113.0), hash(n + 114.0), f.x),
+                                mix(hash(n + 270.0), hash(n + 271.0), f.x),
+                                f.y),
+                            f.z);
+                    }
 
-                        vec2 u = f * f * (3.0 - 2.0 * f);
+                    // FBM (Fractal Brownian Motion)
+                    float fbm(vec3 p) {
+                        float f = 0.0;
+                        float amp = 0.5;
+                        for(int i = 0; i < 5; i++) {
+                            f += amp * noise(p);
+                            p *= 2.0;
+                            amp *= 0.5;
+                        }
+                        return f;
+                    }
 
-                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    // 地球の色を取得
+                    vec3 getEarthColor(vec3 p) {
+                        // 極座標に変換
+                        float lat = acos(p.y) / PI;
+                        float lon = (atan(p.z, p.x) / PI + 1.0) * 0.5;
+
+                        // 大陸のノイズ
+                        float landNoise = fbm(vec3(lon * 10.0, lat * 5.0, 0.0));
+                        float continentMask = smoothstep(0.4, 0.5, landNoise);
+
+                        // 海の色
+                        vec3 oceanColor = vec3(0.0, 0.1, 0.3) + vec3(0.0, 0.05, 0.15) * fbm(vec3(lon * 15.0, lat * 10.0, time * 0.1));
+
+                        // 陸地の色
+                        vec3 landColor = mix(
+                            vec3(0.1, 0.3, 0.1), // 森林
+                            vec3(0.5, 0.4, 0.2), // 砂漠
+                            fbm(vec3(lon * 20.0, lat * 10.0, 0.5))
+                        );
+
+                        // 極地の色（雪）
+                        float polarMask = smoothstep(0.0, 0.2, abs(lat - 0.5) * 2.0);
+                        landColor = mix(landColor, vec3(0.9, 0.9, 0.95), polarMask);
+
+                        // 雲のノイズ
+                        float cloudNoise = fbm(vec3(lon * 8.0 + time * 0.05, lat * 4.0, time * 0.02));
+                        float cloudMask = smoothstep(0.4, 0.6, cloudNoise);
+
+                        // 最終的な色
+                        vec3 color = mix(oceanColor, landColor, continentMask);
+                        color = mix(color, vec3(1.0), cloudMask * 0.5);
+
+                        // 大気光の効果
+                        float atmosphere = pow(1.0 - abs(dot(normalize(p), normalize(vec3(0.0, 0.0, -1.0)))), 2.0);
+                        color += vec3(0.1, 0.2, 0.4) * atmosphere;
+
+                        return color;
+                    }
+
+                    // レイマーチング用の距離関数
+                    float sdfSphere(vec3 p, float r) {
+                        return length(p) - r;
+                    }
+
+                    // レイマーチング
+                    vec4 raymarch(vec3 ro, vec3 rd) {
+                        float dO = 0.0;
+                        float dS;
+
+                        for(int i = 0; i < MAX_STEPS; i++) {
+                            vec3 p = ro + rd * dO;
+                            dS = sdfSphere(p, 0.9);
+
+                            if(dS < SURF_DIST || dO > MAX_DIST) break;
+                            dO += dS;
+                        }
+
+                        if(dO > MAX_DIST) {
+                            return vec4(0.0); // 何も当たらなかった
+                        }
+
+                        // 交点の位置
+                        vec3 p = ro + rd * dO;
+
+                        // 法線計算
+                        vec2 e = vec2(0.001, 0.0);
+                        vec3 n = normalize(vec3(
+                            sdfSphere(p + e.xyy, 0.9) - sdfSphere(p - e.xyy, 0.9),
+                            sdfSphere(p + e.yxy, 0.9) - sdfSphere(p - e.yxy, 0.9),
+                            sdfSphere(p + e.yyx, 0.9) - sdfSphere(p - e.yyx, 0.9)
+                        ));
+
+                        // 地球の色を取得
+                        vec3 color = getEarthColor(p);
+
+                        // 光源方向（太陽）
+                        vec3 lightDir = normalize(vec3(sin(time * 0.2), 0.2, cos(time * 0.2)));
+
+                        // 拡散反射
+                        float diff = max(dot(n, lightDir), 0.0);
+
+                        // 環境光
+                        float ambient = 0.2;
+
+                        // 最終的な色
+                        color *= (diff + ambient);
+
+                        // 大気の縁の効果
+                        float rim = 1.0 - max(dot(n, -rd), 0.0);
+                        rim = pow(rim, 4.0);
+                        color += vec3(0.1, 0.3, 0.5) * rim;
+
+                        return vec4(color, 1.0);
                     }
 
                     void main() {
-                        // UVを使用
-                        vec2 uv = vUv;
+                        // カメラ設定
+                        vec3 ro = vec3(0.0, 0.0, 2.5); // カメラ位置
 
-                        // 法線を使用して炎の強度を変調
-                        float normalIntensity = dot(normalize(vNormal), normalize(vec3(0.0, 1.0, 0.0))) * 0.5 + 0.5;
+                        // 回転行列
+                        float rotY = time * 0.2;
+                        mat3 rotMat = mat3(
+                            cos(rotY), 0.0, sin(rotY),
+                            0.0, 1.0, 0.0,
+                            -sin(rotY), 0.0, cos(rotY)
+                        );
 
-                        // 3D位置を使用して炎の動きを変調
-                        float positionEffect = sin(vPosition.x * 3.0 + vPosition.z * 3.0 + time) * 0.2 + 0.8;
+                        // UVを使用してレイの方向を計算
+                        vec2 uv = vUv * 2.0 - 1.0;
+                        uv.x *= resolution.x / resolution.y; // アスペクト比の調整
 
-                        // UV座標の調整
-                        uv.y = 1.0 - uv.y;
+                        vec3 rd = normalize(vec3(uv, -1.0));
+                        rd = rotMat * rd; // 回転を適用
 
-                        // 炎のベース形状を作成
-                        float y = pow(uv.y, 2.0);
+                        // レイマーチング
+                        vec4 color = raymarch(ro, rd);
 
-                        // 炎のエフェクト用のノイズを追加
-                        vec2 noisePos = uv * vec2(3.0, 10.0) + vec2(time * 0.5, -time * 2.0);
-                        // 3D位置を使用してノイズを変調
-                        noisePos += vPosition.xy * 0.5;
+                        // 背景色（宇宙）
+                        if(color.a < 0.1) {
+                            // 星を追加
+                            vec2 uv = vUv * 2.0 - 1.0;
+                            float stars = pow(noise(vec3(uv * 500.0, time * 0.01)), 20.0);
+                            color.rgb = vec3(stars) * 0.5;
+                        }
 
-                        float n = noise(noisePos) * 0.5;
-                        n += noise(noisePos * 2.0) * 0.25;
-
-                        // 炎の形状を作成
-                        float flame = y - n * (1.0 - y);
-                        flame = max(flame, 0.0);
-
-                        // 法線と位置に基づいて炎を変調
-                        flame *= normalIntensity * positionEffect;
-
-                        // 黄色から赤へのカラーグラデーション
-                        vec3 color = vec3(1.5, 0.5, 0.0) * flame;
-                        color = mix(color, vec3(1.0, 0.5, 0.0), flame * 0.7);
-                        color = mix(color, vec3(0.0, 0.0, 0.0), 1.0 - flame * 1.2);
-
-                        // 3D効果を強化するために法線に基づいて色を調整
-                        color *= vec3(0.8 + 0.2 * vNormal.x, 0.8 + 0.2 * vNormal.y, 0.8 + 0.2 * vNormal.z);
-
-                        gl_FragColor = vec4(color, 1.0);
+                        gl_FragColor = color;
                     }
                 `
             },
@@ -685,7 +793,7 @@
         const fullscreenContainer = document.getElementById('fullscreen-container');
         const backButton = document.getElementById('back-button');
         const codeOverlayBtn = document.getElementById('code-overlay-btn');
-        const codeOverlay = document.getElementById('code-overlay');
+        let codeOverlay = document.getElementById('code-overlay');
         const overlayShaderCode = document.getElementById('overlay-shader-code');
 
         // シェーダーカードの生成

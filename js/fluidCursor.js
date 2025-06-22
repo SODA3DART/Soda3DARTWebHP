@@ -1189,8 +1189,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Add event listeners to start animation on first interaction
-  window.addEventListener('mousedown', startAnimationIfNeeded, { once: true });
-  window.addEventListener('mousemove', startAnimationIfNeeded, { once: true });
-  window.addEventListener('touchstart', startAnimationIfNeeded, { once: true });
+  // Start animation automatically on desktop devices
+  function checkIfDesktop() {
+    // Simple check for desktop - no touch capability or large screen
+    return !('ontouchstart' in window) || window.innerWidth >= 1024;
+  }
+
+  // If on desktop, start animation immediately
+  if (checkIfDesktop()) {
+    // Small delay to ensure everything is loaded
+    setTimeout(startAnimationIfNeeded, 100);
+  } else {
+    // For mobile, wait for interaction
+    window.addEventListener('mousedown', startAnimationIfNeeded, { once: true });
+    window.addEventListener('mousemove', startAnimationIfNeeded, { once: true });
+    window.addEventListener('touchstart', startAnimationIfNeeded, { once: true });
+  }
 });

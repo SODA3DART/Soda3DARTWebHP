@@ -543,6 +543,7 @@
             z-index: -1;
         }
 
+        /* Regular magic text effect animation */
         .magic-text-effect.animate {
             background-image: linear-gradient(90deg, 
                 #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8);
@@ -552,6 +553,119 @@
             -webkit-text-fill-color: transparent;
             text-fill-color: transparent;
             animation: magicEffect 4s ease-in-out forwards;
+        }
+
+        /* Blur text animation styles with gradient */
+        .blur-text-container {
+            display: inline-block;
+            position: relative;
+            padding: 10px 20px;
+            margin: 5px 0;
+        }
+
+        /* Add blurred background with rounded corners */
+        .blur-text-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.18));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+
+        .blur-text-char {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(10px);
+            animation: 
+                blur-text-reveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards,
+                gradient-shift 1.5s ease-in-out forwards 0.8s;
+            background-image: linear-gradient(90deg, 
+                #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
+            background-size: 600% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+                background-image: linear-gradient(90deg, 
+                    #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
+            }
+            40% {
+                background-position: 100% 50%;
+                background-image: linear-gradient(90deg, 
+                    #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
+            }
+            60% {
+                background-position: 0% 50%;
+                background-image: linear-gradient(90deg, 
+                    rgba(255, 182, 193, 0.8), rgba(255, 215, 0, 0.8), 
+                    rgba(152, 251, 152, 0.8), rgba(173, 216, 230, 0.8), 
+                    rgba(216, 191, 216, 0.8), rgba(255, 255, 255, 0.8));
+            }
+            80% {
+                background-position: 50% 50%;
+                background-image: linear-gradient(90deg, 
+                    rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9), 
+                    rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9), 
+                    rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
+            }
+            100% {
+                background-position: 0% 50%;
+                background-image: linear-gradient(90deg, 
+                    #ffffff, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff);
+            }
+        }
+
+        @keyframes blur-text-reveal {
+            0% {
+                opacity: 0;
+                filter: blur(10px);
+                transform: translateY(10px);
+                background-position: 0% 50%;
+            }
+            20% {
+                opacity: 0.4;
+                filter: blur(7px);
+                transform: translateY(7px);
+                background-position: 25% 50%;
+            }
+            40% {
+                opacity: 0.6;
+                filter: blur(5px);
+                transform: translateY(5px);
+                background-position: 50% 50%;
+            }
+            60% {
+                opacity: 0.8;
+                filter: blur(3px);
+                transform: translateY(3px);
+                background-position: 75% 50%;
+            }
+            80% {
+                opacity: 0.9;
+                filter: blur(1px);
+                transform: translateY(1px);
+                background-position: 100% 50%;
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+                background-position: 0% 50%;
+            }
         }
 
         .cta-button {
@@ -1340,7 +1454,7 @@
     <!-- ヒーロー部分 -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1 class="magic-text-effect">3Dアートで新しい世界を創造する</h1>
+            <h1 class="blur-text-container">3Dアートで新しい世界を創造する</h1>
             <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
             <a href="#features" class="cta-button">詳しく見る</a>
         </div>
@@ -2016,6 +2130,33 @@
                         // animate クラスを追加してアニメーションを開始
                         element.classList.add('animate');
                     });
+
+                    // Blur text animation for the hero title with gradient effect
+                    const blurTextContainers = document.querySelectorAll('.blur-text-container');
+                    blurTextContainers.forEach(function(container) {
+                        const text = container.textContent;
+                        container.textContent = '';
+
+                        // Split text into characters and create spans
+                        for (let i = 0; i < text.length; i++) {
+                            const charSpan = document.createElement('span');
+                            charSpan.classList.add('blur-text-char');
+                            charSpan.textContent = text[i];
+
+                            // Add staggered animation delay
+                            const baseDelay = i * 0.04;
+                            // Add slight randomness to the animation delay for a more dynamic effect
+                            const randomDelay = baseDelay + (Math.random() * 0.02);
+                            charSpan.style.animationDelay = `${randomDelay}s`;
+
+                            // Add animation duration with slight variation
+                            const baseDuration = 0.8;
+                            const randomDuration = baseDuration + (Math.random() * 0.4);
+                            charSpan.style.animationDuration = `${randomDuration}s`;
+
+                            container.appendChild(charSpan);
+                        }
+                    });
                 }, 300);
             }
 
@@ -2061,7 +2202,7 @@
                 'nav-contact': 'お問い合わせ',
 
                 // ヒーロー部分
-                'hero-title': '3Dアートで新しい世界を創造する',
+                'hero-title': '3Dアートで新しい世界を創造する', // This text is now handled by the blur-text-container
                 'hero-description': '崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。',
                 'hero-cta': '詳しく見る',
 
