@@ -7,13 +7,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize filter functionality
     initFilterFunctionality();
-    
+
     // Initialize lightbox functionality
     initLightbox();
-    
+
     // Initialize thumbnail position
     initThumbnailPosition();
-    
+
     // Initialize hover image change for special artworks
     initHoverImageChange();
 });
@@ -98,6 +98,31 @@ function initLightbox() {
                 <p>赤い髪と青い瞳が特徴的で、冒険の中で様々な仲間と出会いながら成長していきます。</p>
                 <p>このモデルはFusion 360とBlenderを使用して作成し、ゲームエンジンへの実装も行いました。</p>
             `
+        },
+        // Japanese woman jeoulous artwork
+        "Japanese woman jeoulous": {
+            images: [
+                "images/profkiyoshima.png", // Main image
+                "images/prof,kiyoshima/profwork.png", // Additional image 1
+                "images/prof,kiyoshima/profwork2.png" // Additional image 2
+            ],
+            description: `
+                <h3>Japanese woman jeoulous - デジタル彫刻</h3>
+                <p>清島浩徳教授によるZBrushを用いたデジタル彫刻作品です。</p>
+                <p>日本人女性の感情表現を繊細に表現した作品で、デジタル彫刻の可能性を追求しています。</p>
+                <p>このモデルはZBrushを使用して作成され、3Dプリントやデジタル展示に活用されています。</p>
+                <div id="ar-button-container" style="margin-top: 20px; display: none;">
+                    <a id="ar-button" href="models/ProfHiroSculpter/Jw.usdz" rel="ar" style="display: inline-block; background-color: #4285f4; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                        <span style="display: flex; align-items: center; justify-content: center;">
+                            <svg style="margin-right: 8px;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 18V12C3 9.61305 3.94821 7.32387 5.63604 5.63604C7.32387 3.94821 9.61305 3 12 3C14.3869 3 16.6761 3.94821 18.364 5.63604C20.0518 7.32387 21 9.61305 21 12V18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M21 19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H18C17.4696 21 16.9609 20.7893 16.5858 20.4142C16.2107 20.0391 16 19.5304 16 19V16C16 15.4696 16.2107 14.9609 16.5858 14.5858C16.9609 14.2107 17.4696 14 18 14H21V19ZM3 19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H6C6.53043 21 7.03914 20.7893 7.41421 20.4142C7.78929 20.0391 8 19.5304 8 19V16C8 15.4696 7.78929 14.9609 7.41421 14.5858C7.03914 14.2107 6.53043 14 6 14H3V19Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            ARで見る
+                        </span>
+                    </a>
+                </div>
+            `
         }
         // Add more special artworks here as needed
     };
@@ -153,6 +178,13 @@ function initLightbox() {
     }
 
     /**
+     * Function to check if the device is iOS/iPhone
+     */
+    function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    /**
      * Function to open the lightbox with animation
      */
     function openLightbox(imageSrc, artworkTitle) {
@@ -197,6 +229,17 @@ function initLightbox() {
             // Add description
             if (lightboxDescription) {
                 lightboxDescription.innerHTML = artwork.description;
+
+                // Check if this is the Japanese woman jeoulous artwork and if the device is iOS/iPhone
+                if (artworkTitle === "Japanese woman jeoulous") {
+                    // After the description is added to the DOM, get the AR button container
+                    const arButtonContainer = document.getElementById('ar-button-container');
+
+                    // Show the AR button only on iOS devices
+                    if (arButtonContainer && isIOS()) {
+                        arButtonContainer.style.display = 'block';
+                    }
+                }
             }
         }
 
@@ -215,7 +258,7 @@ function initLightbox() {
      */
     function closeLightbox() {
         if (!lightbox) return;
-        
+
         // Remove the active class to trigger closing animations
         lightbox.classList.remove('active');
 
@@ -257,6 +300,14 @@ function initHoverImageChange() {
                 "images/gallery/miniPoppy.png", // Additional image 1
                 "images/gallery/PoppySettnings.png", // Additional image 2
                 "images/gallery/Poppyw.png"
+            ]
+        },
+        // Japanese woman jeoulous artwork
+        "Japanese woman jeoulous": {
+            images: [
+                "images/profkiyoshima.png", // Main image
+                "images/prof,kiyoshima/profwork.png", // Additional image 1
+                "images/prof,kiyoshima/profwork2.png" // Additional image 2
             ]
         }
         // Add more special artworks here as needed
