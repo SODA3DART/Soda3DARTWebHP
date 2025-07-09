@@ -1736,7 +1736,7 @@
                         </div>
                     </div>
                     <h3>オープンキャンパス情報</h3>
-                    <p>次回のオープンキャンパスは2025年7月19日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。</p>
+                    <p>次回のオープンキャンパスは2025年7月1F日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。</p>
                     <p>詳細は<a href="https://soda3dart.github.io/Soda3DARTWebHP/special/OpenCampus.html">こちら</a>をご覧ください。</p>
                 </div>
                 <div class="contact-form">
@@ -2246,7 +2246,7 @@
                 'contact-phone': '096-326-3111(大学代表番号)',
                 'contact-email-label': 'メールアドレス',
                 'contact-opencampus-title': 'オープンキャンパス情報',
-                'contact-opencampus-info': '次回のオープンキャンパスは2025年7月15日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。',
+                'contact-opencampus-info': '次回のオープンキャンパスは2025年7月19日(土)に開催予定です。3Dアートコースの施設見学や体験ワークショップにぜひご参加ください。',
                 'contact-form-title': 'お問い合わせフォーム',
                 'contact-form-name': 'お名前',
                 'contact-form-email': 'メールアドレス',
@@ -2308,7 +2308,7 @@
                 'contact-phone': '096-326-3111 (University Main Line)',
                 'contact-email-label': 'Email Address',
                 'contact-opencampus-title': 'Open Campus Information',
-                'contact-opencampus-info': 'The next Open Campus is scheduled for July 15, 2025 (Saturday). Please join us for a tour of the 3D Art Course facilities and experience workshops.',
+                'contact-opencampus-info': 'The next Open Campus is scheduled for July 19, 2025 (Saturday). Please join us for a tour of the 3D Art Course facilities and experience workshops.',
                 'contact-form-title': 'Contact Form',
                 'contact-form-name': 'Name',
                 'contact-form-email': 'Email Address',
@@ -2650,14 +2650,14 @@
             today.setHours(0, 0, 0, 0);
 
             // ミリ秒単位での差分を日数に変換
-            const diffTime = openCampusDate.getTime() - today.getTime();
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffTime = openCampusDate.getTime() - today.getTime() ;
+            const diffDays = Math.ceil(diffTime  / (1000 * 60 * 60 * 24));
 
             // カウンターを更新
             const daysCounter = document.getElementById('days-counter');
             if (daysCounter) {
                 if (diffDays > 0) {
-                    daysCounter.textContent = diffDays;
+                    daysCounter.textContent = diffDays -1 ;
                 } else if (diffDays === 0) {
                     daysCounter.textContent = "今日";
                 } else {
