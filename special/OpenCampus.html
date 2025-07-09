@@ -1017,6 +1017,99 @@
                 font-size: 1rem;
             }
         }
+
+        /* Slideshow styles */
+        .slideshow-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slideshow-slides {
+            display: flex;
+            width: 700%; /* 7 images */
+            transition: transform 0.5s ease;
+        }
+
+        .slide-image {
+            width: 14.285%; /* 100% / 7 */
+            height: 300px;
+            object-fit: cover;
+        }
+
+        /* Navigation buttons */
+        .slideshow-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .slideshow-nav button {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        .slideshow-nav button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .slideshow-nav button i {
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        /* Indicators */
+        .slideshow-indicators {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .indicator.active {
+            background-color: white;
+        }
+
+        /* Responsive slideshow adjustments */
+        @media (max-width: 768px) {
+            .slideshow-container {
+                width: 100%;
+                height: auto;
+                touch-action: pan-y;
+            }
+
+            .slide-image {
+                height: 200px;
+            }
+
+            .slideshow-nav {
+                display: none; /* Hide buttons on mobile, use swipe instead */
+            }
+        }
     </style>
 </head>
 <body>
@@ -1102,7 +1195,7 @@
                     <i class="fas fa-vr-cardboard"></i>
                 </div>
                 <h3>XR体験</h3>
-                <p>最新のXR機器を使って、学生が制作した3Dアプリケーションを体験。自分の作品がXRで見られる未来を体感しよう！※進行状況によっては体験いただけない場合がございます。</p>
+                <p>最新のXR機器を使って、学生が制作した3Dアプリケーションを体験。自分の作品がXRで見られる未来を体感しよう！<br>※進行状況によっては体験いただけない場合がございます。</p>
             </div>
 
 
@@ -1117,7 +1210,30 @@
 
         <div class="course-features" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-card">
-                <img src="../images/degitaltop.png" alt="最新設備" class="feature-image">
+                <div class="slideshow-container feature-image">
+                    <div class="slideshow-slides">
+                        <img src="../images/course/Figure_modeling.JPG" alt="最新設備1" class="slide-image">
+                        <img src="../images/course/study1.png" alt="最新設備2" class="slide-image">
+                        <img src="../images/course/study9.png" alt="最新設備3" class="slide-image">
+                        <img src="../images/3DScan1.jpg" alt="最新設備4" class="slide-image">
+                        <img src="../images/course/kendama.webp" alt="最新設備5" class="slide-image">
+                        <img src="../images/course/zbru.webp" alt="最新設備6" class="slide-image">
+                        <img src="../images/course/AVP.webp" alt="最新設備7" class="slide-image">
+                    </div>
+                    <div class="slideshow-nav">
+                        <button class="prev-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button class="next-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="slideshow-indicators">
+                        <span class="indicator active" data-index="0"></span>
+                        <span class="indicator" data-index="1"></span>
+                        <span class="indicator" data-index="2"></span>
+                        <span class="indicator" data-index="3"></span>
+                        <span class="indicator" data-index="4"></span>
+                        <span class="indicator" data-index="5"></span>
+                        <span class="indicator" data-index="6"></span>
+                    </div>
+                </div>
                 <div class="feature-content">
                     <h3><i class="fas fa-laptop"></i> 最新設備で学ぶ</h3>
                     <p>ハイスペックPC、3Dスキャナー、モーションキャプチャー、VR機器など、業界標準の最新設備を完備。プロと同じ環境で創作活動ができます。</p>
@@ -1168,7 +1284,7 @@
             <div class="registration-form">
                 <p>以下のボタンから大学公式サイトの申し込みフォームへ移動します。</p>
                 <a href=https://www.sojo-u.ac.jp/nyushi/event/#:~:text=%E5%8F%97%E4%BB%9812%EF%BC%9A00%EF%BD%9E%EF%BC%89-,%E8%8A%B8%E8%A1%93%E5%AD%A6%E9%83%A8,-2025%E5%B9%B47" class="registration-btn" target="_blank">申し込みフォームへ</a>
-                <p class="form-note">※申し込み時に「3Dアートコース体験希望」と備考欄にご記入ください。</p>
+
             </div>
         </div>
     </div>
@@ -1220,6 +1336,95 @@
         </div>
     </div>
 </footer>
+
+<!-- Slideshow JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize slideshow
+        initSlideshow();
+    });
+
+    function initSlideshow() {
+        const slideshowContainer = document.querySelector('.slideshow-container');
+        const slidesContainer = document.querySelector('.slideshow-slides');
+        const slides = document.querySelectorAll('.slide-image');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const indicators = document.querySelectorAll('.indicator');
+
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        // Set initial position
+        updateSlidePosition();
+
+        // Add event listeners for buttons
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlidePosition();
+            updateIndicators();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlidePosition();
+            updateIndicators();
+        });
+
+        // Add event listeners for indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateSlidePosition();
+                updateIndicators();
+            });
+        });
+
+        // Touch swipe functionality for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        slideshowContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        slideshowContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance for a swipe
+            const swipeDistance = touchEndX - touchStartX;
+
+            if (swipeDistance > swipeThreshold) {
+                // Swipe right - go to previous slide
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            } else if (swipeDistance < -swipeThreshold) {
+                // Swipe left - go to next slide
+                currentIndex = (currentIndex + 1) % totalSlides;
+            }
+
+            updateSlidePosition();
+            updateIndicators();
+        }
+
+        function updateSlidePosition() {
+            const translateX = -currentIndex * (100 / totalSlides);
+            slidesContainer.style.transform = `translateX(${translateX}%)`;
+        }
+
+        function updateIndicators() {
+            indicators.forEach((indicator, index) => {
+                if (index === currentIndex) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+    }
+</script>
 
 <!-- React Components -->
 <script type="text/babel">
