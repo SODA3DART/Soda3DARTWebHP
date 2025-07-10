@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create image element for initial logo
     const logoImg = document.createElement('img');
-    logoImg.src = 'images/logo.png';
+    logoImg.src = 'images/logo.webp';
     logoImg.alt = '3Dアートコースロゴ';
     logoImg.id = 'logo-image';
     logoImg.style.maxHeight = '50px';
