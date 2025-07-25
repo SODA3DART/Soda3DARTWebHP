@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第二回オープンキャンパス 2025年8月3日 - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <link rel="icon" href="../images/logohedder.webp" type="image/webp">
+    <meta name="description" content="崇城大学芸術学部美術学科3Dアートコースの第二回オープンキャンパス情報。ローポリキャラクターを作成し、Webページに3DCGを埋め込む方法を体験できます。">
+    <link rel="canonical" href="https://soda3dart.github.io/Soda3DARTWebHP/special/OpunCumpus2025_2.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpunCumpus2025_2.html">
+    <meta property="og:title" content="第二回オープンキャンパス 2025年8月3日 - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="og:description" content="崇城大学芸術学部美術学科3Dアートコースの第二回オープンキャンパス情報。ローポリキャラクターを作成し、Webページに3DCGを埋め込む方法を体験できます。">
+    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/OpunCumpus2025_2.html">
+    <meta property="twitter:title" content="第二回オープンキャンパス 2025年8月3日 - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="twitter:description" content="崇城大学芸術学部美術学科3Dアートコースの第二回オープンキャンパス情報。ローポリキャラクターを作成し、Webページに3DCGを埋め込む方法を体験できます。">
+    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
+
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Three.js ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <!-- Three.js 拡張ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <!-- GLTFLoader for loading 3D models -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 14px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        /* 言語切り替えボタンのスタイル */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        /* ナビゲーション内の言語切り替えボタン用のスタイル */
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .language-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-btn.active {
+            background-color: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #4285f4;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #4285f4;
+        }
+
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+            background-image: url('../images/TopImage/topimage1.webp');
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+            animation: fadeInUp 1s ease-out 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .hero-date {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #4285f4;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+            animation: fadeInUp 1s ease-out 0.6s;
+            animation-fill-mode: both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            animation: fadeInUp 1s ease-out 0.9s;
+            animation-fill-mode: both;
+        }
+
+        .hero-btn {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.5);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hero-btn:hover {
+            background-color: #3367d6;
+            box-shadow: 0 0 30px rgba(66, 133, 244, 0.8);
+            transform: scale(1.05);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-down i {
+            font-size: 2rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* セクションスタイル */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 15px;
+            color: #333;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #4285f4;
+        }
+
+        /* イベント概要セクション */
+        .event-summary {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 50px;
+        }
+
+        .event-summary h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .event-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .detail-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .detail-card i {
+            font-size: 2.5rem;
+            color: #4285f4;
+            margin-bottom: 15px;
+        }
+
+        .detail-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .detail-card p {
+            font-size: 1rem;
+        }
+
+        /* ワークショップセクション */
+        .workshop-section {
+            background-color: #f0f4f8;
+        }
+
+        .workshop-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .workshop-step {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .workshop-step.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .workshop-image {
+            width: 40%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .workshop-content {
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        .workshop-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .workshop-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* 3Dモデルビューアー */
+        .model-viewer-container {
+            width: 100%;
+            height: 400px;
+            margin: 30px 0;
+            position: relative;
+            background-color: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* フルスクリーンアイコン */
+        .fullscreen-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #4285f4;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .fullscreen-icon:hover {
+            background-color: #4285f4;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .model-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-btn {
+            background-color: #4285f4;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .model-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+
+        /* お知らせセクション */
+        .announcement {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .announcement h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .announcement p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .announcement-btn {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .announcement-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+
+        /* フッター部分 */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #4285f4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4285f4;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+
+        /* 学生作品ギャラリー */
+        .student-gallery {
+            margin-top: 50px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .gallery-item {
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .gallery-image {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .gallery-model-container {
+            width: 100%;
+            height: 250px;
+            background-color: #f0f0f0;
+        }
+
+        .gallery-info {
+            padding: 20px;
+        }
+
+        .gallery-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .gallery-author {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .gallery-description {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .gallery-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .gallery-tag {
+            background-color: #f0f4f8;
+            color: #4285f4;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .view-model-btn {
+            display: inline-block;
+            background-color: #4285f4;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .view-model-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+
+        /* モデルビューアーモーダル */
+        .model-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow: hidden;
+        }
+
+        .model-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            max-width: 1000px;
+            margin: 2% auto;
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .model-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        .model-modal-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .model-modal-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 2001;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo-text span {
+                font-size: 12px;
+            }
+
+            nav {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+
+            nav.active {
+                transform: translateY(0);
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-date {
+                font-size: 1.8rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .workshop-step,
+            .workshop-step.reverse {
+                flex-direction: column;
+            }
+
+            .workshop-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .model-viewer-container {
+                height: 300px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .model-modal-content {
+                width: 95%;
+                height: 80%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="../images/logohedder.webp" alt="崇城大学 芸術学部 3Dアートコース">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <div class="mobile-menu" id="mobileMenu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="../index.html#home">ホーム</a></li>
+                    <li><a href="../index.html#features">コース紹介</a></li>
+                    <li><a href="../index.html#gallery">ギャラリー</a></li>
+                    <li><a href="../index.html#news">ニュース</a></li>
+                    <li><a href="../index.html#contact">お問い合わせ</a></li>
+                    <li class="language-switch">
+                        <button class="language-btn active" data-lang="ja">日本語</button>
+                        <button class="language-btn" data-lang="en">English</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">第二回オープンキャンパス</h1>
+            <p class="hero-subtitle">崇城大学芸術学部美術学科 3Dアートコース</p>
+            <p class="hero-date">2025年8月3日 開催予定</p>
+            <div class="hero-buttons">
+                <a href="#summary" class="hero-btn">イベント概要</a>
+            </div>
+        </div>
+        <div class="scroll-down">
+            スクロールして詳細を見る
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- イベント概要セクション -->
+    <section id="summary" class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">イベント概要</h2>
+            <div class="event-summary" data-aos="fade-up" data-aos-delay="200">
+                <h3>第二回オープンキャンパスのご案内</h3>
+                <p>2025年8月3日に開催予定の第二回オープンキャンパスでは、「ローポリキャラを動かしてみよう」をテーマに、3DCGをWebページに埋め込む技術を体験していただきます。</p>
+                <p>参加者の皆さんは、Blenderを使ってローポリキャラクターをモデリングし、それをWebページ上で動かす方法を学びます。自分だけのオリジナルキャラクターをインタラクティブに操作できるようになります。</p>
+
+                <h3>3DCGをWebに埋め込むデモ</h3>
+                <p>以下は、Webページに3DCGモデルを埋め込んだ例です。マウスでドラッグして視点を変えたり、ホイールでズームしたりできます。</p>
+
+                <!-- 3Dモデルビューアー -->
+                <div class="model-viewer-container">
+                    <div id="model-viewer"></div>
+                    <div class="fullscreen-icon" id="fullscreenBtn">
+                        <i class="fas fa-expand"></i>
+                    </div>
+                    <div class="model-controls">
+                        <button class="model-btn" id="resetViewBtn">視点リセット</button>
+                        <button class="model-btn" id="rotateModelBtn">回転</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ワークショップセクション -->
+    <section class="section workshop-section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">ワークショップ内容</h2>
+            <div class="workshop-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="workshop-step">
+                    <img src="../images/gallery/Poppy.png" alt="ローポリモデリング" class="workshop-image">
+                    <div class="workshop-content">
+                        <h3>Step 1: ローポリキャラクターモデリング</h3>
+                        <p>Blenderを使って、ゲームなどで使用されるローポリキャラクターを作成します。基本的なモデリング技術を学びながら、自分だけのキャラクターを作り上げていきます。</p>
+                        <p>初めての方でも分かりやすく丁寧に指導しますので、安心してご参加ください。</p>
+                    </div>
+                </div>
+
+                <div class="workshop-step reverse">
+                    <img src="../images/gallery/PoppySettnings.png" alt="アニメーション設定" class="workshop-image">
+                    <div class="workshop-content">
+                        <h3>Step 2: キャラクターのアニメーション</h3>
+                        <p>作成したキャラクターに動きをつけるための基本的なアニメーション技術を学びます。リギングやウェイトペイントなど、キャラクターを動かすための基礎を体験します。</p>
+                        <p>簡単な歩行モーションや、表情の変化などを設定してみましょう。</p>
+                    </div>
+                </div>
+
+                <div class="workshop-step">
+                    <img src="../images/gallery/miniPoppy.png" alt="Web埋め込み" class="workshop-image">
+                    <div class="workshop-content">
+                        <h3>Step 3: Webページへの埋め込み</h3>
+                        <p>完成したキャラクターをWebページに埋め込む方法を学びます。Three.jsというJavaScriptライブラリを使って、ブラウザ上で3Dモデルを表示・操作する技術を体験します。</p>
+                        <p>自分のキャラクターをインタラクティブに操作できるWebページを作成し、友達や家族に共有することができます。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学生作品ギャラリーセクション -->
+    <section class="section" style="background-color: #f0f4f8;">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">学生作品ギャラリー</h2>
+            <p class="text-center" style="text-align: center; margin-bottom: 30px;">オープンキャンパスに参加した学生たちが制作した3Dモデル作品をご紹介します。各作品はマウスでドラッグして視点を変えたり、ホイールでズームしたりできます。</p>
+
+            <div class="gallery-grid">
+                <!-- 作品1 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="gallery-model-container" id="gallery-model-1"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">キャラクター「ミミ」</h3>
+                        <p class="gallery-description">ファンタジー世界の冒険者をイメージして作成したキャラクター。明るい性格で、魔法が得意。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">キャラクター</span>
+                            <span class="gallery-tag">Blender</span>
+                            <span class="gallery-tag">ローポリ</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="1">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品2 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="150">
+                    <div class="gallery-model-container" id="gallery-model-2"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">ロボット「メカノ」</h3>
+                        <p class="gallery-description">近未来の家庭用ロボットをデザイン。シンプルな形状ながら機能性を重視した設計。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">ロボット</span>
+                            <span class="gallery-tag">SF</span>
+                            <span class="gallery-tag">メカニカル</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="2">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品3 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="gallery-model-container" id="gallery-model-3"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">ファンタジー生物「ドラゴリン」</h3>
+                        <p class="gallery-description">ドラゴンとゴブリンを掛け合わせたオリジナル生物。小さな体ながらも炎を吐く能力を持つ。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">クリーチャー</span>
+                            <span class="gallery-tag">オリジナル</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="3">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品4 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="250">
+                    <div class="gallery-model-container" id="gallery-model-4"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">宇宙船「スターグライダー」</h3>
+                        <p class="gallery-description">宇宙探査用の小型宇宙船。流線型のデザインで大気圏突入時の抵抗を減らす設計。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">SF</span>
+                            <span class="gallery-tag">宇宙船</span>
+                            <span class="gallery-tag">ハードサーフェス</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="4">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品5 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="gallery-model-container" id="gallery-model-5"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">武器「エンチャントソード」</h3>
+                        <p class="gallery-description">魔法の力を宿した剣。刀身に刻まれた模様が光り、特殊な能力を発揮する。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">武器</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">小物</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="5">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品6 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="350">
+                    <div class="gallery-model-container" id="gallery-model-6"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">動物「ネコミミ」</h3>
+                        <p class="gallery-description">猫の特徴を持つ架空の生物。大きな耳と尻尾が特徴で、愛らしい表情が魅力。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">動物</span>
+                            <span class="gallery-tag">キャラクター</span>
+                            <span class="gallery-tag">かわいい</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="6">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品7 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="gallery-model-container" id="gallery-model-7"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">建物「ファンタジータワー」</h3>
+                        <p class="gallery-description">魔法世界の塔をモチーフにした建築物。螺旋状の階段と多数の窓が特徴。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">建築</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">環境</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="7">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品8 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="450">
+                    <div class="gallery-model-container" id="gallery-model-8"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">乗り物「ホバーバイク」</h3>
+                        <p class="gallery-description">未来の空中バイク。重力制御技術を使って浮遊し、高速移動が可能。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">乗り物</span>
+                            <span class="gallery-tag">SF</span>
+                            <span class="gallery-tag">メカニカル</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="8">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品9 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="500">
+                    <div class="gallery-model-container" id="gallery-model-9"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">アクセサリー「魔法の宝石」</h3>
+                        <p class="gallery-description">魔力を宿した宝石のペンダント。内部から光を放ち、持ち主に特殊な力を与える。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">アクセサリー</span>
+                            <span class="gallery-tag">小物</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="9">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品10 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="550">
+                    <div class="gallery-model-container" id="gallery-model-10"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">モンスター「ゴブリンキング」</h3>
+                        <p class="gallery-description">ゴブリン族の王。大きな体格と豪華な装飾品が特徴で、強力な武器を持つ。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">モンスター</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">キャラクター</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="10">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品11 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
+                    <div class="gallery-model-container" id="gallery-model-11"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">食べ物「マジカルフルーツ」</h3>
+                        <p class="gallery-description">架空の魔法の果物。虹色に輝き、食べると一時的に特殊能力が得られる。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">食べ物</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">小物</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="11">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品12 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="650">
+                    <div class="gallery-model-container" id="gallery-model-12"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">ロボット「バトルドロイド」</h3>
+                        <p class="gallery-description">戦闘用ロボット。複数の武器を内蔵し、高い機動性と防御力を持つ。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">ロボット</span>
+                            <span class="gallery-tag">SF</span>
+                            <span class="gallery-tag">メカニカル</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="12">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品13 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="700">
+                    <div class="gallery-model-container" id="gallery-model-13"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">魔法使い「ウィザードマスター」</h3>
+                        <p class="gallery-description">古代の知識を持つ魔法使い。長い杖と特徴的なローブが印象的。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">キャラクター</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">人物</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="13">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品14 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="750">
+                    <div class="gallery-model-container" id="gallery-model-14"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">乗り物「ドラゴンライダー」</h3>
+                        <p class="gallery-description">ドラゴンに乗るための特殊な鞍と装備。炎や高高度に耐えられる素材で作られている。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">乗り物</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">装備</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="14">3Dモデルを見る</button>
+                    </div>
+                </div>
+
+                <!-- 作品15 -->
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="800">
+                    <div class="gallery-model-container" id="gallery-model-15"></div>
+                    <div class="gallery-info">
+                        <h3 class="gallery-title">ペット「マジカルフォックス」</h3>
+                        <p class="gallery-description">魔法の力を持つキツネ。複数の尻尾を持ち、それぞれが異なる魔法を使える。</p>
+                        <div class="gallery-tags">
+                            <span class="gallery-tag">動物</span>
+                            <span class="gallery-tag">ファンタジー</span>
+                            <span class="gallery-tag">ペット</span>
+                        </div>
+                        <button class="view-model-btn" data-model-id="15">3Dモデルを見る</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- モデルビューアーモーダル -->
+    <div id="modelModal" class="model-modal">
+        <span class="model-modal-close">&times;</span>
+        <div class="model-modal-content">
+            <div id="modal-model-viewer" class="model-modal-viewer"></div>
+            <!-- ローディングインジケーター -->
+            <div id="modalLoading" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 2002;">
+                <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #4285f4; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                <div style="color: white; font-size: 16px; background-color: rgba(0, 0, 0, 0.7); padding: 10px 20px; border-radius: 5px;">読み込み中...</div>
+            </div>
+            <div class="model-modal-controls">
+                <button class="model-btn" id="modalResetViewBtn">視点リセット</button>
+                <button class="model-btn" id="modalRotateModelBtn">回転</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <!-- お知らせセクション -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">参加方法について</h2>
+            <div class="announcement" data-aos="fade-up" data-aos-delay="200">
+                <h3>Webページに埋め込む3DCGを作ろう</h3>
+                <p>ワークショップで制作していただいた3Dキャラクターは、専用のWebページに埋め込んで公開することができます。参加者の皆さんには、作品のURLをお渡しします。</p>
+                <p>ご家族やお友達に自分の作ったキャラクターを見せることができます！</p>
+                <a href="../special/OpenCampus.html" class="announcement-btn">オープンキャンパス情報</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>崇城大学</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/">大学について</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/faculty/">学部・学科紹介</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/examination/">入試情報</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/student_life/">キャンパスライフ</a></li>
+                        <li><a href="https://www.sojo-u.ac.jp/course/">就職・進路</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>芸術学部</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://soda.art.sojo-u.ac.jp/about">美術学科</a></li>
+                        <li><a href="https://soda.art.sojo-u.ac.jp/art-professor">教員紹介</a></li>
+                        <li><a href="../facilities.html">施設・設備</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>学生作品</h3>
+                    <ul class="footer-links">
+                        <li><a href="../gallery.html">ギャラリー</a></li>
+                        <li><a href="../temp/temppage.html">講義紹介・プロジェクト</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>お問い合わせ</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.sojo-u.ac.jp/access/">アクセス</a></li>
+                        <li><a href="../index.html#contact">3Dアートコースへのお問い合わせ</a></li>
+                        <li><a href="../special/OpenCampus.html">オープンキャンパス</a></li>
+                        <li><a href="../question.html">よくある質問</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // AOS初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+
+            // モバイルメニュートグル
+            const mobileMenu = document.getElementById('mobileMenu');
+            const nav = document.getElementById('nav');
+
+            mobileMenu.addEventListener('click', function() {
+                nav.classList.toggle('active');
+            });
+
+            // メインの3Dモデルビューアーの初期化
+            initMainModelViewer();
+
+            // ギャラリーの3Dモデルビューアーの初期化
+            initGalleryModelViewers();
+
+            // モーダルの設定
+            setupModelModal();
+        });
+
+        // メインの3Dモデルビューアーの初期化
+        function initMainModelViewer() {
+            // シーン、カメラ、レンダラーの作成
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 1, 3);
+
+            const container = document.getElementById('model-viewer');
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // OrbitControlsの設定
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 1;
+            controls.maxDistance = 10;
+
+            // 光源の追加
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // 床の作成
+            const floorGeometry = new THREE.PlaneGeometry(10, 10);
+            const floorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xeeeeee,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.5;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // 3Dモデルの読み込み
+            let model;
+            const gltfLoader = new THREE.GLTFLoader();
+            gltfLoader.load('Models/Kumayu.glb', function(gltf) {
+                model = gltf.scene;
+                model.position.set(0, 0, 0);
+                model.scale.set(1, 1, 1);
+
+                // 影の設定
+                model.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+
+                scene.add(model);
+            });
+
+            // ウィンドウリサイズ時の処理
+            window.addEventListener('resize', function() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            // 視点リセットボタン
+            document.getElementById('resetViewBtn').addEventListener('click', function() {
+                camera.position.set(0, 1, 3);
+                controls.target.set(0, 0, 0);
+            });
+
+            // モデル回転フラグ
+            let isRotating = false;
+
+            // 回転ボタン
+            document.getElementById('rotateModelBtn').addEventListener('click', function() {
+                isRotating = !isRotating;
+                this.textContent = isRotating ? '回転停止' : '回転';
+            });
+
+            // フルスクリーンボタン
+            document.getElementById('fullscreenBtn').addEventListener('click', function() {
+                // モーダルを開く
+                const modal = document.getElementById('modelModal');
+                modal.style.display = 'block';
+
+                // モーダル内に3Dモデルビューアーを作成
+                openModelModal('main');
+            });
+
+            // アニメーションループ
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // モデルの回転
+                if (isRotating && model) {
+                    model.rotation.y += 0.01;
+                }
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        }
+
+        // ギャラリーの3Dモデルビューアーの初期化
+        function initGalleryModelViewers() {
+            // 各ギャラリーアイテムに3Dモデルビューアーを初期化
+            for (let i = 1; i <= 15; i++) {
+                createModelViewer(`gallery-model-${i}`, i);
+            }
+        }
+
+        // 3Dモデルビューアーの作成
+        function createModelViewer(containerId, modelId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // コンテナを相対位置に設定（フルスクリーンアイコンの配置のため）
+            container.style.position = 'relative';
+
+            // シーン、カメラ、レンダラーの作成
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 1, 3);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // フルスクリーンアイコンの追加
+            const fullscreenIcon = document.createElement('div');
+            fullscreenIcon.className = 'fullscreen-icon';
+            fullscreenIcon.innerHTML = '<i class="fas fa-expand"></i>';
+            container.appendChild(fullscreenIcon);
+
+            // フルスクリーンアイコンのクリックイベント
+            fullscreenIcon.addEventListener('click', function() {
+                const modal = document.getElementById('modelModal');
+                modal.style.display = 'block';
+                openModelModal(modelId);
+            });
+
+            // OrbitControlsの設定
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 1;
+            controls.maxDistance = 10;
+
+            // 光源の追加
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 10, 5);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // 床の作成
+            const floorGeometry = new THREE.PlaneGeometry(10, 10);
+            const floorMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xeeeeee,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.5;
+            floor.receiveShadow = true;
+            scene.add(floor);
+
+            // 3Dモデルの読み込み（すべてのモデルで同じモデルを使用）
+            let model;
+            const gltfLoader = new THREE.GLTFLoader();
+            gltfLoader.load('Models/Kumayu.glb', function(gltf) {
+                model = gltf.scene;
+                model.position.set(0, 0, 0);
+                model.scale.set(1, 1, 1);
+
+                // 影の設定
+                model.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+
+                scene.add(model);
+            });
+
+            // モデルの自動回転
+            function animate() {
+                requestAnimationFrame(animate);
+
+                if (model) {
+                    model.rotation.y += 0.01;
+                }
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            // ウィンドウリサイズ時の処理
+            window.addEventListener('resize', function() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            // モデルIDとシーン、カメラ、コントロール、レンダラーを返す
+            return {
+                modelId: modelId,
+                scene: scene,
+                camera: camera,
+                controls: controls,
+                renderer: renderer,
+                model: model
+            };
+        }
+
+        // グローバル変数の定義
+        let modalViewer = null;
+
+        // グローバルスコープのモーダルを開く関数
+        function openModelModal(modelId) {
+            const modal = document.getElementById('modelModal');
+            console.log("Opening modal for model ID:", modelId);
+            modal.style.display = 'block';
+
+            // Call the function through the window object
+            if (typeof window.setupModelModalOpenModelModal === 'function') {
+                window.setupModelModalOpenModelModal(modelId);
+            } else {
+                console.error("setupModelModalOpenModelModal is not defined");
+            }
+        }
+
+        // モーダルの設定
+        function setupModelModal() {
+            const modal = document.getElementById('modelModal');
+            const modalClose = document.querySelector('.model-modal-close');
+            const viewButtons = document.querySelectorAll('.view-model-btn');
+
+            // モーダルを開く関数（内部実装）を定義
+            function setupModelModalOpenModelModal(modelId) {
+                console.log("Opening modal for model ID:", modelId);
+                modal.style.display = 'block';
+
+                // ローディングインジケータを表示
+                const loadingIndicator = document.getElementById('modalLoading');
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'block';
+                }
+
+                // モーダル内に3Dモデルビューアーを作成
+                const container = document.getElementById('modal-model-viewer');
+                if (!container) {
+                    console.error("Modal container not found");
+                    return;
+                }
+                container.innerHTML = '';
+
+                try {
+                    // シーン、カメラ、レンダラーの作成
+                    const scene = new THREE.Scene();
+                    scene.background = new THREE.Color(0xf0f0f0);
+
+                    // コンテナのサイズを確認
+                    console.log("Container size:", container.clientWidth, container.clientHeight);
+                    if (container.clientWidth <= 0 || container.clientHeight <= 0) {
+                        console.warn("Container has invalid dimensions, using default values");
+                        // デフォルト値を設定
+                        container.style.width = '100%';
+                        container.style.height = '100%';
+                    }
+
+                    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                    camera.position.set(0, 1, 3);
+
+                    // レンダラーの作成（透明度対応）
+                    const renderer = new THREE.WebGLRenderer({ 
+                        antialias: true, 
+                        alpha: true,
+                        powerPreference: "high-performance"
+                    });
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                    renderer.setPixelRatio(window.devicePixelRatio);
+                    renderer.shadowMap.enabled = true;
+                    renderer.setClearColor(0xf0f0f0, 1);
+                    container.appendChild(renderer.domElement);
+
+                    // 初期レンダリング（背景だけでも表示）
+                    renderer.render(scene, camera);
+
+                    // OrbitControlsの設定
+                    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    controls.enableDamping = true;
+                    controls.dampingFactor = 0.05;
+                    controls.screenSpacePanning = false;
+                    controls.minDistance = 1;
+                    controls.maxDistance = 10;
+                    controls.update();
+
+                    // 光源の追加
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                    directionalLight.position.set(5, 10, 5);
+                    directionalLight.castShadow = true;
+                    scene.add(directionalLight);
+
+                    // 床の作成
+                    const floorGeometry = new THREE.PlaneGeometry(10, 10);
+                    const floorMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xeeeeee,
+                        roughness: 0.8,
+                        metalness: 0.2
+                    });
+                    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                    floor.rotation.x = -Math.PI / 2;
+                    floor.position.y = -0.5;
+                    floor.receiveShadow = true;
+                    scene.add(floor);
+
+                    // 再度レンダリング（床を表示）
+                    renderer.render(scene, camera);
+
+                    // モデル回転フラグ
+                    let isRotating = false;
+                    let model = null;
+
+                    // 3Dモデルの読み込み（すべてのモデルで同じモデルを使用）
+                    const gltfLoader = new THREE.GLTFLoader();
+                    console.log("Loading model: Models/Kumayu.glb");
+                    gltfLoader.load(
+                        'Models/Kumayu.glb', 
+                        function(gltf) {
+                            console.log("Model loaded successfully");
+                            // ローディングインジケータを非表示
+                            if (loadingIndicator) {
+                                loadingIndicator.style.display = 'none';
+                            }
+
+                            model = gltf.scene;
+                            model.position.set(0, 0, 0);
+                            model.scale.set(1, 1, 1);
+
+                            // 影の設定
+                            model.traverse(function(child) {
+                                if (child.isMesh) {
+                                    child.castShadow = true;
+                                    child.receiveShadow = true;
+                                }
+                            });
+
+                            scene.add(model);
+
+                            // モデルが読み込まれたら一度レンダリングする
+                            renderer.render(scene, camera);
+                            console.log("Initial render with model completed");
+                        },
+                        function(xhr) {
+                            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                        },
+                        function(error) {
+                            console.error("Error loading model:", error);
+                            // ローディングインジケータを非表示
+                            if (loadingIndicator) {
+                                loadingIndicator.style.display = 'none';
+                            }
+
+                            // エラーメッセージを表示
+                            const errorText = document.createElement('div');
+                            errorText.style.position = 'absolute';
+                            errorText.style.top = '50%';
+                            errorText.style.left = '50%';
+                            errorText.style.transform = 'translate(-50%, -50%)';
+                            errorText.style.color = 'red';
+                            errorText.style.fontSize = '16px';
+                            errorText.textContent = 'モデルの読み込みに失敗しました';
+                            container.appendChild(errorText);
+                        }
+                    );
+
+                    // 回転ボタン
+                    const modalRotateBtn = document.getElementById('modalRotateModelBtn');
+                    if (!modalRotateBtn) {
+                        console.error("Rotate button not found");
+                    } else {
+                        const rotateClickHandler = function() {
+                            isRotating = !isRotating;
+                            this.textContent = isRotating ? '回転停止' : '回転';
+                        };
+
+                        // 既存のイベントリスナーを削除して新しいものを追加
+                        modalRotateBtn.removeEventListener('click', rotateClickHandler);
+                        modalRotateBtn.addEventListener('click', rotateClickHandler);
+                    }
+
+                    // 視点リセットボタン
+                    const modalResetBtn = document.getElementById('modalResetViewBtn');
+                    if (!modalResetBtn) {
+                        console.error("Reset button not found");
+                    } else {
+                        const resetClickHandler = function() {
+                            camera.position.set(0, 1, 3);
+                            controls.target.set(0, 0, 0);
+                            controls.update();
+                            renderer.render(scene, camera);
+                        };
+
+                        // 既存のイベントリスナーを削除して新しいものを追加
+                        modalResetBtn.removeEventListener('click', resetClickHandler);
+                        modalResetBtn.addEventListener('click', resetClickHandler);
+                    }
+
+                    // ウィンドウリサイズ時の処理
+                    function handleResize() {
+                        if (container.clientWidth > 0 && container.clientHeight > 0) {
+                            camera.aspect = container.clientWidth / container.clientHeight;
+                            camera.updateProjectionMatrix();
+                            renderer.setSize(container.clientWidth, container.clientHeight);
+                            renderer.render(scene, camera);
+                        }
+                    }
+
+                    // 既存のリサイズイベントリスナーを削除
+                    if (modalViewer && modalViewer.handleResize) {
+                        window.removeEventListener('resize', modalViewer.handleResize);
+                    }
+
+                    window.addEventListener('resize', handleResize);
+
+                    // 初期サイズを設定
+                    handleResize();
+
+                    // アニメーションループ
+                    let animationFrameId = null;
+                    function animate() {
+                        if (modal.style.display === 'none') {
+                            if (animationFrameId) {
+                                cancelAnimationFrame(animationFrameId);
+                                animationFrameId = null;
+                            }
+                            return;
+                        }
+
+                        animationFrameId = requestAnimationFrame(animate);
+
+                        if (isRotating && model) {
+                            model.rotation.y += 0.01;
+                        }
+
+                        controls.update();
+                        renderer.render(scene, camera);
+                    }
+
+                    // アニメーションを開始
+                    animate();
+
+                    // モーダルビューアーを保存
+                    modalViewer = {
+                        scene: scene,
+                        camera: camera,
+                        controls: controls,
+                        renderer: renderer,
+                        model: model,
+                        handleResize: handleResize,
+                        animate: animate,
+                        animationFrameId: animationFrameId,
+                        rotateClickHandler: modalRotateBtn ? rotateClickHandler : null,
+                        resetClickHandler: modalResetBtn ? resetClickHandler : null
+                    };
+
+                } catch (error) {
+                    console.error("Error creating modal viewer:", error);
+                    // ローディングインジケータを非表示
+                    if (loadingIndicator) {
+                        loadingIndicator.style.display = 'none';
+                    }
+
+                    // エラーメッセージを表示
+                    const errorText = document.createElement('div');
+                    errorText.style.position = 'absolute';
+                    errorText.style.top = '50%';
+                    errorText.style.left = '50%';
+                    errorText.style.transform = 'translate(-50%, -50%)';
+                    errorText.style.color = 'red';
+                    errorText.style.fontSize = '16px';
+                    errorText.textContent = 'エラーが発生しました: ' + error.message;
+                    container.appendChild(errorText);
+                }
+            }
+
+            // Make the function accessible from the global scope
+            window.setupModelModalOpenModelModal = setupModelModalOpenModelModal;
+
+            // 各「3Dモデルを見る」ボタンにクリックイベントを追加
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modelId = this.getAttribute('data-model-id');
+                    openModelModal(modelId);
+                });
+            });
+
+            // モーダルを閉じる関数
+            function closeModal() {
+                modal.style.display = 'none';
+
+                // モーダルビューアーのクリーンアップ
+                if (modalViewer) {
+                    // イベントリスナーの削除
+                    if (modalViewer.handleResize) {
+                        window.removeEventListener('resize', modalViewer.handleResize);
+                    }
+
+                    const modalRotateBtn = document.getElementById('modalRotateModelBtn');
+                    if (modalViewer.rotateClickHandler && modalRotateBtn) {
+                        modalRotateBtn.removeEventListener('click', modalViewer.rotateClickHandler);
+                    }
+
+                    const modalResetBtn = document.getElementById('modalResetViewBtn');
+                    if (modalViewer.resetClickHandler && modalResetBtn) {
+                        modalResetBtn.removeEventListener('click', modalViewer.resetClickHandler);
+                    }
+
+                    // レンダラーの破棄
+                    if (modalViewer.renderer) {
+                        modalViewer.renderer.dispose();
+                        if (modalViewer.renderer.domElement && modalViewer.renderer.domElement.parentNode) {
+                            modalViewer.renderer.domElement.parentNode.removeChild(modalViewer.renderer.domElement);
+                        }
+                    }
+
+                    // コンテナをクリア
+                    const container = document.getElementById('modal-model-viewer');
+                    container.innerHTML = '';
+
+                    // モーダルビューアーの参照をクリア
+                    modalViewer = null;
+                }
+            }
+
+            // モーダルを閉じるボタンのイベント
+            modalClose.addEventListener('click', closeModal);
+
+            // モーダルの外側をクリックしたときにモーダルを閉じる
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
