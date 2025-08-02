@@ -31,6 +31,9 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+    <!-- iOS AR QuickLook Support -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
     <!-- Three.js ライブラリ -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
     <!-- Three.js 拡張ライブラリ -->
@@ -466,6 +469,31 @@
             transform: scale(1.1);
         }
 
+        /* AR アイコン */
+        .ar-icon {
+            position: absolute;
+            top: 10px;
+            right: 60px; /* フルスクリーンアイコンの隣に配置 */
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #4285f4;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: none; /* デフォルトでは非表示 */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .ar-icon:hover {
+            background-color: #4285f4;
+            color: white;
+            transform: scale(1.1);
+        }
+
         .model-controls {
             position: absolute;
             bottom: 20px;
@@ -890,6 +918,9 @@
                     <div class="fullscreen-icon" id="fullscreenBtn">
                         <i class="fas fa-expand"></i>
                     </div>
+                    <div class="ar-icon" id="arBtn">
+                        <i class="fas fa-cube"></i>
+                    </div>
                     <div class="model-controls">
                         <button class="model-btn" id="resetViewBtn">視点リセット</button>
                         <button class="model-btn" id="rotateModelBtn">回転</button>
@@ -1147,6 +1178,10 @@
                 <div style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #4285f4; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
                 <div style="color: white; font-size: 16px; background-color: rgba(0, 0, 0, 0.7); padding: 10px 20px; border-radius: 5px;">読み込み中...</div>
             </div>
+            <!-- AR アイコン (iOS デバイスのみ) -->
+            <div id="modalArBtn" class="ar-icon" style="top: 60px; right: 15px; display: none;">
+                <i class="fas fa-cube"></i>
+            </div>
             <div class="model-modal-controls">
                 <button class="model-btn" id="modalResetViewBtn">視点リセット</button>
                 <button class="model-btn" id="modalRotateModelBtn">回転</button>
@@ -1208,8 +1243,26 @@
     </footer>
 
     <script>
+        // iOS デバイス検出関数
+        function isIOSDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test(userAgent) && !window.MSStream;
+        }
+
+        // グローバル変数として isIOS を定義
+        const isIOS = isIOSDevice();
+
+        // AR表示用関数
+        function showARModel(modelPath) {
+            // iOS の場合は QuickLook を使用して AR 表示
+            if (isIOSDevice()) {
+                window.location.href = modelPath;
+            }
+        }
+
         // AOS初期化
         document.addEventListener('DOMContentLoaded', function() {
+            // iOS デバイスかどうかを確認 (グローバル変数を使用)
             AOS.init({
                 duration: 800,
                 easing: 'ease-in-out',
@@ -1330,6 +1383,15 @@
                 openModelModal('main');
             });
 
+            // AR ボタン (iOS デバイスのみ表示)
+            const arBtn = document.getElementById('arBtn');
+            if (isIOS) {
+                arBtn.style.display = 'flex'; // iOS デバイスの場合のみ表示
+                arBtn.addEventListener('click', function() {
+                    showARModel('../models/OC/usdz/test.usdz');
+                });
+            }
+
             // アニメーションループ
             function animate() {
                 requestAnimationFrame(animate);
@@ -1387,6 +1449,20 @@
                 modal.style.display = 'block';
                 openModelModal(modelId);
             });
+
+            // AR アイコンの追加 (iOS デバイスのみ)
+            if (isIOS) {
+                const arIcon = document.createElement('div');
+                arIcon.className = 'ar-icon';
+                arIcon.innerHTML = '<i class="fas fa-cube"></i>';
+                arIcon.style.display = 'flex'; // iOS デバイスの場合は表示
+                container.appendChild(arIcon);
+
+                // AR アイコンのクリックイベント
+                arIcon.addEventListener('click', function() {
+                    showARModel('../models/OC/usdz/test.usdz');
+                });
+            }
 
             // OrbitControlsの設定
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -1591,6 +1667,15 @@
                             // ローディングインジケータを非表示
                             if (loadingIndicator) {
                                 loadingIndicator.style.display = 'none';
+                            }
+
+                            // AR アイコンの表示 (iOS デバイスのみ)
+                            const modalArBtn = document.getElementById('modalArBtn');
+                            if (isIOS && modalArBtn) {
+                                modalArBtn.style.display = 'flex';
+                                modalArBtn.addEventListener('click', function() {
+                                    showARModel('../models/OC/usdz/test.usdz');
+                                });
                             }
 
                             model = gltf.scene;
