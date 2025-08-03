@@ -1676,6 +1676,12 @@
                                 modalArBtn.addEventListener('click', function() {
                                     showARModel('../models/OC/usdz/test.usdz');
                                 });
+
+                                // iOS デバイスの場合は回転と視点リセットボタンを非表示にする
+                                const modalControls = document.querySelector('.model-modal-controls');
+                                if (modalControls) {
+                                    modalControls.style.display = 'none';
+                                }
                             }
 
                             model = gltf.scene;
@@ -1824,7 +1830,7 @@
                     errorText.style.transform = 'translate(-50%, -50%)';
                     errorText.style.color = 'red';
                     errorText.style.fontSize = '16px';
-                    errorText.textContent = 'エラーが発生しました: ' + error.message;
+                    //errorText.textContent = 'エラーが発生しました: ' + error.message;
                     container.appendChild(errorText);
                 }
             }
