@@ -975,7 +975,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="1">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -985,7 +984,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="2">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -995,7 +993,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="3">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1005,7 +1002,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="4">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1015,7 +1011,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="5">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1025,7 +1020,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="6">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1035,7 +1029,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="7">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1045,7 +1038,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="8">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1055,7 +1047,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="9">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1066,7 +1057,6 @@
                         <div class="gallery-tags">
 
                         </div>
-                        <button class="view-model-btn" data-model-id="10">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1076,7 +1066,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="11">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1086,7 +1075,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="12">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1096,7 +1084,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="13">3Dモデルを見る</button>
                     </div>
                 </div>
 
@@ -1106,7 +1093,7 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="14">3Dモデルを見る</button>
+
                     </div>
                 </div>
 
@@ -1116,7 +1103,6 @@
                     <div class="gallery-info">
                         <div class="gallery-tags">
                         </div>
-                        <button class="view-model-btn" data-model-id="15">3Dモデルを見る</button>
                     </div>
                 </div>
             </div>
@@ -1485,7 +1471,7 @@
             }else if (containerId === 'gallery-model-15') {
                 modelPath = '../models/OC/masuda ayane.glb';
             }else if (containerId === 'gallery-model-16') {
-
+                modelPath = '../models/OC/test.glb'; // デフォルトモデルを使用
             }
             gltfLoader.load(modelPath, function(gltf) {
                 model = gltf.scene;
@@ -1647,11 +1633,63 @@
                     let isRotating = false;
                     let model = null;
 
-                    // 3Dモデルの読み込み（すべてのモデルで同じモデルを使用）
+                    // モデルIDに基づいてモデルパスを設定
+                    let modelPath = '../models/OC/test.glb'; // デフォルトモデル
+                    let usdzModelPath = '../models/OC/usdz/test.usdz'; // デフォルトARモデル
+
+                    // モデルIDに基づいてパスを設定
+                    if (modelId === 1 || modelId === 'gallery-model-1') {
+                        modelPath = '../models/OC/tadaayane.glb';
+                        usdzModelPath = '../models/OC/usdz/tadaayane.usdz';
+                    } else if (modelId === 2 || modelId === 'gallery-model-2') {
+                        modelPath = '../models/OC/toyoseyuuto.glb';
+                        usdzModelPath = '../models/OC/usdz/toyoseyuuto.usdz';
+                    } else if (modelId === 3 || modelId === 'gallery-model-3') {
+                        modelPath = '../models/OC/YoshigaiHiiragi.glb';
+                        usdzModelPath = '../models/OC/usdz/YoshigaiHiiragi.usdz';
+                    } else if (modelId === 4 || modelId === 'gallery-model-4') {
+                        modelPath = '../models/OC/KondoSana.glb';
+                        usdzModelPath = '../models/OC/usdz/KondoSana.usdz';
+                    } else if (modelId === 5 || modelId === 'gallery-model-5') {
+                        modelPath = '../models/OC/Ryuji_Nagae.glb';
+                        usdzModelPath = '../models/OC/usdz/Ryuji_Nagae.usdz';
+                    } else if (modelId === 6 || modelId === 'gallery-model-6') {
+                        modelPath = '../models/OC/sonodamio.glb';
+                        usdzModelPath = '../models/OC/usdz/sonodamio.usdz';
+                    } else if (modelId === 7 || modelId === 'gallery-model-7') {
+                        modelPath = '../models/OC/SuedomiTaichi.glb';
+                        usdzModelPath = '../models/OC/usdz/SuedomiTaichi.usdz';
+                    } else if (modelId === 8 || modelId === 'gallery-model-8') {
+                        modelPath = '../models/OC/suetsugu orie.glb';
+                        usdzModelPath = '../models/OC/usdz/suetsugu orie.usdz';
+                    } else if (modelId === 9 || modelId === 'gallery-model-9') {
+                        modelPath = '../models/OC/nakamuracouiti.glb';
+                        usdzModelPath = '../models/OC/usdz/nakamuracouiti.usdz';
+                    } else if (modelId === 10 || modelId === 'gallery-model-10') {
+                        modelPath = '../models/OC/nakayayuri.glb';
+                        usdzModelPath = '../models/OC/usdz/nakayayuri.usdz';
+                    } else if (modelId === 11 || modelId === 'gallery-model-11') {
+                        modelPath = '../models/OC/horiuchiyuto.glb';
+                        usdzModelPath = '../models/OC/usdz/horiuchiyuto.usdz';
+                    } else if (modelId === 12 || modelId === 'gallery-model-12') {
+                        modelPath = '../models/OC/nakahamario.glb';
+                        usdzModelPath = '../models/OC/usdz/nakahamario.usdz';
+                    } else if (modelId === 13 || modelId === 'gallery-model-13') {
+                        modelPath = '../models/OC/sonodamio.glb';
+                        usdzModelPath = '../models/OC/usdz/sonodamio.usdz';
+                    } else if (modelId === 14 || modelId === 'gallery-model-14') {
+                        modelPath = '../models/OC/iwasaki kotomi.glb';
+                        usdzModelPath = '../models/OC/usdz/iwasaki kotomi.usdz';
+                    } else if (modelId === 15 || modelId === 'gallery-model-15') {
+                        modelPath = '../models/OC/masuda ayane.glb';
+                        usdzModelPath = '../models/OC/usdz/masuda ayane.usdz';
+                    }
+
+                    // 3Dモデルの読み込み
                     const gltfLoader = new THREE.GLTFLoader();
-                    console.log("Loading model: ../models/OC/test.glb");
+                    console.log("Loading model:", modelPath);
                     gltfLoader.load(
-                        '../models/OC/test.glb', 
+                        modelPath, 
                         function(gltf) {
                             console.log("Model loaded successfully");
                             // ローディングインジケータを非表示
@@ -1664,7 +1702,7 @@
                             if (isIOS && modalArBtn) {
                                 modalArBtn.style.display = 'flex';
                                 modalArBtn.addEventListener('click', function() {
-                                    showARModel('../models/OC/usdz/test.usdz');
+                                    showARModel(usdzModelPath);
                                 });
 
                                 // iOS デバイスの場合は回転と視点リセットボタンを非表示にする
@@ -1710,8 +1748,12 @@
                             errorText.style.transform = 'translate(-50%, -50%)';
                             errorText.style.color = 'red';
                             errorText.style.fontSize = '16px';
-                            errorText.textContent = 'モデルの読み込みに失敗しました';
+                            errorText.textContent = 'モデルの読み込みに失敗しました: ' + (error.message || '不明なエラー');
                             container.appendChild(errorText);
+
+                            // コンソールに詳細情報を出力
+                            console.error("Failed to load model:", modelPath);
+                            console.error("Error details:", error);
                         }
                     );
 
@@ -1820,8 +1862,12 @@
                     errorText.style.transform = 'translate(-50%, -50%)';
                     errorText.style.color = 'red';
                     errorText.style.fontSize = '16px';
-                    //errorText.textContent = 'エラーが発生しました: ' + error.message;
+                  //  errorText.textContent = 'エラーが発生しました: ' + (error.message || '不明なエラー');
                     container.appendChild(errorText);
+
+                    // コンソールに詳細情報を出力
+                    console.error("Error details:", error);
+                    console.error("Model ID:", modelId);
                 }
             }
 
