@@ -1449,10 +1449,45 @@
             floor.receiveShadow = true;
             scene.add(floor);
 
-            // 3Dモデルの読み込み（すべてのモデルで同じモデルを使用）
+            // 3Dモデルの読み込み
             let model;
             const gltfLoader = new THREE.GLTFLoader();
-            gltfLoader.load('../models/OC/test.glb', function(gltf) {
+            // 各gallery-modelに対応するモデルパスを設定
+            let modelPath = '../models/OC/test.glb';
+            if (containerId === 'gallery-model-1') {
+                modelPath = '../models/OC/tadaayane.glb';
+            } else if (containerId === 'gallery-model-2') {
+                modelPath = '../models/OC/toyoseyuuto.glb';
+            } else if (containerId === 'gallery-model-3') {
+                modelPath = '../models/OC/YoshigaiHiiragi.glb';
+            } else if (containerId === 'gallery-model-4') {
+                modelPath = '../models/OC/KondoSana.glb';
+            } else if (containerId === 'gallery-model-5') {
+                modelPath = '../models/OC/Ryuji_Nagae.glb';
+            } else if (containerId === 'gallery-model-6') {
+                modelPath = '../models/OC/sonodamio.glb';
+            } else if (containerId === 'gallery-model-7') {
+                modelPath = '../models/OC/SuedomiTaichi.glb';
+            } else if (containerId === 'gallery-model-8') {
+                modelPath = '../models/OC/suetsugu orie.glb';
+            } else if (containerId === 'gallery-model-9') {
+                modelPath = '../models/OC/nakamuracouiti.glb';
+            } else if (containerId === 'gallery-model-10') {
+                modelPath = '../models/OC/nakayayuri.glb';
+            } else if (containerId === 'gallery-model-11') {
+                modelPath = '../models/OC/horiuchiyuto.glb';
+            } else if (containerId === 'gallery-model-12') {
+                modelPath = '../models/OC/nakahamario.glb';
+            } else if (containerId === 'gallery-model-13') {
+                modelPath = '../models/OC/sonodamio.glb';
+            }else  if (containerId === 'gallery-model-14') {
+                modelPath = '../models/OC/iwasaki kotomi.glb';
+            }else if (containerId === 'gallery-model-15') {
+                modelPath = '../models/OC/masuda ayane.glb';
+            }else if (containerId === 'gallery-model-16') {
+
+            }
+            gltfLoader.load(modelPath, function(gltf) {
                 model = gltf.scene;
                 model.position.set(0, 0, 0);
                 model.scale.set(1, 1.5, 1);
