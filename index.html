@@ -263,154 +263,6 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 
-        /* オープンキャンパスカウンター */
-        .opencampus-counter {
-            position: absolute;
-            top: 200px;
-            left: 320px;
-            z-index: 100;
-            transition: all 0.3s ease;
-        }
-
-        /* Responsive adjustments for the counter */
-        @media (max-width: 1200px) {
-            .opencampus-counter {
-                left: 250px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .opencampus-counter {
-                left: 180px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .opencampus-counter {
-                top: 150px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .counter-circle {
-                transform: rotate(-5deg) scale(0.9);
-            }
-
-            .counter-circle:hover {
-                transform: rotate(0deg) scale(0.93);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .opencampus-counter {
-                top: 120px;
-            }
-
-            .counter-circle {
-                transform: rotate(-5deg) scale(0.8);
-                width: 140px;
-                height: 140px;
-            }
-
-            .counter-circle:hover {
-                transform: rotate(0deg) scale(0.83);
-            }
-        }
-
-        .counter-circle {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.9));
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
-            border: none;
-            position: relative;
-            overflow: hidden;
-            transform: rotate(-5deg);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .counter-circle::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05, #ea4335);
-            z-index: 1;
-        }
-
-        .counter-circle::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 40%;
-            height: 40%;
-            background: radial-gradient(circle at bottom right, rgba(66, 133, 244, 0.1), transparent 70%);
-            z-index: 0;
-        }
-
-        .counter-circle:hover {
-            transform: rotate(0deg) scale(1.03);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .counter-text {
-            font-size: 0.9rem;
-            font-weight: 900;
-            color: #333;
-            text-align: center;
-            line-height: 1.3;
-            padding: 16px;
-            word-break: keep-all;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .campus-text {
-            display: block;
-            font-size: 0.9rem;
-            letter-spacing: -0.3px;
-            margin-bottom: -5px;
-            background: linear-gradient(90deg, #FF8C00, #FF5722);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .until-text {
-            display: block;
-            font-size: 0.9rem;
-            margin-right: 2px;
-            margin-bottom: 0px;
-            margin-top: 8px;
-            letter-spacing: -0.3px;
-            background: linear-gradient(90deg, #FF8C00, #FF5722);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        #days-counter {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #4285f4, #0d47a1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-            margin: 5px 0 3px 0;
-            font-weight: 800;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            animation: numberPulse 2s infinite;
-        }
 
         @keyframes pulse {
             0% {
@@ -421,18 +273,6 @@
             }
             100% {
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
-            }
-        }
-
-        @keyframes numberPulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
             }
         }
 
@@ -1458,18 +1298,6 @@
             <h1 class="blur-text-container">3Dアートで新しい世界を創造する</h1>
             <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
             <a href="#features" class="cta-button">詳しく見る</a>
-        </div>
-        <div class="opencampus-counter" id="opencampus-counter">
-            <a href="special/OpenCampus.html" style="text-decoration: none;">
-                <div class="counter-circle">
-                    <div class="counter-text">
-                        <span class="campus-text">第3回<br>オープンキャンパス</span>
-                        <span class="until-text">まで</span>
-                        <span id="days-counter">--</span>
-                        <span style="font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, #4285f4, #0d47a1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">日</span>
-                    </div>
-                </div>
-            </a>
         </div>
         <div class="hero-update-box">
             <div class="update-icon">🆕</div>
@@ -2643,48 +2471,9 @@
 
 
 
-        // オープンキャンパスまでの日数を計算して表示する関数
-        function updateOpenCampusCounter() {
-            const openCampusDate = new Date('2025-08-23'); // 2025年7月19日
-            const today = new Date();
-
-            // 日付の時間部分をリセットして日数の差を正確に計算
-            today.setHours(0, 0, 0, 0);
-
-            // ミリ秒単位での差分を日数に変換
-            const diffTime = openCampusDate.getTime() - today.getTime() ;
-            const diffDays = Math.ceil(diffTime  / (1000 * 60 * 60 * 24));
-
-            // カウンターを更新
-            const daysCounter = document.getElementById('days-counter');
-            if (daysCounter) {
-                if (diffDays > 0) {
-                    daysCounter.textContent = diffDays -1 ;
-                } else if (diffDays === 0) {
-                    daysCounter.textContent = "今日";
-                } else {
-                    daysCounter.textContent = "終了";
-                }
-            }
-        }
 
         // ページ読み込み時にニュース記事を生成
         document.addEventListener('DOMContentLoaded', function() {
-            // オープンキャンパスカウンターを更新
-            updateOpenCampusCounter();
-
-            // 日付が変わったときにカウンターを更新するために、毎日午前0時に更新
-            const now = new Date();
-            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-            const timeToMidnight = tomorrow - now;
-
-            // 最初の更新は翌日の午前0時
-            setTimeout(function() {
-                updateOpenCampusCounter();
-                // その後は24時間ごとに更新
-                setInterval(updateOpenCampusCounter, 24 * 60 * 60 * 1000);
-            }, timeToMidnight);
-
             renderIndexNewsItems();
 
             // 定期的にニュースを更新（30秒ごと）
