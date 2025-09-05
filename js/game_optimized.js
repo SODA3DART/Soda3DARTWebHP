@@ -601,3 +601,4 @@ function animate() {
 // グローバル関数として公開
 window.initGame = initGame;
 window.resetGame = resetGame;
+
