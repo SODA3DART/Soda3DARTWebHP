@@ -596,8 +596,13 @@
 
             // ニュースデータを日付の新しい順にソート
             const sortedNews = [...newsData].sort((a, b) => {
-                const dateA = new Date(a.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
-                const dateB = new Date(b.date.replace(/年|月|日/g, match => match === '年' ? '-' : match === '月' ? '-' : ''));
+                // 日付文字列を正規化（年月日を-に置換）
+                const normalizeDate = (dateStr) => {
+                    return dateStr.replace(/年/g, '-').replace(/月/g, '-').replace(/日/g, '');
+                };
+                
+                const dateA = new Date(normalizeDate(a.date));
+                const dateB = new Date(normalizeDate(b.date));
                 return dateB - dateA;
             });
 
