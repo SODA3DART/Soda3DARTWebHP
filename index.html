@@ -1206,6 +1206,20 @@
         function getDefaultNewsData() {
             return [
                 {
+                    id: 10,
+                    date: '2025年9月30日',
+                    title: '古賀・清島・坂元研究グループと熊本市がメタバースイベントを開催予定',
+                    excerpt: '2025年10月4日（土）、熊本のまちなかで「STREET ART-PLEX KUMAMOTO JAZZ OPEN 2025（ストリート・アートプレックス）」が開催されます。本学の古賀研究室、清島浩徳教授、坂元非常勤講師、そして熊本市商業金融課との連携により、メタバース中継を予定しています。',
+                    image: 'https://www.sojo-u.ac.jp/faculty/engineering/architecture/news/images/f234edbc43736b7949fdd9cadd4d12bba1630297.jpg'
+                },
+                {
+                    id: 9,
+                    date: '2025年7月22日',
+                    title: 'フィギュア造形実習が行われました',
+                    excerpt: '夏の集中講義として世界的に活躍されているフィギュア原型師大畠雅人先生を招きフィギュア造形実習を行いました。',
+                    image: 'images/course/Figure_modeling.JPG'
+                },
+                {
                     id: 1,
                     date: '2025年5月28日',
                     title: '3Dアートコース学生インタビューが公開されました。',
@@ -1265,6 +1279,11 @@
                         news.content.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100) + "..." : 
                         "");
 
+                    // 特定のID（10）の記事は崇城大学公式サイトにリンク
+                    const readMoreLink = news.id === 10 ? 
+                        'https://www.sojo-u.ac.jp/faculty/engineering/architecture/news/2025/250930_006541.html' : 
+                        'news_event.html';
+
                     newsCard.innerHTML = `
                         <div class="news-image">
                             <img src="${news.image}" alt="${news.title}">
@@ -1273,7 +1292,7 @@
                             <div class="news-date">${news.date}</div>
                             <h3 class="news-title">${news.title}</h3>
                             <p class="news-excerpt">${excerpt}</p>
-                            <a href="news_event.html" class="read-more">続きを読む</a>
+                            <a href="${readMoreLink}" class="read-more" ${news.id === 10 ? 'target="_blank"' : ''}>続きを読む</a>
                         </div>
                     `;
 
