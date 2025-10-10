@@ -104,9 +104,9 @@ nav ul li.language-switch:after {
 }
 
 .language-btn.active {
-    background-color: #4285f4;
+    background-color: #2c3e50;
     color: white;
-    border-color: #4285f4;
+    border-color: #2c3e50;
 }
 
 nav ul {
@@ -132,14 +132,14 @@ nav ul li a:after {
     position: absolute;
     width: 0;
     height: 2px;
-    background: #4285f4;
+    background: #2c3e50;
     bottom: 0;
     left: 0;
     transition: width 0.3s;
 }
 
 nav ul li a:hover {
-    color: #4285f4;
+    color: #2c3e50;
 }
 
 nav ul li a:hover:after {
@@ -169,6 +169,166 @@ nav ul li a:hover:after {
     position: relative; /* Added for absolute positioning of hero-update-box */
 }
 
+/* 構築感のあるタイトルアニメーション */
+.particle-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    white-space: nowrap;
+    color: #ffffff;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, 
+        #ffffff 0%, 
+        #ffffff 25%, 
+        #ffffff 50%, 
+        #ffffff 75%, 
+        #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 100%;
+    animation: constructTitle 3s ease-in-out forwards;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.particle-title::before {
+    content: '3Dアートで新しい世界を創造する';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: transparent;
+    background: linear-gradient(90deg, 
+        #000000 0%, 
+        #333333 25%, 
+        #666666 50%, 
+        #999999 75%, 
+        #000000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 100%;
+    animation: constructParticles 3s ease-in-out forwards;
+    z-index: -1;
+    opacity: 0;
+}
+
+.particle-title::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 1px,
+        rgba(255, 255, 255, 0.1) 1px,
+        rgba(255, 255, 255, 0.1) 2px
+    );
+    animation: constructScan 3s ease-in-out forwards;
+    z-index: -2;
+    opacity: 0;
+}
+
+@keyframes constructTitle {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(30px);
+        background-position: -200% 0;
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+    30% {
+        opacity: 0.3;
+        transform: scale(0.9) translateY(15px);
+        background-position: -100% 0;
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+    60% {
+        opacity: 0.7;
+        transform: scale(1.05) translateY(-5px);
+        background-position: 0% 0;
+        text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+    80% {
+        opacity: 0.9;
+        transform: scale(1.02) translateY(2px);
+        background-position: 50% 0;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0px);
+        background-position: 100% 0;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+}
+
+@keyframes constructParticles {
+    0% {
+        opacity: 0;
+        background-position: -200% 0;
+        transform: scale(0.5);
+    }
+    20% {
+        opacity: 0.2;
+        background-position: -150% 0;
+        transform: scale(0.7);
+    }
+    40% {
+        opacity: 0.4;
+        background-position: -100% 0;
+        transform: scale(0.85);
+    }
+    60% {
+        opacity: 0.6;
+        background-position: -50% 0;
+        transform: scale(0.95);
+    }
+    80% {
+        opacity: 0.8;
+        background-position: 0% 0;
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        background-position: 50% 0;
+        transform: scale(1);
+    }
+}
+
+@keyframes constructScan {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    20% {
+        opacity: 0.3;
+        transform: translateY(-80%);
+    }
+    40% {
+        opacity: 0.6;
+        transform: translateY(-60%);
+    }
+    60% {
+        opacity: 0.8;
+        transform: translateY(-40%);
+    }
+    80% {
+        opacity: 0.9;
+        transform: translateY(-20%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+
 /* Hero update box styles */
 .hero-update-box {
     position: absolute;
@@ -184,7 +344,7 @@ nav ul li a:hover:after {
     gap: 15px;
     width: fit-content;
     max-width: 90%;
-    border-left: 5px solid #4285f4;
+    border-left: 5px solid #2c3e50;
     z-index: 100;
     animation: fadeIn 0.5s ease-in-out;
     backdrop-filter: blur(10px);
@@ -192,7 +352,7 @@ nav ul li a:hover:after {
 
 .update-icon {
     font-size: 24px;
-    color: #4285f4;
+    color: #2c3e50;
     margin-top: 2px;
     flex-shrink: 0;
 }
@@ -220,13 +380,13 @@ nav ul li a:hover:after {
 }
 
 .update-content a {
-    color: #4285f4;
+    color: #2c3e50;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .update-content a:hover {
-    color: #3367d6;
+    color: #34495e;
     text-decoration: underline;
 }
 
@@ -362,136 +522,31 @@ nav ul li a:hover:after {
     animation: magicEffect 4s ease-in-out forwards;
 }
 
-/* Blur text animation styles with gradient */
-.blur-text-container {
-    display: inline-block;
-    position: relative;
-    padding: 10px 20px;
-    margin: 5px 0;
-}
+/* Blur text animation styles removed - using particle title instead */
 
-/* Add blurred background with rounded corners */
-.blur-text-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.18));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: -1;
-}
+/* Blur text char styles removed - using particle title instead */
 
-.blur-text-char {
-    display: inline-block;
-    opacity: 0;
-    filter: blur(10px);
-    animation: 
-        blur-text-reveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards,
-        gradient-shift 1.5s ease-in-out forwards 0.8s;
-    background-image: linear-gradient(90deg, 
-        #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
-    background-size: 600% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-fill-color: transparent;
-    font-weight: bold;
-}
+/* Gradient shift animation removed - using particle title instead */
 
-@keyframes gradient-shift {
-    0% {
-        background-position: 0% 50%;
-        background-image: linear-gradient(90deg, 
-            #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
-    }
-    40% {
-        background-position: 100% 50%;
-        background-image: linear-gradient(90deg, 
-            #ffb6c1, #ffd700, #98fb98, #add8e6, #d8bfd8, #ffb6c1);
-    }
-    60% {
-        background-position: 0% 50%;
-        background-image: linear-gradient(90deg, 
-            rgba(255, 182, 193, 0.8), rgba(255, 215, 0, 0.8), 
-            rgba(152, 251, 152, 0.8), rgba(173, 216, 230, 0.8), 
-            rgba(216, 191, 216, 0.8), rgba(255, 255, 255, 0.8));
-    }
-    80% {
-        background-position: 50% 50%;
-        background-image: linear-gradient(90deg, 
-            rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9), 
-            rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9), 
-            rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
-    }
-    100% {
-        background-position: 0% 50%;
-        background-image: linear-gradient(90deg, 
-            #ffffff, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff);
-    }
-}
-
-@keyframes blur-text-reveal {
-    0% {
-        opacity: 0;
-        filter: blur(10px);
-        transform: translateY(10px);
-        background-position: 0% 50%;
-    }
-    20% {
-        opacity: 0.4;
-        filter: blur(7px);
-        transform: translateY(7px);
-        background-position: 25% 50%;
-    }
-    40% {
-        opacity: 0.6;
-        filter: blur(5px);
-        transform: translateY(5px);
-        background-position: 50% 50%;
-    }
-    60% {
-        opacity: 0.8;
-        filter: blur(3px);
-        transform: translateY(3px);
-        background-position: 75% 50%;
-    }
-    80% {
-        opacity: 0.9;
-        filter: blur(1px);
-        transform: translateY(1px);
-        background-position: 100% 50%;
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0px);
-        background-position: 0% 50%;
-    }
-}
+/* Blur text reveal animation removed - using particle title instead */
 
 /* ボタン */
 .cta-button {
     display: inline-block;
-    background-color: #4285f4;
+    background-color: #2c3e50;
     color: #fff;
     padding: 12px 30px;
     border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
 }
 
 .cta-button:hover {
-    background-color: #3367d6;
+    background-color: #34495e;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+    box-shadow: 0 6px 20px rgba(44, 62, 80, 0.4);
 }
 
 /* セクション共通 */
@@ -505,6 +560,14 @@ nav ul li a:hover:after {
     margin-bottom: 20px;
     color: #333;
     font-family: 'IPAex明朝', serif;
+}
+
+/* 特徴セクションのタイトル */
+.features-title {
+    font-family: 'Shippori Mincho', '筑紫明朝', 'Tsukushi Mincho', serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
 }
 
 .section-header p {
@@ -521,6 +584,266 @@ nav ul li a:hover:after {
     background-color: #fff;
 }
 
+/* 新しい学習パネルレイアウト */
+.learning-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 40px;
+    min-height: 600px;
+    background-color: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.learning-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.learning-panel:hover {
+    transform: scale(1.02);
+    z-index: 2;
+}
+
+.learning-panel.expanded {
+    transform: scale(1.05);
+    z-index: 3;
+}
+
+.panel-image {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.learning-panel:hover .panel-image img {
+    transform: scale(1.1);
+}
+
+.panel-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(255, 255, 255, 0.7) 70%, rgba(255, 255, 255, 0.9) 100%);
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.panel-title-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+}
+
+.panel-description {
+    align-self: flex-end;
+    max-width: 60%;
+    margin-left: auto;
+}
+
+.panel-description p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 600;
+}
+
+/* 詳細表示のスタイル */
+.panel-details {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 20%, rgba(255, 255, 255, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.panel-details.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.details-content {
+    max-width: 80%;
+    text-align: center;
+    color: #333;
+}
+
+.details-content h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.details-content > p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: #555;
+    font-weight: 500;
+}
+
+.details-text {
+    margin-bottom: 30px;
+}
+
+.details-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.details-content .more-details-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.details-content .more-details-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* パネルの特別なスタイル（統一） */
+.physical-panel .panel-title-vertical,
+.digital-panel .panel-title-vertical {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .learning-panels {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    
+    .learning-panel {
+        min-height: 400px;
+    }
+    
+    .panel-title-vertical {
+        font-size: 36px;
+        letter-spacing: 4px;
+        left: 20px;
+    }
+    
+    .panel-content {
+        padding: 20px;
+    }
+    
+    .panel-description {
+        max-width: 80%;
+    }
+    
+    .panel-description p {
+        font-size: 14px;
+    }
+    
+    .panel-details {
+        padding: 20px;
+    }
+    
+    .details-content {
+        max-width: 95%;
+    }
+    
+    .details-content h3 {
+        font-size: 24px;
+    }
+    
+    .details-content > p {
+        font-size: 16px;
+    }
+    
+    .details-text p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .particle-title {
+        font-size: 1.5rem;
+    }
+
+    .panel-title-vertical {
+        font-size: 28px;
+        letter-spacing: 2px;
+        left: 15px;
+    }
+    
+    .panel-content {
+        padding: 15px;
+    }
+    
+    .panel-description {
+        max-width: 90%;
+    }
+    
+    .panel-details {
+        padding: 15px;
+    }
+    
+    .details-content h3 {
+        font-size: 20px;
+    }
+    
+    .details-content > p {
+        font-size: 14px;
+    }
+    
+    .details-text p {
+        font-size: 13px;
+    }
+}
+
+/* 既存のfeatures-gridスタイル（後方互換性のため保持） */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -598,14 +921,14 @@ nav ul li a:hover:after {
 .more-details-link {
     display: inline-block;
     margin-top: 15px;
-    color: #4285f4;
+    color: #2c3e50;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s;
 }
 
 .more-details-link:hover {
-    color: #3367d6;
+    color: #34495e;
     text-decoration: underline;
 }
 
@@ -747,7 +1070,7 @@ nav ul li a:hover:after {
 }
 
 .news-card:hover .news-title {
-    color: #4285f4;
+    color: #2c3e50;
 }
 
 .news-excerpt {
@@ -758,14 +1081,14 @@ nav ul li a:hover:after {
 
 .read-more {
     display: inline-block;
-    color: #4285f4;
+    color: #2c3e50;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .read-more:hover {
-    color: #3367d6;
+    color: #34495e;
 }
 
 /* お問い合わせ */
@@ -797,7 +1120,7 @@ nav ul li a:hover:after {
 }
 
 .contact-icon {
-    color: #4285f4;
+    color: #2c3e50;
     font-size: 20px;
     margin-right: 15px;
 }
@@ -827,7 +1150,7 @@ nav ul li a:hover:after {
 }
 
 .contact-form button {
-    background-color: #4285f4;
+    background-color: #2c3e50;
     color: #fff;
     border: none;
     padding: 12px 30px;
@@ -839,7 +1162,7 @@ nav ul li a:hover:after {
 }
 
 .contact-form button:hover {
-    background-color: #3367d6;
+    background-color: #34495e;
 }
 
 /* フッター */
@@ -870,7 +1193,7 @@ footer {
     left: 0;
     width: 50px;
     height: 2px;
-    background-color: #4285f4;
+    background-color: #2c3e50;
 }
 
 .footer-links {
@@ -888,7 +1211,7 @@ footer {
 }
 
 .footer-links a:hover {
-    color: #4285f4;
+    color: #2c3e50;
 }
 
 .footer-bottom {
@@ -991,6 +1314,10 @@ footer {
     }
 
     .hero h1 {
+        font-size: 2rem;
+    }
+
+    .particle-title {
         font-size: 2rem;
     }
 

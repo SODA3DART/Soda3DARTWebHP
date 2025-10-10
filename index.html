@@ -7,6 +7,11 @@
     <link rel="icon" href="images/logohedder.webp" type="image/webp">
     <meta name="description" content="崇城大学芸術学部美術学科3Dアートコースでは、3DCG、VR、Vtuber、ゲーム制作、美術、芸術、VFX、彫刻などを学べます。最新技術と芸術を融合した教育で未来のクリエイターを育成します。">
     <link rel="canonical" href="https://soda3dart.github.io/Soda3DARTWebHP/index.html">
+    
+    <!-- Google Fonts - 筑紫明朝 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -116,7 +121,7 @@
     <!-- ヒーロー部分 -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1 class="blur-text-container">3Dアートで新しい世界を創造する</h1>
+            <h1 class="particle-title">3Dアートで新しい世界を創造する</h1>
             <p class="magic-text-effect">崇城大学芸術学部美術学科3Dアートコースでは、最新のテクノロジーと伝統的な芸術を融合させ、次世代のクリエイターを育成しています。</p>
             <a href="#features" class="cta-button">詳しく見る</a>
         </div>
@@ -136,40 +141,61 @@
     <section id="features" class="features">
         <div class="container">
             <div class="section-header">
-                <h2>フィジカルとデジタル<br>
+                <h2 class="features-title">フィジカルとデジタル<br>
                 伝統と最先端が融合するハイブリッドな学習内容</h2>
 
                 <p>従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身に着けます。</p>
                 <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
-                    <a href="message.html" class="cta-button" style="background-color: #3367d6;">コース担当教員からのメッセージ</a>
+                    <a href="message.html" class="cta-button" style="background-color: #2c3e50;">コース担当教員からのメッセージ</a>
                 </div>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-image">
-                        <div class="feature-image-text" style="font-family: 'IPAexMincho', serif;">フィジカルな学び</div>
-                        <img src="images/Index/IMG_2031 (002).webp" alt="フィジカル - 彫刻作品" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+            <div class="learning-panels">
+                <!-- フィジカルな学びパネル -->
+                <div class="learning-panel physical-panel" onclick="togglePanelDetails('physical')">
+                    <div class="panel-image">
+                        <img src="images/Index/IMG_2031 (002).webp" alt="フィジカル - 彫刻作品">
                     </div>
-                    <h3 style="font-family: 'IPAexMincho', serif;">フィジカルな学び</h3>
-                    <p class="feature-short-desc">従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。</p>
-                    <div class="feature-details">
-                        <p>伝統的な彫刻技法から最新のCG技術を活用した造形まで、幅広い立体表現を学びます。<br>
-                            フィギュア制作、ゲーム製作、空間デザインなど、物理的な形を持つ作品制作に取り組みます。</p>
-                        <p>卒業後はフィギュア制作会社、プロダクトデザイン会社、ゲーム業界など様々な分野で活躍できます。</p>
-                        <a href="courseinfo.html#physical" class="more-details-link">もっとくわしく</a>
+                    <div class="panel-content">
+                        <div class="panel-title-vertical">PHYSICAL</div>
+                        <div class="panel-description">
+                            <p>伝統的な彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。</p>
+                        </div>
+                    </div>
+                    <div class="panel-details" id="physical-details">
+                        <div class="details-content">
+                            <h3>フィジカルな学び</h3>
+                            <p>従来の彫刻、フィギュア造形、立体造形などの物理的な表現方法を学びます。</p>
+                            <div class="details-text">
+                                <p>伝統的な彫刻技法から最新のCG技術を活用した造形まで、幅広い立体表現を学びます。<br>
+                                フィギュア制作、ゲーム製作、空間デザインなど、物理的な形を持つ作品制作に取り組みます。</p>
+                                <p>卒業後はフィギュア制作会社、プロダクトデザイン会社、ゲーム業界など様々な分野で活躍できます。</p>
+                            </div>
+                            <a href="courseinfo.html#physical" class="more-details-link">もっとくわしく</a>
+                        </div>
                     </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-image">
-                        <div class="feature-image-text" style="font-family: 'IPAexMincho', serif;">デジタルな学び</div>
-                        <img src="images/Index/degitaltop.webp" alt="デジタル - 3Dスキャン" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+
+                <!-- デジタルな学びパネル -->
+                <div class="learning-panel digital-panel" onclick="togglePanelDetails('digital')">
+                    <div class="panel-image">
+                        <img src="images/Index/degitaltop.webp" alt="デジタル - 3Dスキャン">
                     </div>
-                    <h3 style="font-family: 'IPAexMincho', serif;">デジタルな学び</h3>
-                    <p class="feature-short-desc">3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
-                    <div class="feature-details">
-                        <p>業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。</p>
-                        <p>卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。</p>
-                        <a href="courseinfo.html#digital" class="more-details-link">もっとくわしく</a>
+                    <div class="panel-content">
+                        <div class="panel-title-vertical">DIGITAL</div>
+                        <div class="panel-description">
+                            <p>3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
+                        </div>
+                    </div>
+                    <div class="panel-details" id="digital-details">
+                        <div class="details-content">
+                            <h3>デジタルな学び</h3>
+                            <p>3DCG、ゲーム、VR/ARなどのデジタル技術を活用した表現方法を学びます。</p>
+                            <div class="details-text">
+                                <p>業界標準のソフトウェアを使用した3Dモデリング、アニメーション、ゲームエンジンを活用したインタラクティブコンテンツ制作、VR/AR技術を用いた新しい表現方法など、デジタル技術を駆使した創作活動を行います。</p>
+                                <p>卒業後はゲーム会社、CG制作会社、映像制作会社などでの活躍が期待されます。</p>
+                            </div>
+                            <a href="courseinfo.html#digital" class="more-details-link">もっとくわしく</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -180,7 +206,7 @@
     <section id="gallery" class="gallery">
         <div class="container">
             <div class="section-header">
-                <h2>ギャラリー</h2>
+                <h2 class="features-title">ギャラリー</h2>
                 <p>3Dアートコースの学生たちが制作した作品をご紹介します。</p>
             </div>
             <div class="gallery-container">
@@ -282,7 +308,7 @@
     <section id="news" class="news">
         <div class="container">
             <div class="section-header">
-                <h2>ニュース</h2>
+                <h2 class="features-title">ニュース</h2>
                 <p>3Dアートコースの最新情報をお届けします。</p>
             </div>
             <div class="news-grid" id="indexNewsList">
@@ -1320,6 +1346,28 @@
 
 
 
+        // パネルの詳細表示切り替え関数
+        function togglePanelDetails(panelType) {
+            const details = document.getElementById(panelType + '-details');
+            const panel = document.querySelector('.' + panelType + '-panel');
+            
+            if (details.classList.contains('active')) {
+                // 詳細を閉じる
+                details.classList.remove('active');
+                panel.classList.remove('expanded');
+            } else {
+                // 他のパネルの詳細を閉じる
+                const allDetails = document.querySelectorAll('.panel-details');
+                const allPanels = document.querySelectorAll('.learning-panel');
+                allDetails.forEach(detail => detail.classList.remove('active'));
+                allPanels.forEach(p => p.classList.remove('expanded'));
+                
+                // 選択されたパネルの詳細を開く
+                details.classList.add('active');
+                panel.classList.add('expanded');
+            }
+        }
+
         // ページ読み込み時にニュース記事を生成
         document.addEventListener('DOMContentLoaded', function() {
             renderIndexNewsItems();
@@ -1331,3 +1379,4 @@
 
 </body>
 </html>
+
