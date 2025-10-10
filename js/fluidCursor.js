@@ -2,21 +2,21 @@
 // Converted from React component to vanilla JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Configuration options - optimized for watercolor effect
+  // Configuration options - optimized for performance
   const config = {
     SIM_RESOLUTION: 128,
-    DYE_RESOLUTION: 1024,
+    DYE_RESOLUTION: 1024, // Reduced from 1440 for better performance
     CAPTURE_RESOLUTION: 512,
-    DENSITY_DISSIPATION: 1.5, // Slower dissipation for watercolor bleeding
-    VELOCITY_DISSIPATION: 1.8, // Slower dissipation for natural flow
-    PRESSURE: 0.05, // Reduced pressure for softer effect
-    PRESSURE_ITERATIONS: 12, // Reduced for softer watercolor effect
-    CURL: 1.5, // Reduced curl for gentler flow
-    SPLAT_RADIUS: 0.15, // Smaller radius for more delicate strokes
-    SPLAT_FORCE: 3000, // Reduced force for gentler application
+    DENSITY_DISSIPATION: 4.0, // Increased for faster dissipation
+    VELOCITY_DISSIPATION: 2.5, // Increased for faster dissipation
+    PRESSURE: 0.1,
+    PRESSURE_ITERATIONS: 16, // Reduced from 20 for better performance
+    CURL: 3,
+    SPLAT_RADIUS: 0.2,
+    SPLAT_FORCE: 6000,
     SHADING: true,
-    COLOR_UPDATE_SPEED: 8, // Slower color changes for watercolor feel
-    BACK_COLOR: { r: 0.9, g: 0.9, b: 0.95 }, // Light watercolor paper color
+    COLOR_UPDATE_SPEED: 10,
+    BACK_COLOR: { r: 0.5, g: 0, b: 0 },
     TRANSPARENT: true,
     PAUSED: false
   };
@@ -965,13 +965,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function clickSplat(pointer) {
     const color = generateColor();
-    // Gentler watercolor splat - reduced glow
-    color.r *= 2.5; // Reduced from 5.0
-    color.g *= 2.5; // Reduced from 5.0
-    color.b *= 2.5; // Reduced from 5.0
-    // More natural, organic movement
-    let dx = 5 * (Math.random() - 0.5);
-    let dy = 15 * (Math.random() - 0.5);
+    color.r *= 10.0;
+    color.g *= 10.0;
+    color.b *= 10.0;
+    let dx = 10 * (Math.random() - 0.5);
+    let dy = 30 * (Math.random() - 0.5);
     splat(pointer.texcoordX, pointer.texcoordY, dx, dy, color);
   }
 
@@ -1044,26 +1042,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function generateColor() {
-    // Watercolor palette - soft, muted colors
-    const watercolorColors = [
-      { r: 0.8, g: 0.4, b: 0.3 }, // Soft red
-      { r: 0.3, g: 0.6, b: 0.8 }, // Soft blue
-      { r: 0.4, g: 0.7, b: 0.4 }, // Soft green
-      { r: 0.7, g: 0.5, b: 0.8 }, // Soft purple
-      { r: 0.8, g: 0.6, b: 0.3 }, // Soft orange
-      { r: 0.5, g: 0.4, b: 0.6 }, // Soft violet
-      { r: 0.6, g: 0.8, b: 0.7 }, // Soft mint
-      { r: 0.8, g: 0.7, b: 0.5 }  // Soft peach
-    ];
-    
-    const color = watercolorColors[Math.floor(Math.random() * watercolorColors.length)];
-    // Add some transparency variation for watercolor effect - reduced glow
-    const alpha = 0.15 + Math.random() * 0.2; // 0.15 to 0.35 (reduced from 0.3-0.7)
-    return {
-      r: color.r * alpha,
-      g: color.g * alpha,
-      b: color.b * alpha
-    };
+    let c = HSVtoRGB(Math.random(), 1.0, 1.0);
+    c.r *= 0.15;
+    c.g *= 0.15;
+    c.b *= 0.15;
+    return c;
   }
 
   function HSVtoRGB(h, s, v) {
