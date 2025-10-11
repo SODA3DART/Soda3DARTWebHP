@@ -145,8 +145,9 @@
                 伝統と最先端が融合するハイブリッドな学習内容</h2>
 
                 <p>従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身に着けます。</p>
-                <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
-                    <a href="message.html" class="cta-button" style="background-color: #2c3e50;">コース担当教員からのメッセージ</a>
+                <div style="text-align: center; margin-top: 20px; margin-bottom: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a href="courseinfo.html" class="cta-button" id="course-detail-btn" style="background-color: #3498db;">コース詳細</a>
+                    <a href="message.html" class="cta-button" id="course-message-btn" style="background-color: #2c3e50;">コース担当教員からのメッセージ</a>
                 </div>
             </div>
             <div class="learning-panels">
@@ -886,6 +887,7 @@
                 // コース紹介
                 'features-title': 'フィジカルとデジタル<br>\n伝統と最先端が融合するハイブリッドな学習内容',
                 'features-description': '従来の彫刻をはじめとする立体表現だけでなく、3DCGといった最先端のデジタル立体表現を学び、フィギュアの造形、ゲームデザイン、AIやXRなどを活用した幅広い表現方法を身に着けます。',
+                'features-detail-link': 'コース詳細',
                 'features-message-link': 'コース担当教員からのメッセージ',
 
                 // フィジカルコース
@@ -975,6 +977,7 @@
                 // Features section
                 'features-title': 'Physical and Digital<br>\nHybrid Learning Combining Tradition and Innovation',
                 'features-description': 'Learn not only traditional sculpture and three-dimensional expression, but also cutting-edge digital 3D expression such as 3DCG, figure modeling, game design, and a wide range of expression methods utilizing AI and XR.',
+                'features-detail-link': 'Course Details',
                 'features-message-link': 'Message from Course Faculty',
 
                 // Physical course
@@ -1114,11 +1117,13 @@
             // コース紹介部分の翻訳
             const featuresTitle = document.querySelector('#features .section-header h2');
             const featuresDesc = document.querySelector('#features .section-header > p');
-            const featuresLink = document.querySelector('#features .section-header .cta-button');
+            const featuresDetailLink = document.getElementById('course-detail-btn');
+            const featuresMessageLink = document.getElementById('course-message-btn');
             
             if (featuresTitle) featuresTitle.innerHTML = languageData[lang]['features-title'];
             if (featuresDesc) featuresDesc.textContent = languageData[lang]['features-description'];
-            if (featuresLink) featuresLink.textContent = languageData[lang]['features-message-link'];
+            if (featuresDetailLink) featuresDetailLink.textContent = languageData[lang]['features-detail-link'];
+            if (featuresMessageLink) featuresMessageLink.textContent = languageData[lang]['features-message-link'];
 
             // フィジカルパネルの翻訳
             const physicalPanel = document.querySelector('.physical-panel');
