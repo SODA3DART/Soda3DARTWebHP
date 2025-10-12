@@ -176,7 +176,9 @@ nav ul li a:hover:after {
     text-align: center;
     margin-bottom: 2rem;
     position: relative;
-    white-space: nowrap;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: keep-all;
     color: #ffffff;
     text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
     background: linear-gradient(135deg, 
@@ -189,32 +191,32 @@ nav ul li a:hover:after {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     background-size: 200% 100%;
-    animation: constructTitle 3s ease-in-out forwards;
+    animation: constructTitle 2s ease-out forwards;
     opacity: 0;
     transform: scale(0.8);
+    padding: 0 20px;
+    max-width: 100%;
+    overflow-wrap: break-word;
 }
 
 .particle-title::before {
-    content: '3Dアートで新しい世界を創造する';
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    color: transparent;
     background: linear-gradient(90deg, 
-        #000000 0%, 
-        #333333 25%, 
-        #666666 50%, 
-        #999999 75%, 
-        #000000 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.3) 25%, 
+        rgba(255, 255, 255, 0.5) 50%, 
+        rgba(255, 255, 255, 0.3) 75%, 
+        rgba(255, 255, 255, 0.1) 100%);
     background-size: 200% 100%;
-    animation: constructParticles 3s ease-in-out forwards;
+    animation: constructParticles 2s ease-out forwards;
     z-index: -1;
     opacity: 0;
+    border-radius: 10px;
 }
 
 .particle-title::after {
@@ -231,7 +233,7 @@ nav ul li a:hover:after {
         rgba(255, 255, 255, 0.1) 1px,
         rgba(255, 255, 255, 0.1) 2px
     );
-    animation: constructScan 3s ease-in-out forwards;
+    animation: constructScan 2s ease-out forwards;
     z-index: -2;
     opacity: 0;
 }
@@ -239,26 +241,14 @@ nav ul li a:hover:after {
 @keyframes constructTitle {
     0% {
         opacity: 0;
-        transform: scale(0.8) translateY(30px);
+        transform: scale(0.9) translateY(20px);
         background-position: -200% 0;
         text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
     }
-    30% {
-        opacity: 0.3;
-        transform: scale(0.9) translateY(15px);
-        background-position: -100% 0;
-        text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-    60% {
+    50% {
         opacity: 0.7;
-        transform: scale(1.05) translateY(-5px);
+        transform: scale(1.02) translateY(-2px);
         background-position: 0% 0;
-        text-shadow: 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-    80% {
-        opacity: 0.9;
-        transform: scale(1.02) translateY(2px);
-        background-position: 50% 0;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
     }
     100% {
@@ -273,31 +263,21 @@ nav ul li a:hover:after {
     0% {
         opacity: 0;
         background-position: -200% 0;
-        transform: scale(0.5);
+        transform: scale(0.8);
     }
-    20% {
-        opacity: 0.2;
-        background-position: -150% 0;
-        transform: scale(0.7);
-    }
-    40% {
-        opacity: 0.4;
+    30% {
+        opacity: 0.3;
         background-position: -100% 0;
-        transform: scale(0.85);
+        transform: scale(0.9);
     }
-    60% {
+    70% {
         opacity: 0.6;
-        background-position: -50% 0;
-        transform: scale(0.95);
-    }
-    80% {
-        opacity: 0.8;
         background-position: 0% 0;
-        transform: scale(1.02);
+        transform: scale(1.05);
     }
     100% {
-        opacity: 1;
-        background-position: 50% 0;
+        opacity: 0.8;
+        background-position: 100% 0;
         transform: scale(1);
     }
 }
@@ -343,11 +323,13 @@ nav ul li a:hover:after {
     align-items: flex-start;
     gap: 15px;
     width: fit-content;
-    max-width: 90%;
+    max-width: 95%;
+    min-width: 280px;
     border-left: 5px solid #2c3e50;
     z-index: 100;
     animation: fadeIn 0.5s ease-in-out;
     backdrop-filter: blur(10px);
+    box-sizing: border-box;
 }
 
 .update-icon {
@@ -371,6 +353,9 @@ nav ul li a:hover:after {
     font-size: 16px !important;
     line-height: 0.8 !important;
     letter-spacing: -0.5px !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .update-content p a {
@@ -410,6 +395,8 @@ nav ul li a:hover:after {
     padding: 0 20px;
     position: relative;
     z-index: 200;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .hero h1 {
@@ -421,6 +408,11 @@ nav ul li a:hover:after {
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 30px;
+    padding: 0 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
 }
 
 /* 魔法のエフェクトアニメーション */
@@ -491,6 +483,10 @@ nav ul li a:hover:after {
     display: inline-block;
     padding: 10px 20px;
     margin: 5px 0;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 /* Add blurred background with rounded corners */
@@ -560,6 +556,11 @@ nav ul li a:hover:after {
     margin-bottom: 20px;
     color: #333;
     font-family: 'IPAex明朝', serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    padding: 0 20px;
+    max-width: 100%;
 }
 
 /* 特徴セクションのタイトル */
@@ -568,6 +569,10 @@ nav ul li a:hover:after {
     font-weight: 600;
     letter-spacing: 0.05em;
     line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
 }
 
 .section-header p {
@@ -576,6 +581,10 @@ nav ul li a:hover:after {
     max-width: 700px;
     margin: 0 auto;
     font-family: 'セザンヌ', sans-serif;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    padding: 0 20px;
 }
 
 /* 特徴部分 */
@@ -809,7 +818,9 @@ nav ul li a:hover:after {
 
 @media (max-width: 480px) {
     .particle-title {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+        line-height: 1.3;
+        padding: 0 15px;
     }
 
     .panel-title-vertical {
@@ -1315,18 +1326,29 @@ footer {
 
     .hero h1 {
         font-size: 2rem;
+        padding: 0 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .particle-title {
         font-size: 2rem;
+        line-height: 1.3;
+        padding: 0 20px;
     }
 
     .hero p {
         font-size: 1rem;
+        padding: 0 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .section-header h2 {
         font-size: 2rem;
+        padding: 0 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .news-grid,
@@ -1362,12 +1384,16 @@ footer {
     .hero-update-box {
         flex-direction: column;
         text-align: center;
-        padding: 12px 20px;
+        padding: 12px 15px;
         bottom: 15px;
         width: fit-content;
         max-width: 95%;
+        min-width: 280px;
         justify-content: center;
         gap: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-sizing: border-box;
     }
 
     .hero-update-box .update-icon {
