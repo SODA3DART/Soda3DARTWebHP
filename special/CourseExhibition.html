@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コース展 2024 - 崇城大学芸術学部美術学科 3Dアートコース</title>
+    <link rel="icon" href="../images/logohedder.webp" type="image/webp">
+    <meta name="description" content="崇城大学芸術学部美術学科3Dアートコースのコース展特設サイト。髙瀬蔵ホールにて開催。">
+    <link rel="canonical" href="https://soda3dart.github.io/Soda3DARTWebHP/special/CourseExhibition.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/CourseExhibition.html">
+    <meta property="og:title" content="コース展 2024 - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="og:description" content="崇城大学芸術学部美術学科3Dアートコースのコース展特設サイト。髙瀬蔵ホールにて開催。">
+    <meta property="og:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://soda3dart.github.io/Soda3DARTWebHP/special/CourseExhibition.html">
+    <meta property="twitter:title" content="コース展 2024 - 崇城大学芸術学部美術学科 3Dアートコース">
+    <meta property="twitter:description" content="崇城大学芸術学部美術学科3Dアートコースのコース展特設サイト。髙瀬蔵ホールにて開催。">
+    <meta property="twitter:image" content="https://soda3dart.github.io/Soda3DARTWebHP/images/TopImage/topimage1.webp">
+
+    <!-- Font imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background: #0f0f0f;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(78, 205, 196, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 193, 7, 0.1) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ヘッダースタイル */
+        header {
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            display: block;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .back-button {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            animation: fadeInUp 1s ease;
+            position: relative;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b 0%, #4ecdc4 100%);
+            border-radius: 2px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero .date {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 40px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.4s both;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin: 60px auto 80px;
+            box-shadow: 
+                0 30px 90px rgba(0, 0, 0, 0.5),
+                0 0 1px rgba(255, 255, 255, 0.5) inset;
+            max-width: 1000px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* 情報カード */
+        .info-section {
+            margin-bottom: 60px;
+        }
+
+        .info-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-section h2 {
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) left bottom no-repeat;
+            background-size: 100% 2px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .info-section h2 i {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 240, 240, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-icon {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 20px;
+            min-width: 35px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #2c3e50;
+            min-width: 130px;
+            letter-spacing: 0.3px;
+        }
+
+        .info-value {
+            color: #555;
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        .info-value a {
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .info-value a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .info-value a:hover {
+            color: #764ba2;
+        }
+
+        .info-value a:hover::after {
+            width: 100%;
+        }
+
+        /* 特別イベント */
+        .special-event {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+            color: white;
+            border-radius: 25px;
+            padding: 45px;
+            margin: 40px 0 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.4);
+        }
+
+        .special-event::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .special-event h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .special-event p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+
+        /* マップセクション */
+        .map-container {
+            margin-top: 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .map-open-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .map-open-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* フッター */
+        footer {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            margin: 8px 0;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.5px;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero .date {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 40px 25px;
+                margin: 30px 15px;
+            }
+
+            .info-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .info-item {
+                flex-direction: column;
+                font-size: 1rem;
+            }
+
+            .info-label {
+                margin-bottom: 8px;
+                min-width: auto;
+            }
+
+            .map-container iframe {
+                height: 350px;
+            }
+
+            .special-event {
+                padding: 30px 20px;
+            }
+
+            .special-event h3 {
+                font-size: 1.5rem;
+            }
+
+            .special-event p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="../images/logohedder.webp" alt="崇城大学 芸術学部 3Dアートコース">
+                <div class="logo-text">崇城大学 芸術学部<span>3Dアートコース</span></div>
+            </div>
+            <a href="../index.html" class="back-button">
+                <i class="fas fa-home"></i> ホームに戻る
+            </a>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="container">
+            <h1 data-aos="fade-up">コース展 2024</h1>
+            <p class="subtitle" data-aos="fade-up" data-aos-delay="200">
+                崇城大学芸術学部美術学科 3Dアートコース
+            </p>
+            <p class="date" data-aos="fade-up" data-aos-delay="400">
+                2024年11月9日(土) ～ 11月22日(金)
+            </p>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content" data-aos="fade-up">
+        <!-- オープニングパーティー -->
+        <div class="special-event">
+            <h3><i class="fas fa-champagne-glasses"></i> オープニングパーティー</h3>
+            <p>11月8日(金) 18:00 ～ 20:00</p>
+        </div>
+
+        <!-- 開催情報 -->
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle"></i> 開催情報</h2>
+            <div class="info-card">
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt info-icon"></i>
+                    <span class="info-label">会期：</span>
+                    <span class="info-value">2024年11月9日(土) ～ 11月22日(金)</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock info-icon"></i>
+                    <span class="info-label">開場時間：</span>
+                    <span class="info-value">10:00 ～ 19:00<br>※最終日は15:00まで</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-door-open info-icon"></i>
+                    <span class="info-label">入場料：</span>
+                    <span class="info-value">無料</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 会場情報 -->
+        <div class="info-section">
+            <h2><i class="fas fa-map-marker-alt"></i> 会場情報</h2>
+            <div class="info-card">
+                <div class="info-item">
+                    <i class="fas fa-building info-icon"></i>
+                    <span class="info-label">会場：</span>
+                    <span class="info-value">髙瀬蔵ホール</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-location-dot info-icon"></i>
+                    <span class="info-label">住所：</span>
+                    <span class="info-value">〒865-0025<br>熊本県玉名市高瀬蔵155-1</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone info-icon"></i>
+                    <span class="info-label">電話：</span>
+                    <span class="info-value"><a href="tel:0968-72-2480">0968-72-2480</a></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-globe info-icon"></i>
+                    <span class="info-label">Web：</span>
+                    <span class="info-value"><a href="https://takasegura.jp/" target="_blank" rel="noopener noreferrer">https://takasegura.jp/</a></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主催情報 -->
+        <div class="info-section">
+            <h2><i class="fas fa-users"></i> 主催</h2>
+            <div class="info-card">
+                <div class="info-item">
+                    <i class="fas fa-handshake info-icon"></i>
+                    <span class="info-label">主催：</span>
+                    <span class="info-value">NPO法人 高瀬蔵</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- マップ -->
+        <div class="info-section">
+            <h2><i class="fas fa-map"></i> アクセス</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps?output=embed&q=髙瀬蔵ホール+熊本県玉名市高瀬蔵155-1"
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="https://www.google.com/maps/search/?api=1&query=髙瀬蔵ホール+熊本県玉名市高瀬蔵155-1" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="map-open-button">
+                    <i class="fas fa-map-marked-alt"></i> Googleマップで開く
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 崇城大学芸術学部美術学科 3Dアートコース All Rights Reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">お問い合わせ：NPO法人 高瀬蔵 Tel: 0968-72-2480</p>
+        </div>
+    </footer>
+
+    <script>
+        // AOSアニメーション初期化
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
