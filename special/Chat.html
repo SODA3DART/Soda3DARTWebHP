@@ -486,7 +486,7 @@
         });
 
         // Azure Functions API設定
-        const API_URL = 'https://sodahpgeminiapi-abgzhhetd4cvf7dc.japanwest-01.azurewebsites.net/api/SendMessage';
+        const API_URL = "https://sodahpgeminiapi-abgzhhetd4cvf7dc.japanwest-01.azurewebsites.net/api/SendMessage";
 
         // DOM要素
         const chatMessages = document.getElementById('chatMessages');
@@ -496,8 +496,49 @@
         const typingIndicator = document.getElementById('typingIndicator');
 
 
+        // 会話履歴の管理
+        let chatHistory = [];
+
+        // 履歴をlocalStorageから読み込み
+        function loadHistory() {
+            try {
+                const savedHistory = localStorage.getItem('chat_history');
+                if (savedHistory) {
+                    chatHistory = JSON.parse(savedHistory);
+                    // 履歴がある場合は復元
+                    restoreChatHistory();
+                }
+            } catch (error) {
+                console.error('履歴の読み込みに失敗しました:', error);
+                chatHistory = [];
+            }
+        }
+
+        // チャット履歴を復元
+        function restoreChatHistory() {
+            chatHistory.forEach(entry => {
+                if (entry.role === 'user') {
+                    addMessage(entry.content, 'user', false);
+                } else if (entry.role === 'assistant') {
+                    addMessage(entry.content, 'kumayu', false);
+                }
+            });
+        }
+
+        // 履歴をlocalStorageに保存
+        function saveHistory() {
+            try {
+                localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+            } catch (error) {
+                console.error('履歴の保存に失敗しました:', error);
+            }
+        }
+
         // 初期化
         document.addEventListener('DOMContentLoaded', function() {
+            // 履歴を読み込み
+            loadHistory();
+
             // テキストエリアの自動リサイズ
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
@@ -536,6 +577,9 @@
             showTypingIndicator();
 
             try {
+                // 現在の履歴を取得
+                const currentHistory = [...chatHistory];
+
                 // Azure Functions APIにリクエスト
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -543,6 +587,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        history: currentHistory,
                         message: message
                     })
                 });
@@ -551,22 +596,30 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const data = await response.json();
+                // プレーンテキストとして応答を受け取る
+                const reply = await response.text();
                 
                 // タイピングインジケーターを非表示
                 hideTypingIndicator();
 
                 // くまゆの返信を表示
-                if (data.reply) {
-                    addMessage(data.reply, 'kumayu');
+                if (reply && reply.trim()) {
+                    addMessage(reply, 'kumayu');
+                    
+                    // 履歴に追加
+                    chatHistory.push({ role: 'user', content: message });
+                    chatHistory.push({ role: 'assistant', content: reply });
+                    
+                    // 履歴を保存
+                    saveHistory();
                 } else {
-                    addMessage('すみません、うまく返答できませんでした。もう一度お試しください。', 'kumayu');
+                    addMessage('申し訳ございませんモン…。うまく返答できませんでしたくま。もう一度お試しください。', 'kumayu');
                 }
 
             } catch (error) {
                 console.error('Error:', error);
                 hideTypingIndicator();
-                addMessage('申し訳ございません。現在システムに問題が発生しています。しばらく時間をおいてから再度お試しください。', 'kumayu');
+                addMessage('申し訳ございませんモン…。システムに問題が発生したみたいだくま。しばらく時間をおいてから再度お試しください。', 'kumayu');
             } finally {
                 // 送信ボタンを有効化
                 sendButton.disabled = false;
@@ -574,7 +627,7 @@
         }
 
         // メッセージ追加
-        function addMessage(content, sender) {
+        function addMessage(content, sender, animate = true) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
 
@@ -583,11 +636,14 @@
                 minute: '2-digit' 
             });
 
+            // 改行を<br>タグに変換
+            const formattedContent = content.replace(/\n/g, '<br>');
+
             if (sender === 'user') {
                 messageDiv.innerHTML = `
                     <div class="message-avatar">U</div>
                     <div class="message-content">
-                        ${escapeHtml(content)}
+                        ${formattedContent}
                         <div class="message-time">${time}</div>
                     </div>
                 `;
@@ -595,7 +651,7 @@
                 messageDiv.innerHTML = `
                     <img src="../images/gallery/Kumayuiru.png" alt="くまゆ" class="message-avatar">
                     <div class="message-content">
-                        ${escapeHtml(content)}
+                        ${formattedContent}
                         <div class="message-time">${time}</div>
                     </div>
                 `;
@@ -616,11 +672,11 @@
             typingIndicator.classList.remove('show');
         }
 
-        // HTMLエスケープ
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // 履歴をクリアする関数（デバッグ用）
+        function clearHistory() {
+            chatHistory = [];
+            localStorage.removeItem('chat_history');
+            location.reload();
         }
 
         // エラーハンドリング
