@@ -137,11 +137,11 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            height: 70vh;
+            height: 85vh;
         }
 
         .chat-header {
@@ -171,6 +171,31 @@
         .chat-subtitle {
             font-size: 0.9rem;
             opacity: 0.9;
+        }
+
+        .chat-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .reset-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .reset-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .chat-messages {
@@ -366,8 +391,9 @@
             }
 
             .chat-container {
-                height: 75vh;
+                height: 80vh;
                 margin: 0 10px;
+                max-width: 95%;
             }
 
             .chat-header {
@@ -399,8 +425,19 @@
             }
 
             .chat-container {
-                height: 80vh;
+                height: 85vh;
                 border-radius: 15px;
+                max-width: 98%;
+            }
+
+            .chat-controls {
+                top: 15px;
+                right: 15px;
+            }
+
+            .reset-button {
+                padding: 6px 12px;
+                font-size: 0.7rem;
             }
 
             .chat-messages {
@@ -438,6 +475,11 @@
         <div class="container">
             <div class="chat-container" data-aos="fade-up">
                 <div class="chat-header">
+                    <div class="chat-controls">
+                        <button class="reset-button" id="resetButton" title="チャット履歴をクリア">
+                            <i class="fas fa-trash-alt"></i> リセット
+                        </button>
+                    </div>
                     <img src="../images/gallery/Kumayuiru.png" alt="くまゆ" class="kumayu-avatar">
                     <h1 class="chat-title">くまゆチャット</h1>
                     <p class="chat-subtitle">崇城大学芸術学部美術学科3Dアートコースについて何でも聞いてね！</p>
@@ -494,6 +536,7 @@
         const sendButton = document.getElementById('sendButton');
         const chatForm = document.getElementById('chatForm');
         const typingIndicator = document.getElementById('typingIndicator');
+        const resetButton = document.getElementById('resetButton');
 
 
         // 会話履歴の管理
@@ -557,6 +600,13 @@
             chatForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 sendMessage();
+            });
+
+            // リセットボタン
+            resetButton.addEventListener('click', function() {
+                if (confirm('チャット履歴をクリアしますか？この操作は取り消せません。')) {
+                    clearHistory();
+                }
             });
         });
 
@@ -688,11 +738,22 @@
             typingIndicator.classList.remove('show');
         }
 
-        // 履歴をクリアする関数（デバッグ用）
+        // 履歴をクリアする関数
         function clearHistory() {
             chatHistory = [];
             localStorage.removeItem('chat_history');
-            location.reload();
+            
+            // チャットメッセージエリアをクリア
+            chatMessages.innerHTML = `
+                <div class="welcome-message">
+                    <h3>こんにちは！くまゆです🐻</h3>
+                    <p>崇城大学芸術学部美術学科3Dアートコースについて、何でもお気軽にお聞きください！<br>
+                    コースの内容、施設、イベント、入試情報など、お答えできることはたくさんありますよ〜</p>
+                </div>
+            `;
+            
+            // スクロールを最上部に
+            chatMessages.scrollTop = 0;
         }
 
         // エラーハンドリング
