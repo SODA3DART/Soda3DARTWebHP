@@ -577,8 +577,15 @@
             showTypingIndicator();
 
             try {
-                // 現在の履歴を取得
-                const currentHistory = [...chatHistory];
+                // 現在の履歴を取得（最新の10件に制限）
+                const currentHistory = chatHistory.slice(-10);
+
+                // リクエストデータを準備（シンプルな形式でテスト）
+                const requestData = {
+                    message: message
+                };
+
+                console.log('送信データ:', requestData);
 
                 // Azure Functions APIにリクエスト
                 const response = await fetch(API_URL, {
@@ -586,18 +593,22 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        history: currentHistory,
-                        message: message
-                    })
+                    body: JSON.stringify(requestData)
                 });
 
+                console.log('レスポンスステータス:', response.status);
+                console.log('レスポンスヘッダー:', response.headers);
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // エラーレスポンスの詳細を取得
+                    const errorText = await response.text();
+                    console.error('エラーレスポンス:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
                 }
 
                 // プレーンテキストとして応答を受け取る
                 const reply = await response.text();
+                console.log('受信した応答:', reply);
                 
                 // タイピングインジケーターを非表示
                 hideTypingIndicator();
@@ -609,6 +620,11 @@
                     // 履歴に追加
                     chatHistory.push({ role: 'user', content: message });
                     chatHistory.push({ role: 'assistant', content: reply });
+                    
+                    // 履歴が長くなりすぎないように制限（最新の20件を保持）
+                    if (chatHistory.length > 20) {
+                        chatHistory = chatHistory.slice(-20);
+                    }
                     
                     // 履歴を保存
                     saveHistory();
