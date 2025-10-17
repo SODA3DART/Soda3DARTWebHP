@@ -766,6 +766,91 @@ nav ul li a:hover:after {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* 固定位置のくまゆ画像 */
+.kumayu-fixed {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    z-index: 999;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.kumayu-fixed:hover {
+    opacity: 1;
+}
+
+.kumayu-link {
+    display: block;
+    text-decoration: none;
+    position: relative;
+    pointer-events: auto;
+}
+
+.kumayu-image {
+    width: 120px;
+    height: auto;
+    max-width: 100%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.kumayu-link:hover .kumayu-image {
+    transform: scale(1.05);
+}
+
+/* 吹き出しスタイル */
+.kumayu-tooltip {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.kumayu-fixed:hover .kumayu-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.tooltip-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.tooltip-arrow {
+    position: absolute;
+    top: 100%;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #764ba2;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .learning-panels {
@@ -1406,5 +1491,30 @@ footer {
         margin-bottom: 8px;
     }
 
+    /* モバイルでのくまゆ画像 */
+    .kumayu-fixed {
+        right: 3%;
+        opacity: 0.7;
+    }
 
+    .kumayu-image {
+        width: 80px;
+    }
+
+    /* モバイルでは吹き出しを非表示 */
+    .kumayu-tooltip {
+        display: none;
+    }
+}
+
+/* より小さな画面でのくまゆ画像 */
+@media (max-width: 480px) {
+    .kumayu-fixed {
+        right: 2%;
+        opacity: 0.6;
+    }
+
+    .kumayu-image {
+        width: 60px;
+    }
 }
