@@ -701,7 +701,9 @@
             if (!message) return;
 
             // 管理者コマンドの検知
-            if (message === 'コード999を実行') {
+            console.log('入力されたメッセージ:', message);
+            if (message === '裏コード999を実行') {
+                console.log('裏コード999コマンドが検知されました');
                 // 旧形式のコマンド（単一日付のみ）
                 const password = prompt('管理者パスワードを入力してください:');
                 if (password === null) return; // キャンセルされた場合
