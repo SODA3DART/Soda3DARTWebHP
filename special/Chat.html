@@ -547,7 +547,18 @@
             try {
                 const savedHistory = localStorage.getItem('chat_history');
                 if (savedHistory) {
-                    chatHistory = JSON.parse(savedHistory);
+                    const parsedHistory = JSON.parse(savedHistory);
+                    // 古い形式から新しい形式に変換
+                    chatHistory = parsedHistory.map(entry => {
+                        if (entry.content) {
+                            // 古い形式: { role: "user", content: "..." }
+                            return { role: entry.role, parts: [{ text: entry.content }] };
+                        } else if (entry.parts) {
+                            // 新しい形式: { role: "user", parts: [{ text: "..." }] }
+                            return entry;
+                        }
+                        return entry;
+                    });
                     // 履歴がある場合は復元
                     restoreChatHistory();
                 }
@@ -560,10 +571,10 @@
         // チャット履歴を復元
         function restoreChatHistory() {
             chatHistory.forEach(entry => {
-                if (entry.role === 'user') {
-                    addMessage(entry.content, 'user', false);
-                } else if (entry.role === 'assistant') {
-                    addMessage(entry.content, 'kumayu', false);
+                if (entry.role === 'user' && entry.parts && entry.parts[0]) {
+                    addMessage(entry.parts[0].text, 'user', false);
+                } else if ((entry.role === 'model' || entry.role === 'assistant') && entry.parts && entry.parts[0]) {
+                    addMessage(entry.parts[0].text, 'kumayu', false);
                 }
             });
         }
@@ -610,10 +621,71 @@
             });
         });
 
+        // 管理者用ログダウンロード機能
+        async function downloadLogs(date, password) {
+            try {
+                const response = await fetch('https://sodahpgeminiapi-abgzhhetd4cvf7dc.japanwest-01.azurewebsites.net/api/DownloadLogs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        date: date,
+                        password: password
+                    })
+                });
+
+                if (response.status === 401) {
+                    alert('パスワードが違います。');
+                    return;
+                }
+
+                if (!response.ok) {
+                    alert('ログのダウンロードに失敗しました。');
+                    return;
+                }
+
+                // ZIPファイルのダウンロード
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `chat_logs_${date}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+            } catch (error) {
+                console.error('ダウンロードエラー:', error);
+                alert('ログのダウンロードに失敗しました。');
+            }
+        }
+
         // メッセージ送信
         async function sendMessage() {
             const message = messageInput.value.trim();
             if (!message) return;
+
+            // 管理者コマンドの検知
+            if (message === 'コード999を実行') {
+                const password = prompt('管理者パスワードを入力してください:');
+                if (password === null) return; // キャンセルされた場合
+
+                const date = prompt('ダウンロードしたいログの日付をYYYY-MM-DD形式で入力してください:');
+                if (date === null) return; // キャンセルされた場合
+
+                // 日付形式の検証
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(date)) {
+                    alert('日付はYYYY-MM-DD形式で入力してください。');
+                    return;
+                }
+
+                // ダウンロード実行
+                await downloadLogs(date, password);
+                return;
+            }
 
             // ユーザーメッセージを表示
             addMessage(message, 'user');
@@ -630,9 +702,10 @@
                 // 現在の履歴を取得（最新の10件に制限）
                 const currentHistory = chatHistory.slice(-10);
 
-                // リクエストデータを準備（シンプルな形式でテスト）
+                // リクエストデータを準備（正しい形式）
                 const requestData = {
-                    message: message
+                    message: message,
+                    history: currentHistory
                 };
 
                 console.log('送信データ:', requestData);
@@ -667,9 +740,9 @@
                 if (reply && reply.trim()) {
                     addMessage(reply, 'kumayu');
                     
-                    // 履歴に追加
-                    chatHistory.push({ role: 'user', content: message });
-                    chatHistory.push({ role: 'assistant', content: reply });
+                    // 履歴に追加（正しい形式）
+                    chatHistory.push({ role: 'user', parts: [{ text: message }] });
+                    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
                     
                     // 履歴が長くなりすぎないように制限（最新の20件を保持）
                     if (chatHistory.length > 20) {
