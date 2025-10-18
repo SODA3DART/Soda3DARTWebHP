@@ -621,8 +621,36 @@
             });
         });
 
+        // 日付範囲の検証とファイル名生成
+        function validateDateRange(dateRange) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            
+            // 単一日付: 2025-10-18
+            if (dateRegex.test(dateRange)) {
+                return { valid: true, filename: `chat_logs_${dateRange}.zip` };
+            }
+            
+            // その日以降: 2025-10-15~
+            if (dateRange.endsWith('~') && dateRegex.test(dateRange.slice(0, -1))) {
+                return { valid: true, filename: `chat_logs_${dateRange.slice(0, -1)}_onwards.zip` };
+            }
+            
+            // その日以前: ~2025-10-17
+            if (dateRange.startsWith('~') && dateRegex.test(dateRange.slice(1))) {
+                return { valid: true, filename: `chat_logs_until_${dateRange.slice(1)}.zip` };
+            }
+            
+            // 期間指定: 2025-10-15~2025-10-18
+            const rangeMatch = dateRange.match(/^(\d{4}-\d{2}-\d{2})~(\d{4}-\d{2}-\d{2})$/);
+            if (rangeMatch && dateRegex.test(rangeMatch[1]) && dateRegex.test(rangeMatch[2])) {
+                return { valid: true, filename: `chat_logs_${rangeMatch[1]}_${rangeMatch[2]}.zip` };
+            }
+            
+            return { valid: false, filename: null };
+        }
+
         // 管理者用ログダウンロード機能
-        async function downloadLogs(date, password) {
+        async function downloadLogs(dateRange, password) {
             try {
                 const response = await fetch('https://sodahpgeminiapi-abgzhhetd4cvf7dc.japanwest-01.azurewebsites.net/api/DownloadLogs', {
                     method: 'POST',
@@ -630,13 +658,18 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        date: date,
+                        date_range: dateRange,
                         password: password
                     })
                 });
 
                 if (response.status === 401) {
                     alert('パスワードが違います。');
+                    return;
+                }
+
+                if (response.status === 404) {
+                    addMessage('指定された期間にログは見つかりませんでした。', 'kumayu');
                     return;
                 }
 
@@ -650,7 +683,7 @@
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `chat_logs_${date}.zip`;
+                a.download = validateDateRange(dateRange).filename;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -668,22 +701,27 @@
             if (!message) return;
 
             // 管理者コマンドの検知
-            if (message === 'コード999を実行') {
+            if (message.startsWith('/download')) {
                 const password = prompt('管理者パスワードを入力してください:');
                 if (password === null) return; // キャンセルされた場合
 
-                const date = prompt('ダウンロードしたいログの日付をYYYY-MM-DD形式で入力してください:');
-                if (date === null) return; // キャンセルされた場合
+                // /download の後の部分を取得
+                const dateRangePart = message.substring('/download'.length).trim();
+                
+                if (!dateRangePart) {
+                    alert('日付範囲を指定してください。\n例: /download 2025-10-18\n例: /download 2025-10-15~\n例: /download ~2025-10-17\n例: /download 2025-10-15~2025-10-18');
+                    return;
+                }
 
-                // 日付形式の検証
-                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateRegex.test(date)) {
-                    alert('日付はYYYY-MM-DD形式で入力してください。');
+                // 日付範囲の検証
+                const validation = validateDateRange(dateRangePart);
+                if (!validation.valid) {
+                    alert('日付範囲の形式が正しくありません。\n例: /download 2025-10-18\n例: /download 2025-10-15~\n例: /download ~2025-10-17\n例: /download 2025-10-15~2025-10-18');
                     return;
                 }
 
                 // ダウンロード実行
-                await downloadLogs(date, password);
+                await downloadLogs(dateRangePart, password);
                 return;
             }
 
