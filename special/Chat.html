@@ -704,22 +704,22 @@
             console.log('入力されたメッセージ:', message);
             if (message === '裏コード999を実行') {
                 console.log('裏コード999コマンドが検知されました');
-                // 旧形式のコマンド（単一日付のみ）
+                // 旧形式のコマンド（期間指定対応）
                 const password = prompt('管理者パスワードを入力してください:');
                 if (password === null) return; // キャンセルされた場合
 
-                const date = prompt('ダウンロードしたいログの日付をYYYY-MM-DD形式で入力してください:');
-                if (date === null) return; // キャンセルされた場合
+                const dateRange = prompt('ダウンロードしたいログの日付範囲を入力してください:\n例: 2025-10-18 (単一日付)\n例: 2025-10-15~ (その日以降)\n例: ~2025-10-17 (その日以前)\n例: 2025-10-15~2025-10-18 (期間指定)');
+                if (dateRange === null) return; // キャンセルされた場合
 
-                // 日付形式の検証
-                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateRegex.test(date)) {
-                    alert('日付はYYYY-MM-DD形式で入力してください。');
+                // 日付範囲の検証
+                const validation = validateDateRange(dateRange);
+                if (!validation.valid) {
+                    alert('日付範囲の形式が正しくありません。\n例: 2025-10-18 (単一日付)\n例: 2025-10-15~ (その日以降)\n例: ~2025-10-17 (その日以前)\n例: 2025-10-15~2025-10-18 (期間指定)');
                     return;
                 }
 
                 // ダウンロード実行
-                await downloadLogs(date, password);
+                await downloadLogs(dateRange, password);
                 return;
             } else if (message.startsWith('/download')) {
                 // 新形式のコマンド（期間指定対応）
