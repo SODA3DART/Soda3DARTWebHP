@@ -365,6 +365,56 @@
             border-left: 4px solid #c62828;
         }
 
+        /* テンプレートボタンのスタイル */
+        .template-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .template-buttons.hidden {
+            display: none;
+        }
+
+        .template-button {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #e9ecef;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-button:hover {
+            background: #e9ecef;
+            color: #495057;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .template-button:active {
+            transform: translateY(0);
+        }
+
+        .template-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .template-description {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -491,6 +541,11 @@
                         <p>崇城大学芸術学部美術学科3Dアートコースについて、何でもお気軽にお聞きください！<br>
                         コースの内容、施設、イベント、入試情報など、お答えできることはたくさんありますよ〜</p>
                     </div>
+                    
+                    <!-- 初回ユーザー向けテンプレートボタン（動的生成） -->
+                    <div class="template-buttons" id="templateButtons">
+                        <!-- テンプレートボタンはJavaScriptで動的に生成されます -->
+                    </div>
                 </div>
 
                 <div class="typing-indicator" id="typingIndicator">
@@ -537,10 +592,239 @@
         const chatForm = document.getElementById('chatForm');
         const typingIndicator = document.getElementById('typingIndicator');
         const resetButton = document.getElementById('resetButton');
+        const templateButtons = document.getElementById('templateButtons');
 
 
         // 会話履歴の管理
         let chatHistory = [];
+
+        // テンプレートメッセージ送信関数
+        function sendTemplateMessage(message) {
+            // テンプレートボタンを非表示にする
+            templateButtons.classList.add('hidden');
+            
+            // メッセージを入力欄に設定して送信
+            messageInput.value = message;
+            sendMessage();
+        }
+
+        // テンプレートグループA（ランダム表示）
+        const templateGroupA = [
+            {
+                title: '🎉 イベント・活動',
+                description: 'どんなイベントや活動があるのか知りたい',
+                message: 'イベントや活動について教えてください'
+            },
+            {
+                title: '💼 就職・進路',
+                description: '卒業後の進路や就職について知りたい',
+                message: '就職や進路について教えてください'
+            },
+            {
+                title: '👨‍🏫 先生について',
+                description: 'くまゆが知っている先生の情報を教えるよ',
+                message: 'どんな先生がいるの？'
+            },
+            {
+                title: '👨‍🎓 学生について',
+                description: '学生の作品を紹介するよ',
+                message: 'どんな学生がいるの？'
+            }
+        ];
+
+        // テンプレートグループB（曜日・時間別）
+        const templateGroupB = {
+            'monday_morning': [
+                {
+                    title: '🍯 くまゆの好物',
+                    description: 'くまゆの好物教えて！',
+                    message: 'くまゆの好物教えて！'
+                },
+                {
+                    title: '😄 楽しい話',
+                    description: '楽しい話がしたい！',
+                    message: '楽しい話がしたい！'
+                },
+                {
+                    title: '💼 くまゆのお仕事',
+                    description: 'くまゆのお仕事は何？',
+                    message: 'くまゆのお仕事は何？'
+                }
+            ],
+            'monday_afternoon': [
+                {
+                    title: '🏫 お気に入りスポット',
+                    description: '崇城大学のお気に入りスポットを教えて',
+                    message: '崇城大学のお気に入りスポットを教えて'
+                }
+            ],
+            'tuesday_morning': [
+                {
+                    title: '🧪 3Dアート実習',
+                    description: '3Dアート実習って何するの？',
+                    message: '3Dアート実習って何するの？'
+                }
+            ],
+            'tuesday_afternoon': [
+                {
+                    title: '📚 勉強法',
+                    description: '3Dアートコースの勉強法',
+                    message: '3Dアートコースの勉強法'
+                }
+            ],
+            'wednesday_morning': [
+                {
+                    title: '🎨 作品制作',
+                    description: '作品制作ってどうするの？',
+                    message: '作品制作ってどうするの？'
+                }
+            ],
+            'wednesday_afternoon': [
+                {
+                    title: '💡 やりたいこと',
+                    description: 'やりたいことの見つけ方教えて',
+                    message: 'やりたいことの見つけ方教えて'
+                }
+            ],
+            'thursday_morning': [
+                {
+                    title: '🏗️ 建物制作',
+                    description: '建物みたいなものって作ったりできる？',
+                    message: '建物みたいなものって作ったりできる？'
+                }
+            ],
+            'thursday_afternoon': [
+                {
+                    title: '📅 くまゆのスケジュール',
+                    description: 'くまゆのスケジュール教えて',
+                    message: 'くまゆのスケジュール教えて'
+                }
+            ],
+            'friday_morning': [
+                {
+                    title: '🎨 くまゆの作品',
+                    description: 'くまゆは作品作らないの？',
+                    message: 'くまゆは作品作らないの？'
+                },
+                {
+                    title: '🎉 くまゆの週末',
+                    description: 'くまゆの週末の過ごし方教えて',
+                    message: 'くまゆの週末の過ごし方教えて'
+                }
+            ],
+            'friday_afternoon': [
+                {
+                    title: '🍕 くまゆの好きな学食',
+                    description: 'くまゆの好きな学食教えて',
+                    message: 'くまゆの好きな学食教えて'
+                }
+            ],
+            'weekend': [
+                {
+                    title: '😄 冗談',
+                    description: '冗談言って',
+                    message: '冗談言って'
+                },
+                {
+                    title: '🎵 くまゆの歌',
+                    description: 'くまゆの歌を聞かせて',
+                    message: 'くまゆの歌を聞かせて'
+                },
+                {
+                    title: '👥 コースの人',
+                    description: '3Dアートコースってどんな人が多い？',
+                    message: '3Dアートコースってどんな人が多い？'
+                },
+                {
+                    title: '🌍 英語',
+                    description: 'くまゆって英語しゃべれるの？',
+                    message: 'くまゆって英語しゃべれるの？'
+                }
+            ]
+        };
+
+        // 現在の曜日・時間を取得
+        function getCurrentTimeSlot() {
+            const now = new Date();
+            const day = now.getDay(); // 0=日曜, 1=月曜, ..., 6=土曜
+            const hour = now.getHours();
+            
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const dayName = dayNames[day];
+            
+            if (day === 0 || day === 6) {
+                return 'weekend';
+            }
+            
+            const timeSlot = hour < 12 ? 'morning' : 'afternoon';
+            return `${dayName}_${timeSlot}`;
+        }
+
+        // テンプレートボタンを動的に生成
+        function generateTemplateButtons() {
+            const timeSlot = getCurrentTimeSlot();
+            const groupBTemplates = templateGroupB[timeSlot] || [];
+            
+            console.log('現在の時間帯:', timeSlot);
+            console.log('グループBテンプレート:', groupBTemplates);
+            
+            // グループAからランダムに1つ選択
+            const randomIndex = Math.floor(Math.random() * templateGroupA.length);
+            const selectedGroupA = templateGroupA[randomIndex];
+            
+            console.log('選択されたグループA:', selectedGroupA);
+            
+            // グループBから1つ選択（利用可能な場合）
+            let selectedGroupB = null;
+            if (groupBTemplates.length > 0) {
+                const randomBIndex = Math.floor(Math.random() * groupBTemplates.length);
+                selectedGroupB = groupBTemplates[randomBIndex];
+                console.log('選択されたグループB:', selectedGroupB);
+            } else {
+                console.log('グループBテンプレートが利用できません');
+            }
+            
+            // 固定のコース内容ボタン
+            const courseButton = `
+                <button class="template-button" onclick="sendTemplateMessage('コースの内容について教えてください')">
+                    <div class="template-title">📚 コースの内容</div>
+                    <div class="template-description">3Dアートコースで学べる内容について詳しく知りたい</div>
+                </button>
+            `;
+            
+            // グループAのボタン
+            const groupAButton = `
+                <button class="template-button" onclick="sendTemplateMessage('${selectedGroupA.message}')">
+                    <div class="template-title">${selectedGroupA.title}</div>
+                    <div class="template-description">${selectedGroupA.description}</div>
+                </button>
+            `;
+            
+            // グループBのボタン（利用可能な場合）
+            let groupBButton = '';
+            if (selectedGroupB) {
+                groupBButton = `
+                    <button class="template-button" onclick="sendTemplateMessage('${selectedGroupB.message}')">
+                        <div class="template-title">${selectedGroupB.title}</div>
+                        <div class="template-description">${selectedGroupB.description}</div>
+                    </button>
+                `;
+            }
+            
+            return courseButton + groupAButton + groupBButton;
+        }
+
+        // テンプレートボタンの表示状態を管理
+        function checkTemplateVisibility() {
+            // 履歴がある場合はテンプレートボタンを非表示
+            if (chatHistory.length > 0) {
+                templateButtons.classList.add('hidden');
+            } else {
+                templateButtons.classList.remove('hidden');
+                // テンプレートボタンを動的に生成
+                templateButtons.innerHTML = generateTemplateButtons();
+            }
+        }
 
         // 履歴をlocalStorageから読み込み
         function loadHistory() {
@@ -562,9 +846,13 @@
                     // 履歴がある場合は復元
                     restoreChatHistory();
                 }
+                
+                // テンプレートボタンの表示状態をチェック
+                checkTemplateVisibility();
             } catch (error) {
                 console.error('履歴の読み込みに失敗しました:', error);
                 chatHistory = [];
+                checkTemplateVisibility();
             }
         }
 
@@ -810,6 +1098,9 @@
                     
                     // 履歴を保存
                     saveHistory();
+                    
+                    // テンプレートボタンの表示状態を更新
+                    checkTemplateVisibility();
                 } else {
                     addMessage('申し訳ございませんモン…。うまく返答できませんでしたくま。もう一度お試しください。', 'kumayu');
                 }
@@ -882,7 +1173,15 @@
                     <p>崇城大学芸術学部美術学科3Dアートコースについて、何でもお気軽にお聞きください！<br>
                     コースの内容、施設、イベント、入試情報など、お答えできることはたくさんありますよ〜</p>
                 </div>
+                
+                <!-- 初回ユーザー向けテンプレートボタン（動的生成） -->
+                <div class="template-buttons" id="templateButtons">
+                    <!-- テンプレートボタンはJavaScriptで動的に生成されます -->
+                </div>
             `;
+            
+            // テンプレートボタンの表示状態を更新
+            checkTemplateVisibility();
             
             // スクロールを最上部に
             chatMessages.scrollTop = 0;
