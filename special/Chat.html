@@ -1115,6 +1115,18 @@
             }
         }
 
+        // URLをリンクに変換する関数
+        function convertUrlsToLinks(text) {
+            // URLの正規表現パターン（http/httpsで始まるURL）
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlPattern, function(url) {
+                // 角括弧で囲まれたURLの場合、角括弧を除去
+                const cleanUrl = url.replace(/^\[|\]$/g, '');
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: underline;">${cleanUrl}</a>`;
+            });
+        }
+
         // メッセージ追加
         function addMessage(content, sender, animate = true) {
             const messageDiv = document.createElement('div');
@@ -1125,8 +1137,9 @@
                 minute: '2-digit' 
             });
 
-            // 改行を<br>タグに変換
-            const formattedContent = content.replace(/\n/g, '<br>');
+            // 改行を<br>タグに変換し、URLをリンクに変換
+            let formattedContent = content.replace(/\n/g, '<br>');
+            formattedContent = convertUrlsToLinks(formattedContent);
 
             if (sender === 'user') {
                 messageDiv.innerHTML = `
