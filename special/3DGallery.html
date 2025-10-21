@@ -137,27 +137,35 @@
             z-index: 1001;
             display: flex;
             gap: 15px;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 24px;
             border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .ui-button {
-            background-color: #4285f4;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 25px;
             font-size: 0.9rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             border: none;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .ui-button:hover {
-            background-color: #3367d6;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .ui-button:active {
+            transform: translateY(0);
         }
 
         /* 操作説明 */
@@ -165,37 +173,108 @@
             position: fixed;
             top: 80px;
             left: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             z-index: 1001;
             font-size: 0.9rem;
-            max-width: 250px;
+            max-width: 280px;
+            transition: all 0.3s ease;
+        }
+
+        .controls-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .controls-info h3 {
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #333;
+            font-weight: 700;
         }
 
         .controls-info ul {
             list-style: none;
-            padding-left: 10px;
+            padding-left: 0;
         }
 
         .controls-info li {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
         }
 
         .controls-info .key {
             display: inline-block;
-            background-color: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 5px;
-            font-family: monospace;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 8px;
+            font-family: 'Courier New', monospace;
             font-weight: bold;
+            font-size: 0.8rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* 作品情報表示 */
+        .artwork-info {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1001;
+            max-width: 300px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .artwork-info.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .artwork-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .artwork-info p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .artwork-info .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .artwork-info .close-btn:hover {
+            color: #333;
         }
 
         /* ローディング画面 */
@@ -205,7 +284,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -215,18 +294,37 @@
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4285f4;
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .loading-text {
-            font-size: 1.2rem;
-            color: #333;
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.8));
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
         @keyframes spin {
@@ -289,6 +387,9 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
         <div class="loading-text">3D美術館を読み込み中...</div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="loadingProgressBar"></div>
+        </div>
     </div>
 
     <!-- ヘッダー -->
@@ -330,10 +431,21 @@
         </ul>
     </div>
 
+    <!-- 作品情報表示 -->
+    <div class="artwork-info" id="artworkInfo">
+        <button class="close-btn" id="closeArtworkInfo">&times;</button>
+        <h3 id="artworkTitle">作品名</h3>
+        <p id="artworkDescription">作品の説明がここに表示されます。</p>
+        <p><strong>作者:</strong> <span id="artworkAuthor">作者名</span></p>
+        <p><strong>制作年:</strong> <span id="artworkYear">2024年</span></p>
+        <p><strong>技法:</strong> <span id="artworkTechnique">3DCG</span></p>
+    </div>
+
     <!-- UI要素 -->
     <div class="ui-container">
         <button class="ui-button" id="toggleControlsBtn">操作方法</button>
         <button class="ui-button" id="resetPositionBtn">位置リセット</button>
+        <button class="ui-button" id="toggleInfoBtn">作品情報</button>
     </div>
 
     <!-- JavaScript -->
@@ -349,9 +461,13 @@
         // Three.js 3D美術館
         let scene, camera, renderer, controls;
         let loadingScreen = document.getElementById('loadingScreen');
+        let loadingProgressBar = document.getElementById('loadingProgressBar');
         let controlsInfo = document.getElementById('controlsInfo');
+        let artworkInfo = document.getElementById('artworkInfo');
         let toggleControlsBtn = document.getElementById('toggleControlsBtn');
         let resetPositionBtn = document.getElementById('resetPositionBtn');
+        let toggleInfoBtn = document.getElementById('toggleInfoBtn');
+        let closeArtworkInfo = document.getElementById('closeArtworkInfo');
 
         // キーボード操作のための変数
         let keys = {
@@ -361,12 +477,62 @@
             d: false
         };
         let isMobile = false; // モバイルデバイス判定用
+        let raycaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2();
+        let selectedArtwork = null;
+        let artworks = []; // 作品データを格納
+
+        // 作品データ
+        const artworkData = {
+            'kumayu': {
+                title: 'くまゆ',
+                description: '崇城大学3Dアートコースのマスコットキャラクター。温かみのあるデザインで親しみやすさを表現しています。',
+                author: '3Dアートコース学生',
+                year: '2024年',
+                technique: '3DCG・Blender'
+            },
+            'jw': {
+                title: 'JW彫刻作品',
+                description: '伝統的な彫刻技法を用いた立体作品。物理的な素材の質感と重量感を大切にした造形です。',
+                author: '広瀬教授',
+                year: '2023年',
+                technique: '彫刻・立体造形'
+            },
+            'box': {
+                title: '幾何学的彫刻',
+                description: 'シンプルな幾何学形状を組み合わせた現代的な彫刻作品。ミニマルな美しさを追求しています。',
+                author: '学生作品',
+                year: '2024年',
+                technique: '立体造形・彫刻'
+            },
+            'sphere': {
+                title: '球体彫刻',
+                description: '完璧な球体をモチーフにした彫刻作品。光と影の相互作用を意識した造形です。',
+                author: '学生作品',
+                year: '2024年',
+                technique: '立体造形・彫刻'
+            },
+            'cylinder': {
+                title: '円柱彫刻',
+                description: '円柱の形状を活かした彫刻作品。垂直性と安定感を表現しています。',
+                author: '学生作品',
+                year: '2024年',
+                technique: '立体造形・彫刻'
+            },
+            'cone': {
+                title: '円錐彫刻',
+                description: '円錐の鋭い先端と安定した底面の対比を活かした彫刻作品。',
+                author: '学生作品',
+                year: '2024年',
+                technique: '立体造形・彫刻'
+            }
+        };
 
         // 初期化関数
         function init() {
             // シーンの作成
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f0f0);
+            scene.background = new THREE.Color(0xf8f9fa);
 
             // カメラの作成
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -377,6 +543,9 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
             // OrbitControlsの設定
@@ -388,32 +557,59 @@
             controls.maxDistance = 50;
             controls.maxPolarAngle = Math.PI / 2;
 
-            // 光源の追加
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            // 高度な照明設定
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
             scene.add(ambientLight);
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            // メイン照明
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
             directionalLight.position.set(10, 20, 10);
             directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            directionalLight.shadow.camera.near = 0.5;
+            directionalLight.shadow.camera.far = 50;
+            directionalLight.shadow.camera.left = -25;
+            directionalLight.shadow.camera.right = 25;
+            directionalLight.shadow.camera.top = 25;
+            directionalLight.shadow.camera.bottom = -25;
             scene.add(directionalLight);
+
+            // 補助照明
+            const pointLight1 = new THREE.PointLight(0xffffff, 0.5, 30);
+            pointLight1.position.set(-10, 10, -10);
+            scene.add(pointLight1);
+
+            const pointLight2 = new THREE.PointLight(0xffffff, 0.5, 30);
+            pointLight2.position.set(10, 10, 10);
+            scene.add(pointLight2);
 
             // 床の作成
             const floorGeometry = new THREE.PlaneGeometry(100, 100);
             const floorMaterial = new THREE.MeshStandardMaterial({ 
-                color: 0xeeeeee,
-                roughness: 0.8,
-                metalness: 0.2
+                color: 0xf5f5f5,
+                roughness: 0.1,
+                metalness: 0.0
             });
             const floor = new THREE.Mesh(floorGeometry, floorMaterial);
             floor.rotation.x = -Math.PI / 2;
             floor.receiveShadow = true;
             scene.add(floor);
 
+            // 天井の作成
+            createCeiling();
+
             // 壁の作成
             createWalls();
 
+            // 装飾要素の追加
+            createDecorations();
+
             // サンプル作品の配置
             createSampleArtworks();
+
+            // マウスクリックイベントの追加
+            renderer.domElement.addEventListener('click', onMouseClick, false);
 
             // イベントリスナーの設定
             window.addEventListener('resize', onWindowResize, false);
@@ -453,22 +649,47 @@
                 resetPosition();
             });
 
+            toggleInfoBtn.addEventListener('click', function() {
+                artworkInfo.classList.toggle('show');
+            });
+
+            closeArtworkInfo.addEventListener('click', function() {
+                artworkInfo.classList.remove('show');
+            });
+
             // ローディング画面を非表示
-            loadingScreen.style.opacity = '0';
             setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 2000);
 
             // アニメーションループの開始
             animate();
+        }
+
+        // 天井の作成関数
+        function createCeiling() {
+            const ceilingGeometry = new THREE.PlaneGeometry(100, 100);
+            const ceilingMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xf8f9fa,
+                roughness: 0.8,
+                metalness: 0.0
+            });
+            const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+            ceiling.position.y = 10;
+            ceiling.rotation.x = Math.PI / 2;
+            ceiling.receiveShadow = true;
+            scene.add(ceiling);
         }
 
         // 壁の作成関数
         function createWalls() {
             const wallMaterial = new THREE.MeshStandardMaterial({ 
                 color: 0xffffff,
-                roughness: 0.7,
-                metalness: 0.1
+                roughness: 0.3,
+                metalness: 0.0
             });
 
             // 北壁
@@ -498,6 +719,43 @@
             scene.add(westWall);
         }
 
+        // 装飾要素の作成関数
+        function createDecorations() {
+            // 柱の追加
+            for (let i = -30; i <= 30; i += 20) {
+                for (let j = -30; j <= 30; j += 20) {
+                    if (Math.abs(i) < 40 && Math.abs(j) < 40) continue; // 中央部分は避ける
+                    
+                    const columnGeometry = new THREE.CylinderGeometry(0.3, 0.3, 10, 16);
+                    const columnMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xf0f0f0,
+                        roughness: 0.2,
+                        metalness: 0.1
+                    });
+                    const column = new THREE.Mesh(columnGeometry, columnMaterial);
+                    column.position.set(i, 5, j);
+                    column.castShadow = true;
+                    column.receiveShadow = true;
+                    scene.add(column);
+                }
+            }
+
+            // 照明の追加
+            for (let i = -40; i <= 40; i += 20) {
+                for (let j = -40; j <= 40; j += 20) {
+                    const lightGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+                    const lightMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0xffffff,
+                        emissive: 0xffffff,
+                        emissiveIntensity: 0.5
+                    });
+                    const light = new THREE.Mesh(lightGeometry, lightMaterial);
+                    light.position.set(i, 9, j);
+                    scene.add(light);
+                }
+            }
+        }
+
         // サンプル作品の作成
         function createSampleArtworks() {
             // くまゆモデルの読み込み
@@ -506,6 +764,7 @@
                 const model = gltf.scene;
                 model.position.set(0, 0, 0);
                 model.scale.set(1, 1, 1);
+                model.userData = { type: 'kumayu', name: 'くまゆ' };
 
                 // 影の設定
                 model.traverse(function(child) {
@@ -515,7 +774,9 @@
                     }
                 });
 
+                artworks.push(model);
                 scene.add(model);
+                updateLoadingProgress(20);
             });
 
             // ProfHiroSculpterのjw.objモデルの読み込み
@@ -524,6 +785,7 @@
                 // モデルの位置とスケールを設定
                 obj.position.set(8, 0, 0);
                 obj.scale.set(1, 1, 1);
+                obj.userData = { type: 'jw', name: 'JW彫刻作品' };
 
                 // 影の設定
                 obj.traverse(function(child) {
@@ -539,7 +801,9 @@
                     }
                 });
 
+                artworks.push(obj);
                 scene.add(obj);
+                updateLoadingProgress(40);
             });
 
             // 彫刻作品1（箱）
@@ -554,7 +818,10 @@
             boxMesh.rotation.y = Math.PI / 4;
             boxMesh.castShadow = true;
             boxMesh.receiveShadow = true;
+            boxMesh.userData = { type: 'box', name: '幾何学的彫刻' };
+            artworks.push(boxMesh);
             scene.add(boxMesh);
+            updateLoadingProgress(60);
 
             // 彫刻作品2（球）
             const sphereGeometry = new THREE.SphereGeometry(0.75, 32, 32);
@@ -567,7 +834,10 @@
             sphereMesh.position.set(5, 1, -5);
             sphereMesh.castShadow = true;
             sphereMesh.receiveShadow = true;
+            sphereMesh.userData = { type: 'sphere', name: '球体彫刻' };
+            artworks.push(sphereMesh);
             scene.add(sphereMesh);
+            updateLoadingProgress(80);
 
             // 彫刻作品3（円柱）
             const cylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
@@ -580,6 +850,8 @@
             cylinderMesh.position.set(-5, 1, 5);
             cylinderMesh.castShadow = true;
             cylinderMesh.receiveShadow = true;
+            cylinderMesh.userData = { type: 'cylinder', name: '円柱彫刻' };
+            artworks.push(cylinderMesh);
             scene.add(cylinderMesh);
 
             // 彫刻作品4（円錐）
@@ -593,7 +865,10 @@
             coneMesh.position.set(5, 1, 5);
             coneMesh.castShadow = true;
             coneMesh.receiveShadow = true;
+            coneMesh.userData = { type: 'cone', name: '円錐彫刻' };
+            artworks.push(coneMesh);
             scene.add(coneMesh);
+            updateLoadingProgress(100);
         }
 
         // ウィンドウリサイズ時の処理
@@ -643,6 +918,44 @@
                 camera.position.addScaledVector(right, speed);
                 controls.target.addScaledVector(right, speed);
             }
+        }
+
+        // ローディング進捗更新
+        function updateLoadingProgress(progress) {
+            if (loadingProgressBar) {
+                loadingProgressBar.style.width = progress + '%';
+            }
+        }
+
+        // マウスクリック時の処理
+        function onMouseClick(event) {
+            // マウス位置を正規化
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // レイキャスティング
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(artworks);
+
+            if (intersects.length > 0) {
+                const selectedObject = intersects[0].object;
+                const artworkType = selectedObject.userData.type;
+                
+                if (artworkData[artworkType]) {
+                    showArtworkInfo(artworkData[artworkType]);
+                }
+            }
+        }
+
+        // 作品情報表示
+        function showArtworkInfo(data) {
+            document.getElementById('artworkTitle').textContent = data.title;
+            document.getElementById('artworkDescription').textContent = data.description;
+            document.getElementById('artworkAuthor').textContent = data.author;
+            document.getElementById('artworkYear').textContent = data.year;
+            document.getElementById('artworkTechnique').textContent = data.technique;
+            
+            artworkInfo.classList.add('show');
         }
 
         // アニメーションループ
