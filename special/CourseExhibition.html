@@ -36,9 +36,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/InertiaPlugin.min.js"></script>
 
-    <!-- Three.js Library for Galaxy Effect -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -403,77 +400,6 @@
             width: 100%;
         }
 
-        /* 特別イベント */
-        .special-event {
-            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
-            color: white;
-            border-radius: 25px;
-            padding: 45px;
-            margin: 40px 0 50px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.4);
-        }
-
-        .galaxy-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: auto;
-            z-index: 1;
-            opacity: 0.6;
-            border-radius: 25px;
-            background: transparent;
-            mix-blend-mode: screen;
-        }
-
-        .special-event h3,
-        .special-event p {
-            position: relative;
-            z-index: 2;
-        }
-
-        .special-event::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .special-event h3 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .special-event p {
-            font-size: 1.5rem;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-            letter-spacing: 0.5px;
-        }
-
         /* マップセクション */
         .map-container {
             margin-top: 40px;
@@ -528,51 +454,66 @@
 
         /* ギャラリーセクション */
         .gallery-section {
-            margin: 60px 0;
+            margin: 80px 0;
         }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-auto-rows: 220px;
+            gap: 24px;
             margin-top: 30px;
         }
 
         .gallery-item {
             position: relative;
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.45s ease;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
         }
 
         .gallery-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 55%), radial-gradient(circle at 80% 80%, rgba(102, 126, 234, 0.25), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.45s ease;
+            pointer-events: none;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
         }
 
         .gallery-item img {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.6s ease;
+            filter: saturate(110%);
         }
 
         .gallery-item:hover img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
         .gallery-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            inset: auto 0 0 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.95) 80%);
             color: white;
-            padding: 30px 20px 20px;
-            transform: translateY(100%);
-            transition: transform 0.4s ease;
+            padding: 28px 24px 20px;
+            transform: translateY(55%);
+            transition: transform 0.45s ease;
         }
 
         .gallery-item:hover .gallery-overlay {
@@ -580,16 +521,29 @@
         }
 
         .gallery-overlay h4 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            letter-spacing: 0.4px;
         }
 
         .gallery-overlay p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             opacity: 0.9;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        .gallery-item.tall {
+            grid-row: span 2;
+        }
+
+        .gallery-item.wide {
+            grid-column: span 2;
+        }
+
+        .gallery-item.wide.tall {
+            grid-column: span 2;
+            grid-row: span 2;
         }
 
         /* ScrollFloat Animation Styles */
@@ -655,25 +609,18 @@
                 height: 350px;
             }
 
-            .special-event {
-                padding: 30px 20px;
-            }
-
-            .special-event h3 {
-                font-size: 1.5rem;
-            }
-
-            .special-event p {
-                font-size: 1.2rem;
-            }
-
             .gallery-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                grid-auto-rows: 260px;
+                gap: 18px;
             }
 
-            .gallery-item img {
-                height: 200px;
+            .gallery-item,
+            .gallery-item.tall,
+            .gallery-item.wide,
+            .gallery-item.wide.tall {
+                grid-column: span 1;
+                grid-row: span 1;
             }
         }
     </style>
@@ -716,24 +663,6 @@
 
     <!-- メインコンテンツ -->
     <div class="main-content" data-aos="fade-up">
-        <!-- オープニングパーティー -->
-        <div class="special-event">
-            <div class="galaxy-container" id="galaxyEffect"></div>
-            <h3 class="animate-scroll-float" data-text="オープニングパーティー"><i class="fas fa-champagne-glasses"></i> <span class="scroll-float-text"></span></h3>
-            <p>11月8日(土) 18:00 ～ 20:00</p>
-        </div>
-
-        <!-- オープニングパーティー説明 -->
-        <div class="info-section">
-            <div class="info-card">
-                <div class="info-item">
-                    <i class="fas fa-comments info-icon"></i>
-                    <span class="info-label">パーティーについて：</span>
-                    <span class="info-value">9日からの展示に先駆け、学生との交流や展示作品の解説も兼ねたオープニングパーティーを開催します。軽食も用意しておりますのでお気軽に参加ください！（※無料）</span>
-                </div>
-            </div>
-        </div>
-
         <!-- 開催情報 -->
         <div class="info-section">
             <h2 class="animate-scroll-float" data-text="開催情報"><i class="fas fa-info-circle"></i> <span class="scroll-float-text"></span></h2>
@@ -769,36 +698,71 @@
             </div>
         </div>
 
-        <!-- 昨年の様子 -->
-        <div class="info-section">
-            <h2 class="animate-scroll-float" data-text="昨年の様子"><i class="fas fa-images"></i> <span class="scroll-float-text"></span></h2>
+        <!-- ギャラリー -->
+        <div class="info-section gallery-section">
+            <h2 class="animate-scroll-float" data-text="展示の様子"><i class="fas fa-images"></i> <span class="scroll-float-text"></span></h2>
             <div class="gallery-grid">
-                <div class="gallery-item" data-aos="fade-up">
-                    <img src="../images/events/Takasegura/Screenshot 2025-10-12 211846.webp" alt="昨年のコース展の様子">
+                <div class="gallery-item wide tall" data-aos="fade-up">
+                    <img src="../images/Exhibition/Takasegura/Image (6).webp" alt="">
                     <div class="gallery-overlay">
-                        <h4>昨年の展示風景</h4>
-                        <p>2024年のコース展での作品展示の様子</p>
+                        <h4></h4>
+                        <p></p>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
-                    <img src="../images/events/Takasegura/Screenshot 2025-10-12 211857.webp" alt="昨年のコース展の様子">
+                <div class="gallery-item tall" data-aos="fade-up" data-aos-delay="120">
+                    <img src="../images/Exhibition/Takasegura/Image (7).webp" alt="立体作品を鑑賞する来場者">
                     <div class="gallery-overlay">
-                        <h4>来場者の様子</h4>
-                        <p>多くの方々にご来場いただいた昨年の展示会</p>
+                        <h4></h4>
+                        <p></p>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="fade-up" data-aos-delay="400">
-                    <img src="../images/events/Takasegura/Screenshot 2025-10-12 211906.webp" alt="昨年のコース展の様子">
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="180">
+                    <img src="../images/Exhibition/Takasegura/Image (8).webp" alt="照明演出が施された展示空間">
                     <div class="gallery-overlay">
-                        <h4>作品展示の様子</h4>
-                        <p>学生たちの3Dアート作品が展示された空間</p>
+                        <h4></h4>
+                        <p></p>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="fade-up" data-aos-delay="600">
-                    <img src="../images/events/Takasegura/Screenshot 2025-10-12 211914.webp" alt="昨年のコース展の様子">
+                <div class="gallery-item wide" data-aos="fade-up" data-aos-delay="240">
+                    <img src="../images/Exhibition/Takasegura/Image (9).webp" alt="展示室内の広がりのある風景">
                     <div class="gallery-overlay">
-                        <h4>展示会の雰囲気</h4>
-                        <p>髙瀬蔵ホールでの温かみのある展示会の様子</p>
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="300">
+                    <img src="../images/Exhibition/Takasegura/Image (10).webp" alt="会場入口付近のインフォメーション">
+                    <div class="gallery-overlay">
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="gallery-item tall" data-aos="fade-up" data-aos-delay="360">
+                    <img src="../images/Exhibition/Takasegura/Image (11).webp" alt="展示室内の高低差を活かした作品配置">
+                    <div class="gallery-overlay">
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="420">
+                    <img src="../images/Exhibition/Takasegura/Image (12).webp" alt="細部にこだわった立体作品">
+                    <div class="gallery-overlay">
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="gallery-item wide" data-aos="fade-up" data-aos-delay="480">
+                    <img src="../images/Exhibition/Takasegura/Image (13).webp" alt="映像作品と立体が共存するセクション">
+                    <div class="gallery-overlay">
+                        <h4></h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="540">
+                    <img src="../images/Exhibition/Takasegura/Image (14).webp" alt="展示空間を彩る壁面ディスプレイ">
+                    <div class="gallery-overlay">
+                        <h4></h4>
+                        <p></p>
                     </div>
                 </div>
             </div>
@@ -862,199 +826,6 @@
     <script>
         // GSAP ScrollTrigger登録
         gsap.registerPlugin(ScrollTrigger);
-
-        // Galaxyエフェクト初期化（Three.js版）
-        function initGalaxyEffect() {
-            console.log('initGalaxyEffect called');
-            console.log('THREE object:', typeof THREE !== 'undefined' ? THREE : 'undefined');
-            console.log('THREE version:', typeof THREE !== 'undefined' ? THREE.REVISION : 'undefined');
-            
-            if (typeof THREE === 'undefined') {
-                console.error('THREE.js library not loaded');
-                return;
-            }
-            
-            const container = document.getElementById('galaxyEffect');
-            console.log('Galaxy container found:', container);
-            if (!container) {
-                console.error('Galaxy container not found');
-                return;
-            }
-
-            // Three.js Renderer初期化
-            const renderer = new THREE.WebGLRenderer({
-                alpha: true,
-                antialias: true,
-                powerPreference: 'high-performance'
-            });
-            
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.setClearColor(0x000000, 0);
-            renderer.setSize(container.offsetWidth, container.offsetHeight);
-
-            // シーン、カメラ、ライトの設定
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-            camera.position.z = 1;
-
-            // 星空のパーティクルシステム
-            const starsGeometry = new THREE.BufferGeometry();
-            const starsCount = 2000;
-            const positions = new Float32Array(starsCount * 3);
-            const colors = new Float32Array(starsCount * 3);
-            const sizes = new Float32Array(starsCount);
-
-            // 星の位置、色、サイズを生成
-            for (let i = 0; i < starsCount; i++) {
-                const i3 = i * 3;
-                
-                // 球面上にランダム配置
-                const radius = 5;
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.random() * Math.PI;
-                
-                positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
-                positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-                positions[i3 + 2] = radius * Math.cos(phi);
-                
-                // 色（虹色の範囲）
-                const hue = Math.random(); // 全色相
-                const saturation = 0.8 + Math.random() * 0.2;
-                const lightness = 0.7 + Math.random() * 0.3;
-                const color = new THREE.Color().setHSL(hue, saturation, lightness);
-                
-                colors[i3] = color.r;
-                colors[i3 + 1] = color.g;
-                colors[i3 + 2] = color.b;
-                
-                // サイズ
-                sizes[i] = Math.random() * 3 + 1;
-            }
-
-            starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            starsGeometry.setAttribute('starColor', new THREE.BufferAttribute(colors, 3));
-            starsGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-            // 星のマテリアル
-            const starsMaterial = new THREE.ShaderMaterial({
-                uniforms: {
-                    time: { value: 0 },
-                    mouse: { value: new THREE.Vector2(0.5, 0.5) }
-                },
-                vertexShader: `
-                    attribute float size;
-                    attribute vec3 starColor;
-                    varying vec3 vColor;
-                    uniform float time;
-                    uniform vec2 mouse;
-                    
-                    void main() {
-                        vColor = starColor;
-                        
-                        vec3 pos = position;
-                        
-                        // 時間ベースのアニメーション
-                        pos.x += sin(time * 0.5 + pos.y * 0.1) * 0.1;
-                        pos.y += cos(time * 0.3 + pos.z * 0.1) * 0.1;
-                        
-                        // マウス位置に基づく影響
-                        vec2 mouseInfluence = (mouse - 0.5) * 2.0;
-                        pos.x += mouseInfluence.x * 0.5;
-                        pos.y += mouseInfluence.y * 0.5;
-                        
-                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-                        gl_PointSize = size * (300.0 / -mvPosition.z) * (0.5 + 0.5 * sin(time + pos.x * 0.1));
-                        gl_Position = projectionMatrix * mvPosition;
-                    }
-                `,
-                fragmentShader: `
-                    varying vec3 vColor;
-                    
-                    void main() {
-                        float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
-                        float alpha = 1.0 - smoothstep(0.0, 0.5, distanceToCenter);
-                        gl_FragColor = vec4(vColor, alpha * 0.6);
-                    }
-                `,
-                transparent: true,
-                vertexColors: true,
-                blending: THREE.AdditiveBlending
-            });
-
-            const stars = new THREE.Points(starsGeometry, starsMaterial);
-            scene.add(stars);
-
-            // マウス状態
-            const mouse = new THREE.Vector2(0.5, 0.5);
-            const targetMouse = new THREE.Vector2(0.5, 0.5);
-
-            // マウスイベント
-            function handleMouseMove(e) {
-                const rect = container.getBoundingClientRect();
-                targetMouse.x = (e.clientX - rect.left) / rect.width;
-                targetMouse.y = 1.0 - (e.clientY - rect.top) / rect.height;
-            }
-
-            function handleMouseLeave() {
-                targetMouse.set(0.5, 0.5);
-            }
-
-            container.addEventListener('mousemove', handleMouseMove);
-            container.addEventListener('mouseleave', handleMouseLeave);
-
-            // リサイズ処理
-            function resize() {
-                const width = container.offsetWidth;
-                const height = container.offsetHeight;
-                renderer.setSize(width, height);
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix();
-            }
-
-            window.addEventListener('resize', resize);
-            resize();
-
-            // アニメーションループ
-            let animateId;
-            function animate() {
-                animateId = requestAnimationFrame(animate);
-                
-                // 時間の更新
-                starsMaterial.uniforms.time.value += 0.01;
-                
-                // マウス位置の滑らかな追従
-                mouse.lerp(targetMouse, 0.1);
-                starsMaterial.uniforms.mouse.value.copy(mouse);
-                
-                // 星の回転
-                stars.rotation.y += 0.001;
-                stars.rotation.x += 0.0005;
-
-                renderer.render(scene, camera);
-            }
-
-            animate();
-            container.appendChild(renderer.domElement);
-
-            console.log('Galaxy effect initialization completed');
-
-            // クリーンアップ関数を返す
-            return () => {
-                console.log('Cleaning up Galaxy effect');
-                if (animateId) {
-                    cancelAnimationFrame(animateId);
-                }
-                window.removeEventListener('resize', resize);
-                container.removeEventListener('mousemove', handleMouseMove);
-                container.removeEventListener('mouseleave', handleMouseLeave);
-                if (container.contains(renderer.domElement)) {
-                    container.removeChild(renderer.domElement);
-                }
-                renderer.dispose();
-                starsGeometry.dispose();
-                starsMaterial.dispose();
-            };
-        }
 
         // SVG Dot Grid初期化
         function initDotGrid() {
@@ -1294,13 +1065,9 @@
                 offset: 100
             });
 
-            // Galaxyエフェクト初期化
-            console.log('Starting Galaxy effect initialization');
-            let cleanupGalaxy = initGalaxyEffect();
-
             // Three.js Dot Grid初期化
             console.log('Starting Dot Grid initialization');
-            let cleanupDotGrid = initDotGrid();
+            const cleanupDotGrid = initDotGrid();
 
             // ScrollFloatアニメーション初期化
             initScrollFloatAnimations();
@@ -1321,9 +1088,6 @@
 
             // ページ離脱時のクリーンアップ
             window.addEventListener('beforeunload', function() {
-                if (cleanupGalaxy) {
-                    cleanupGalaxy();
-                }
                 if (cleanupDotGrid) {
                     cleanupDotGrid();
                 }
