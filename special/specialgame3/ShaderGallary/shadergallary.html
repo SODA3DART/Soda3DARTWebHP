@@ -1,1138 +1,813 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLSLシェーダーギャラリー | 崇城大学芸術学部美術学科 3Dアートコース</title>
-    <meta name="description" content="GLSLシェーダーで作成された様々な視覚効果を展示するギャラリーページです。">
-    <link rel="icon" href="../../../images/logohedder.png" type="image/png">
+    <title>GLSL ART GALLERY | SODA 3D ART</title>
+    <meta name="description" content="A collection of advanced GLSL shaders.">
 
-    <!-- Font imports -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Cinzel:wght@400;700&family=Noto+Sans+JP:wght@300;400&display=swap"
+        rel="stylesheet">
 
-    <!-- Three.js ライブラリ -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
-    <!-- OrbitControls for camera manipulation -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <!-- Three.js & Post Processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
     <style>
+        :root {
+            --primary: #00ffff;
+            --secondary: #ff00ff;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Sans JP', sans-serif;
         }
 
         body {
-            background-color: #111;
+            background-color: var(--bg);
             color: #fff;
-            line-height: 1.6;
-            overflow-x: hidden;
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        .ui-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            background: radial-gradient(circle at center, transparent 0%, #000 150%);
         }
 
         header {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
             text-align: center;
-            position: relative;
-            z-index: 10;
+            pointer-events: auto;
+            z-index: 20;
+            mix-blend-mode: difference;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 10px;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
             margin-bottom: 10px;
-            color: #4285f4;
-            text-shadow: 0 0 10px rgba(66, 133, 244, 0.7);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
-        .description {
-            max-width: 800px;
-            margin: 0 auto 20px;
-            font-size: 1.1rem;
+        .subtitle {
+            font-size: 1rem;
+            color: var(--primary);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0.8;
         }
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .shader-card {
-            background-color: #222;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .shader-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .shader-canvas-container {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .shader-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .shader-info {
-            padding: 15px;
-        }
-
-        .shader-title {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-            color: #4285f4;
-        }
-
-        .shader-description {
-            font-size: 0.9rem;
-            color: #ccc;
-            margin-bottom: 10px;
-        }
-
-        .shader-code-btn {
-            display: inline-block;
-            background-color: #333;
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .shader-code-btn:hover {
-            background-color: #4285f4;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 100;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background-color: #222;
-            margin: 50px auto;
-            padding: 20px;
-            width: 90%;
-            max-width: 800px;
-            border-radius: 10px;
-            position: relative;
-        }
-
-        .close-btn {
+        /* Navigation / Gallery Interface */
+        .gallery-nav {
             position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
             cursor: pointer;
-            color: #aaa;
+            transition: all 0.3s ease;
         }
 
-        .close-btn:hover {
-            color: #fff;
+        .nav-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            transform: scale(1.5);
         }
 
-        .code-display {
-            background-color: #1a1a1a;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-top: 15px;
+        /* Info Panel */
+        .info-panel {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            transform: translateY(-50%);
+            width: 300px;
+            padding: 30px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 4px;
+            pointer-events: auto;
+            transition: all 0.5s ease;
+            opacity: 0;
+            /* Hidden initially */
         }
 
-        pre {
-            color: #f8f8f2;
-            font-family: monospace;
-            white-space: pre-wrap;
+        .info-panel.visible {
+            opacity: 1;
+            left: 80px;
         }
 
-        .fullscreen-shader {
-            display: none;
+        .info-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        .info-desc {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 0.9rem;
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .code-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Code Overlay */
+        .code-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 50;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 100;
+            display: none;
+            padding: 50px;
+            overflow: auto;
         }
 
-        .fullscreen-canvas {
+        .code-content {
+            font-family: 'Fira Code', monospace;
+            color: #0f0;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .close-code {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Loading */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            background: #000;
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+
+        .loader-text {
+            font-size: 2rem;
+            letter-spacing: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+                text-shadow: 0 0 0 var(--primary);
+            }
+
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 20px var(--primary);
+            }
+
+            100% {
+                opacity: 0.5;
+                text-shadow: 0 0 0 var(--primary);
+            }
         }
 
         .back-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 60;
-            display: none;
+            top: 30px;
+            right: 30px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            pointer-events: auto;
+            z-index: 30;
         }
 
         .back-btn:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .code-overlay-btn {
-            position: fixed;
-            top: 20px;
-            right: 100px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 60;
-            display: none;
-        }
-
-        .code-overlay-btn:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .code-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            overflow: auto;
-            z-index: 55;
-            display: none;
-            padding: 20px;
-        }
-
-        .code-overlay pre {
-            color: #f8f8f2;
-            font-family: monospace;
-            white-space: pre-wrap;
-            margin-top: 60px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #000;
-            margin-top: 40px;
-        }
-
-        .back-to-site {
-            color: #4285f4;
-            text-decoration: none;
-        }
-
-        .back-to-site:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
+            opacity: 1;
+            text-shadow: 0 0 10px #fff;
         }
     </style>
 </head>
+
 <body>
-    <header>
-        <h1>GLSLシェーダーギャラリー</h1>
-        <p class="description">
-            GLSLシェーダーを使用して作成された様々な視覚効果を3Dオブジェクトに適用して展示しています。各シェーダーのサムネイルをクリックすると全画面表示になります。マウスドラッグで視点を自由に変更でき、ホイールでズームイン・アウトができます。「コードを見る」ボタンでシェーダーコードを確認できます。
-        </p>
-    </header>
 
-    <div class="gallery" id="shader-gallery">
-        <!-- シェーダーカードはJavaScriptで動的に生成されます -->
+    <div class="loader" id="loader">
+        <div class="loader-text">INITIALIZING ART CORE...</div>
     </div>
 
-    <div class="modal" id="code-modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">&times;</span>
-            <h2 id="modal-title"></h2>
-            <div class="code-display">
-                <pre id="shader-code"></pre>
-            </div>
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <header>
+            <h1>GLSL GALLERY</h1>
+            <div class="subtitle">Advanced Raymarching Collection</div>
+        </header>
+
+        <a href="../../../index.html" class="back-btn">EXIT GALLERY</a>
+
+        <div class="info-panel" id="infoPanel">
+            <h2 class="info-title" id="shaderTitle">Shader Name</h2>
+            <p class="info-desc" id="shaderDesc">Description goes here.</p>
+            <button class="code-btn" id="viewCodeBtn">VIEW SOURCE</button>
+        </div>
+
+        <div class="gallery-nav" id="navContainer">
+            <!-- Dots generated by JS -->
         </div>
     </div>
 
-    <div class="fullscreen-shader" id="fullscreen-container">
-        <!-- 全画面シェーダー表示用 -->
-        <div class="code-overlay" id="code-overlay">
-            <pre id="overlay-shader-code"></pre>
-        </div>
+    <div class="code-overlay" id="codeOverlay">
+        <div class="close-code" id="closeCode">&times;</div>
+        <pre class="code-content" id="codeContent"></pre>
     </div>
-
-    <button class="back-btn" id="back-button">戻る</button>
-    <button class="code-overlay-btn" id="code-overlay-btn">コードを表示</button>
-
-    <footer>
-        <p>&copy; 2025 崇城大学芸術学部美術学科 3Dアートコース</p>
-        <p><a href="../../../index.html" class="back-to-site">サイトに戻る</a></p>
-    </footer>
 
     <script>
-        // シェーダーギャラリーのデータ
-        const shaderGallery = [
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            bloomStrength: 1.5,
+            bloomRadius: 0.4,
+            bloomThreshold: 0.1
+        };
+
+        // --- SHADER DATA ---
+        const SHADERS = [
             {
-                id: 'wave-shader',
-                title: '波紋シェーダー (3D)',
-                description: '動的な波紋パターンを3Dオブジェクトに適用したシェーダー',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
+                id: 'fractal',
+                title: 'FRACTAL COSMOS',
+                desc: '無限に広がるマンデルボックス・フラクタル。数学的構造が織りなす宇宙。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec2 uMouse;
 
-                    void main() {
-                        vec2 uv = vUv;
-                        vec2 center = vec2(0.5, 0.5);
-                        float dist = distance(uv, center);
-
-                        // 3D効果を強化するために法線を使用
-                        float normalEffect = dot(vNormal, vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
-
-                        // 波紋効果
-                        float wave = sin(dist * 50.0 - time * 2.0) * 0.5 + 0.5;
-
-                        // 3D位置に基づいた効果を追加
-                        float posEffect = sin(vPosition.x * 5.0 + time) * 0.2 + 0.8;
-
-                        // 色の計算
-                        vec3 color = vec3(0.0, 0.5, 1.0) * wave * posEffect;
-                        color += vec3(0.0, 0.1, 0.2) * normalEffect;
-
-                        gl_FragColor = vec4(color, 1.0);
-                    }
-                `
-            },
-            {
-                id: 'gradient-noise',
-                title: 'グラデーションノイズ (3D)',
-                description: 'パーリンノイズを使用したカラフルなグラデーションを3Dオブジェクトに適用',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
-
-                    // 2D Random
-                    float random(in vec2 st) {
-                        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-                    }
-
-                    // 2D Noise based on Morgan McGuire
-                    float noise(in vec2 st) {
-                        vec2 i = floor(st);
-                        vec2 f = fract(st);
-
-                        // Four corners in 2D of a tile
-                        float a = random(i);
-                        float b = random(i + vec2(1.0, 0.0));
-                        float c = random(i + vec2(0.0, 1.0));
-                        float d = random(i + vec2(1.0, 1.0));
-
-                        // Smooth Interpolation
-                        vec2 u = f * f * (3.0 - 2.0 * f);
-
-                        // Mix 4 corners percentages
-                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-                    }
-
-                    void main() {
-                        // UVを使用
-                        vec2 uv = vUv;
-
-                        // 3D位置を使用して座標系をスケーリング
-                        vec2 pos = vec2(uv * 10.0);
-                        pos.x += time * 0.5;
-
-                        // 法線を使用して追加のノイズ変調を作成
-                        float normalNoise = dot(vNormal, vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1))) * 0.5 + 0.5;
-
-                        // 3D位置に基づいた効果
-                        float posEffect = sin(vPosition.x * 2.0 + vPosition.y * 2.0 + vPosition.z * 2.0 + time) * 0.2 + 0.8;
-
-                        // 複数のノイズオクターブを使用
-                        float n = noise(pos * 0.5 + vPosition.xy);
-                        n += noise(pos * 1.0) * 0.5;
-                        n += noise(pos * 2.0) * 0.25;
-                        n += noise(pos * 4.0) * 0.125;
-
-                        // 法線ノイズを適用
-                        n = mix(n, normalNoise, 0.3);
-
-                        // 3D位置効果を適用
-                        n *= posEffect;
-
-                        // カラーリング
-                        vec3 color = vec3(0.0);
-                        color.r = sin(n * 3.1415 + time) * 0.5 + 0.5;
-                        color.g = sin(n * 3.1415 + time + 2.094) * 0.5 + 0.5;
-                        color.b = sin(n * 3.1415 + time + 4.188) * 0.5 + 0.5;
-
-                        gl_FragColor = vec4(color, 1.0);
-
-                    }
-                `
-            },
-            {
-                id: 'fire-shader',
-                title: '地球',
-                description: 'レイマーチングを用いた地球を再現したシェーダー',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
-
-                    #define PI 3.14159265359
                     #define MAX_STEPS 100
                     #define MAX_DIST 100.0
                     #define SURF_DIST 0.001
 
-                    // ノイズ関数
-                    float hash(float n) {
-                        return fract(sin(n) * 43758.5453);
+                    // Rotation matrix
+                    mat2 rot(float a) {
+                        float s = sin(a), c = cos(a);
+                        return mat2(c, -s, s, c);
                     }
 
+                    // Mandelbox Distance Estimator
+                    float mandelbox(vec3 p) {
+                        float scale = 2.8;
+                        vec3 offset = p;
+                        float dr = 1.0;
+                        
+                        for (int i = 0; i < 10; i++) {
+                            p.xy = clamp(p.xy, -1.0, 1.0) * 2.0 - p.xy;
+                            float r2 = dot(p, p);
+                            if (r2 < 0.5) { 
+                                p *= 4.0; 
+                                dr *= 4.0; 
+                            } else if (r2 < 1.0) { 
+                                p /= r2; 
+                                dr /= r2; 
+                            }
+                            p = p * scale + offset;
+                            dr = dr * scale + 1.0;
+                        }
+                        return length(p) / abs(dr);
+                    }
+
+                    float GetDist(vec3 p) {
+                        p.xz *= rot(uTime * 0.1);
+                        p.xy *= rot(uTime * 0.05);
+                        return mandelbox(p);
+                    }
+
+                    float RayMarch(vec3 ro, vec3 rd) {
+                        float dO = 0.0;
+                        for(int i=0; i<MAX_STEPS; i++) {
+                            vec3 p = ro + rd*dO;
+                            float dS = GetDist(p);
+                            dO += dS;
+                            if(dO>MAX_DIST || dS<SURF_DIST) break;
+                        }
+                        return dO;
+                    }
+
+                    vec3 GetNormal(vec3 p) {
+                        float d = GetDist(p);
+                        vec2 e = vec2(0.001, 0);
+                        vec3 n = d - vec3(
+                            GetDist(p-e.xyy),
+                            GetDist(p-e.yxy),
+                            GetDist(p-e.yyx));
+                        return normalize(n);
+                    }
+
+                    void main() {
+                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        vec3 ro = vec3(0, 0, -3.5); // Camera position
+                        vec3 rd = normalize(vec3(uv.x, uv.y, 1));
+
+                        float d = RayMarch(ro, rd);
+                        vec3 col = vec3(0);
+
+                        if(d < MAX_DIST) {
+                            vec3 p = ro + rd * d;
+                            vec3 n = GetNormal(p);
+                            vec3 r = reflect(rd, n);
+
+                            // Lighting
+                            vec3 lightPos = vec3(2, 4, -3);
+                            float dif = clamp(dot(n, normalize(lightPos)), 0.0, 1.0);
+                            
+                            // Coloring based on position and normal
+                            col = vec3(dif);
+                            col += 0.5 * sin(p * 2.0 + uTime);
+                            col *= vec3(0.2, 0.8, 1.0); // Cyan tint
+                            
+                            // Glow
+                            float glow = 1.0 / (1.0 + d * d * 0.1);
+                            col += glow * vec3(0.1, 0.3, 0.8);
+                        } else {
+                            // Background glow
+                            col = vec3(0.05, 0.05, 0.1) * (1.0 - length(uv));
+                        }
+
+                        gl_FragColor = vec4(col, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'liquid',
+                title: 'LIQUID CHROME',
+                desc: '流体金属のシミュレーション。環境マッピングによる反射表現。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec2 uMouse;
+
+                    #define MAX_STEPS 100
+                    #define MAX_DIST 100.0
+                    #define SURF_DIST 0.001
+
+                    // Noise functions
+                    float hash(float n) { return fract(sin(n) * 43758.5453); }
                     float noise(vec3 x) {
                         vec3 p = floor(x);
                         vec3 f = fract(x);
                         f = f * f * (3.0 - 2.0 * f);
-
-                        float n = p.x + p.y * 157.0 + 113.0 * p.z;
-                        return mix(
-                            mix(
-                                mix(hash(n + 0.0), hash(n + 1.0), f.x),
-                                mix(hash(n + 157.0), hash(n + 158.0), f.x),
-                                f.y),
-                            mix(
-                                mix(hash(n + 113.0), hash(n + 114.0), f.x),
-                                mix(hash(n + 270.0), hash(n + 271.0), f.x),
-                                f.y),
-                            f.z);
+                        float n = p.x + p.y * 57.0 + 113.0 * p.z;
+                        return mix(mix(mix(hash(n + 0.0), hash(n + 1.0), f.x),
+                                       mix(hash(n + 57.0), hash(n + 58.0), f.x), f.y),
+                                   mix(mix(hash(n + 113.0), hash(n + 114.0), f.x),
+                                       mix(hash(n + 170.0), hash(n + 171.0), f.x), f.y), f.z);
                     }
 
-                    // FBM (Fractal Brownian Motion)
                     float fbm(vec3 p) {
                         float f = 0.0;
-                        float amp = 0.5;
-                        for(int i = 0; i < 5; i++) {
-                            f += amp * noise(p);
-                            p *= 2.0;
-                            amp *= 0.5;
-                        }
+                        f += 0.5000 * noise(p); p *= 2.02;
+                        f += 0.2500 * noise(p); p *= 2.03;
+                        f += 0.1250 * noise(p); p *= 2.01;
                         return f;
                     }
 
-                    // 地球の色を取得
-                    vec3 getEarthColor(vec3 p) {
-                        // 極座標に変換
-                        float lat = acos(p.y) / PI;
-                        float lon = (atan(p.z, p.x) / PI + 1.0) * 0.5;
-
-                        // 大陸のノイズ
-                        float landNoise = fbm(vec3(lon * 10.0, lat * 5.0, 0.0));
-                        float continentMask = smoothstep(0.4, 0.5, landNoise);
-
-                        // 海の色
-                        vec3 oceanColor = vec3(0.0, 0.1, 0.3) + vec3(0.0, 0.05, 0.15) * fbm(vec3(lon * 15.0, lat * 10.0, time * 0.1));
-
-                        // 陸地の色
-                        vec3 landColor = mix(
-                            vec3(0.1, 0.3, 0.1), // 森林
-                            vec3(0.5, 0.4, 0.2), // 砂漠
-                            fbm(vec3(lon * 20.0, lat * 10.0, 0.5))
-                        );
-
-                        // 極地の色（雪）
-                        float polarMask = smoothstep(0.0, 0.2, abs(lat - 0.5) * 2.0);
-                        landColor = mix(landColor, vec3(0.9, 0.9, 0.95), polarMask);
-
-                        // 雲のノイズ
-                        float cloudNoise = fbm(vec3(lon * 8.0 + time * 0.05, lat * 4.0, time * 0.02));
-                        float cloudMask = smoothstep(0.4, 0.6, cloudNoise);
-
-                        // 最終的な色
-                        vec3 color = mix(oceanColor, landColor, continentMask);
-                        color = mix(color, vec3(1.0), cloudMask * 0.5);
-
-                        // 大気光の効果
-                        float atmosphere = pow(1.0 - abs(dot(normalize(p), normalize(vec3(0.0, 0.0, -1.0)))), 2.0);
-                        color += vec3(0.1, 0.2, 0.4) * atmosphere;
-
-                        return color;
+                    float GetDist(vec3 p) {
+                        // Distort space with FBM
+                        float displacement = fbm(p * 1.5 + uTime * 0.5);
+                        return length(p) - 1.5 + displacement * 0.8;
                     }
 
-                    // レイマーチング用の距離関数
-                    float sdfSphere(vec3 p, float r) {
-                        return length(p) - r;
-                    }
-
-                    // レイマーチング
-                    vec4 raymarch(vec3 ro, vec3 rd) {
+                    float RayMarch(vec3 ro, vec3 rd) {
                         float dO = 0.0;
-                        float dS;
-
-                        for(int i = 0; i < MAX_STEPS; i++) {
-                            vec3 p = ro + rd * dO;
-                            dS = sdfSphere(p, 0.9);
-
-                            if(dS < SURF_DIST || dO > MAX_DIST) break;
+                        for(int i=0; i<MAX_STEPS; i++) {
+                            vec3 p = ro + rd*dO;
+                            float dS = GetDist(p);
                             dO += dS;
+                            if(dO>MAX_DIST || dS<SURF_DIST) break;
                         }
+                        return dO;
+                    }
 
-                        if(dO > MAX_DIST) {
-                            return vec4(0.0); // 何も当たらなかった
-                        }
-
-                        // 交点の位置
-                        vec3 p = ro + rd * dO;
-
-                        // 法線計算
-                        vec2 e = vec2(0.001, 0.0);
-                        vec3 n = normalize(vec3(
-                            sdfSphere(p + e.xyy, 0.9) - sdfSphere(p - e.xyy, 0.9),
-                            sdfSphere(p + e.yxy, 0.9) - sdfSphere(p - e.yxy, 0.9),
-                            sdfSphere(p + e.yyx, 0.9) - sdfSphere(p - e.yyx, 0.9)
-                        ));
-
-                        // 地球の色を取得
-                        vec3 color = getEarthColor(p);
-
-                        // 光源方向（太陽）
-                        vec3 lightDir = normalize(vec3(sin(time * 0.2), 0.2, cos(time * 0.2)));
-
-                        // 拡散反射
-                        float diff = max(dot(n, lightDir), 0.0);
-
-                        // 環境光
-                        float ambient = 0.2;
-
-                        // 最終的な色
-                        color *= (diff + ambient);
-
-                        // 大気の縁の効果
-                        float rim = 1.0 - max(dot(n, -rd), 0.0);
-                        rim = pow(rim, 4.0);
-                        color += vec3(0.1, 0.3, 0.5) * rim;
-
-                        return vec4(color, 1.0);
+                    vec3 GetNormal(vec3 p) {
+                        float d = GetDist(p);
+                        vec2 e = vec2(0.01, 0);
+                        vec3 n = d - vec3(
+                            GetDist(p-e.xyy),
+                            GetDist(p-e.yxy),
+                            GetDist(p-e.yyx));
+                        return normalize(n);
                     }
 
                     void main() {
-                        // カメラ設定
-                        vec3 ro = vec3(0.0, 0.0, 2.5); // カメラ位置
+                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        vec3 ro = vec3(0, 0, -4);
+                        vec3 rd = normalize(vec3(uv, 1));
 
-                        // 回転行列
-                        float rotY = time * 0.2;
-                        mat3 rotMat = mat3(
-                            cos(rotY), 0.0, sin(rotY),
-                            0.0, 1.0, 0.0,
-                            -sin(rotY), 0.0, cos(rotY)
-                        );
+                        float d = RayMarch(ro, rd);
+                        vec3 col = vec3(0);
 
-                        // UVを使用してレイの方向を計算
-                        vec2 uv = vUv * 2.0 - 1.0;
-                        uv.x *= resolution.x / resolution.y; // アスペクト比の調整
+                        if(d < MAX_DIST) {
+                            vec3 p = ro + rd * d;
+                            vec3 n = GetNormal(p);
+                            vec3 r = reflect(rd, n);
 
-                        vec3 rd = normalize(vec3(uv, -1.0));
-                        rd = rotMat * rd; // 回転を適用
-
-                        // レイマーチング
-                        vec4 color = raymarch(ro, rd);
-
-                        // 背景色（宇宙）
-                        if(color.a < 0.1) {
-                            // 星を追加
-                            vec2 uv = vUv * 2.0 - 1.0;
-                            float stars = pow(noise(vec3(uv * 500.0, time * 0.01)), 20.0);
-                            color.rgb = vec3(stars) * 0.5;
+                            // Fake Environment Mapping
+                            vec3 ref = vec3(0.5) + 0.5 * cos(r * 3.0 + vec3(0, 2, 4) + uTime);
+                            
+                            // Fresnel
+                            float fresnel = pow(1.0 + dot(rd, n), 3.0);
+                            
+                            col = ref * (0.2 + 0.8 * fresnel);
+                            col += vec3(0.8, 0.9, 1.0) * pow(max(dot(r, vec3(0,1,0)), 0.0), 10.0); // Specular
                         }
 
-                        gl_FragColor = color;
+                        gl_FragColor = vec4(col, 1.0);
                     }
                 `
             },
             {
-                id: 'circle-pattern',
-                title: '円形パターン (3D)',
-                description: '同心円と時間変化するパターンを3Dオブジェクトに適用したシェーダー',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
-
+                id: 'tunnel',
+                title: 'NEON TUNNEL',
+                desc: '無限に続く光の回廊。スピードと色彩の融合。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    
                     void main() {
-                        // UVを中心に合わせる
-                        vec2 uv = vUv * 2.0 - 1.0;
-
-                        // 3D位置と法線を使用してパターンを変調
-                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1)));
-                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
-
-                        float dist = length(uv);
-                        float angle = atan(uv.y, uv.x);
-
-                        // 3D効果を強化するために位置を使用して距離を変調
-                        dist += posEffect * 0.2;
-
-                        // リングを作成
-                        float rings = fract(dist * 10.0 - time * 0.1);
-
-                        // 放射状の線を追加
-                        float lines = 0.5 + 0.5 * sin(angle * 20.0 + time);
-
-                        // 法線に基づいて線を変調
-                        lines *= normalEffect;
-
-                        // パターンを組み合わせる
-                        float pattern = rings * lines;
-
-                        // 3D位置に基づいてパターンを強化
-                        pattern *= 0.8 + 0.2 * sin(vPosition.x * 5.0 + vPosition.y * 5.0 + vPosition.z * 5.0 + time);
-
-                        // カラーマッピング
-                        vec3 color = vec3(0.0);
-                        color.r = pattern * (0.5 + 0.5 * sin(time));
-                        color.g = pattern * (0.5 + 0.5 * sin(time + 2.0));
-                        color.b = pattern * (0.5 + 0.5 * sin(time + 4.0));
-
-                        // 法線に基づいて色を調整して3D効果を強化
-                        color *= vec3(0.8 + 0.2 * vNormal.x, 0.8 + 0.2 * vNormal.y, 0.8 + 0.2 * vNormal.z);
-
-                        gl_FragColor = vec4(color, 1.0);
+                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        
+                        // Polar coordinates
+                        float r = length(uv);
+                        float a = atan(uv.y, uv.x);
+                        
+                        // Tunnel effect
+                        float z = 1.0 / r + uTime * 2.0;
+                        float angle = a / 3.14159 + uTime * 0.2;
+                        
+                        // Grid pattern
+                        float grid = abs(sin(z * 10.0) * sin(angle * 10.0));
+                        
+                        // Color
+                        vec3 col = vec3(0);
+                        col += vec3(0.1, 0.8, 1.0) / abs(sin(z * 10.0) * 2.0 + r * 5.0); // Blue rings
+                        col += vec3(1.0, 0.2, 0.5) * grid * r; // Pink grid
+                        
+                        // Fog
+                        col *= r * 1.5;
+                        
+                        gl_FragColor = vec4(col, 1.0);
                     }
                 `
             },
             {
-                id: 'plasma-effect',
-                title: 'プラズマエフェクト (3D)',
-                description: 'クラシックなプラズマエフェクトを3Dオブジェクトに適用したシェーダー',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
+                id: 'clouds',
+                title: 'VOLUMETRIC CLOUDS',
+                desc: 'レイマーチングによる雲の表現。夕暮れの空。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+
+                    // Simple noise
+                    float hash(float n) { return fract(sin(n)*753.5453123); }
+                    float noise(in vec3 x) {
+                        vec3 p = floor(x);
+                        vec3 f = fract(x);
+                        f = f*f*(3.0-2.0*f);
+                        float n = p.x + p.y*157.0 + 113.0*p.z;
+                        return mix(mix(mix( hash(n+  0.0), hash(n+  1.0),f.x),
+                                       mix( hash(n+157.0), hash(n+158.0),f.x),f.y),
+                                   mix(mix( hash(n+113.0), hash(n+114.0),f.x),
+                                       mix( hash(n+270.0), hash(n+271.0),f.x),f.y),f.z);
+                    }
+
+                    float fbm(vec3 p) {
+                        float f = 0.0;
+                        f += 0.50000*noise( p ); p = p*2.02;
+                        f += 0.25000*noise( p ); p = p*2.03;
+                        f += 0.12500*noise( p ); p = p*2.01;
+                        return f;
+                    }
 
                     void main() {
-                        // UVを使用
-                        vec2 uv = vUv;
-                        vec2 p = uv * 2.0 - 1.0;
-
-                        // 3D位置と法線を使用してプラズマを変調
-                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.3), cos(time * 0.2), sin(time * 0.1)));
-                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
-
-                        // 3D位置を使用してプラズマパターンを変調
-                        float v1 = sin((p.x * 10.0 + vPosition.x) + time);
-                        float v2 = sin((p.y * 10.0 + vPosition.y) + time);
-                        float v3 = sin((p.x + p.y + vPosition.z) * 5.0 + time);
-                        float v4 = sin(sqrt(p.x * p.x + p.y * p.y) * 10.0 - time);
-
-                        // 法線を使用して追加の変調を作成
-                        float v5 = sin(vNormal.x * 5.0 + time) * 0.5;
-                        float v6 = sin(vNormal.y * 5.0 + time) * 0.5;
-
-                        // プラズマ効果を組み合わせる
-                        float plasma = (v1 + v2 + v3 + v4 + v5 + v6) / 6.0;
-
-                        // 3D位置と法線効果を適用
-                        plasma = mix(plasma, plasma * posEffect, 0.3);
-                        plasma = mix(plasma, plasma * normalEffect, 0.3);
-
-                        // カラーマッピング
-                        vec3 color = vec3(0.0);
-                        color.r = 0.5 + 0.5 * sin(plasma * 6.28 + 0.0);
-                        color.g = 0.5 + 0.5 * sin(plasma * 6.28 + 2.09);
-                        color.b = 0.5 + 0.5 * sin(plasma * 6.28 + 4.19);
-
-                        // 法線に基づいて色を調整して3D効果を強化
-                        color = mix(color, color * vec3(vNormal * 0.5 + 0.5), 0.2);
-
-                        gl_FragColor = vec4(color, 1.0);
-                    }
-                `
-            },
-            {
-                id: 'voronoi-pattern',
-                title: 'ボロノイパターン (3D)',
-                description: 'ボロノイ図形を使用した幾何学的なパターンを3Dオブジェクトに適用',
-                fragmentShader: `
-                    precision mediump float;
-                    uniform float time;
-                    uniform vec2 resolution;
-                    varying vec2 vUv;
-                    varying vec3 vPosition;
-                    varying vec3 vNormal;
-
-                    // 2D Random vector
-                    vec2 random2(vec2 p) {
-                        return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
-                    }
-
-                    // Cellular noise ("Voronoi")
-                    vec2 voronoi(vec2 x) {
-                        vec2 n = floor(x);
-                        vec2 f = fract(x);
-
-                        vec2 mg, mr;
-                        float md = 8.0;
-
-                        for(int j = -1; j <= 1; j++) {
-                            for(int i = -1; i <= 1; i++) {
-                                vec2 g = vec2(float(i), float(j));
-                                vec2 o = random2(n + g);
-                                o = 0.5 + 0.5 * sin(time * 0.5 + 6.2831 * o);
-
-                                vec2 r = g + o - f;
-                                float d = dot(r, r);
-
-                                if(d < md) {
-                                    md = d;
-                                    mr = r;
-                                    mg = g;
-                                }
+                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        vec3 ro = vec3(0.0, 0.0, uTime * 2.0);
+                        vec3 rd = normalize(vec3(uv, 1.0));
+                        
+                        vec3 col = vec3(0.5, 0.7, 0.9) - max(rd.y, 0.0)*0.5; // Sky gradient
+                        
+                        // Raymarch clouds
+                        float t = 0.0;
+                        for(int i=0; i<64; i++) {
+                            vec3 p = ro + t*rd;
+                            float den = fbm(p * 0.5);
+                            if(den > 0.4) {
+                                float dif = clamp((den - fbm(p+0.3))/0.6, 0.0, 1.0);
+                                vec3 lin = vec3(1.0, 0.6, 0.3)*dif + vec3(0.9);
+                                col = mix(col, lin, 0.05 * den); // Blend
                             }
+                            t += 0.2;
                         }
+                        
+                        // Sun
+                        float sun = pow(max(dot(rd, normalize(vec3(0, 0.2, 1))), 0.0), 32.0);
+                        col += vec3(1.0, 0.8, 0.4) * sun;
 
-                        return vec2(md, dot(mr, mg));
+                        gl_FragColor = vec4(col, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'cyber',
+                title: 'CYBER CITY',
+                desc: 'グリッドとビル群。サイバーパンクな夜景。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+
+                    float sdBox(vec3 p, vec3 b) {
+                        vec3 d = abs(p) - b;
+                        return length(max(d, 0.0)) + min(max(d.x, max(d.y, d.z)), 0.0);
+                    }
+
+                    float GetDist(vec3 p) {
+                        // Ground
+                        float d = p.y + 1.0;
+                        
+                        // Buildings (Repeated)
+                        vec3 q = p;
+                        q.xz = mod(p.xz + 5.0, 10.0) - 5.0;
+                        float b = sdBox(q - vec3(0, 0, 0), vec3(1.0, 4.0 + sin(floor(p.x/10.0)*10.0)*2.0, 1.0));
+                        
+                        return min(d, b);
+                    }
+
+                    float RayMarch(vec3 ro, vec3 rd) {
+                        float dO = 0.0;
+                        for(int i=0; i<100; i++) {
+                            vec3 p = ro + rd*dO;
+                            float dS = GetDist(p);
+                            dO += dS;
+                            if(dO>100.0 || dS<0.01) break;
+                        }
+                        return dO;
                     }
 
                     void main() {
-                        // UVを使用
-                        vec2 uv = vUv;
+                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        vec3 ro = vec3(0, 5, uTime * 5.0);
+                        vec3 rd = normalize(vec3(uv.x, uv.y - 0.2, 1));
 
-                        // 3D位置と法線を使用してパターンを変調
-                        float posEffect = dot(normalize(vPosition), vec3(sin(time * 0.2), cos(time * 0.3), sin(time * 0.1)));
-                        float normalEffect = dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+                        float d = RayMarch(ro, rd);
+                        vec3 col = vec3(0);
 
-                        // 3D位置を使用してUVを変調
-                        uv += vec2(vPosition.x, vPosition.y) * 0.1;
+                        if(d < 100.0) {
+                            vec3 p = ro + rd * d;
+                            
+                            // Grid pattern on floor
+                            if(p.y < -0.9) {
+                                float grid = step(0.98, fract(p.x)) + step(0.98, fract(p.z));
+                                col = vec3(0.0, 1.0, 1.0) * grid;
+                            } else {
+                                // Buildings
+                                col = vec3(0.1, 0.0, 0.2);
+                                // Windows
+                                float w = step(0.8, fract(p.y * 2.0)) * step(0.8, fract(p.x * 2.0));
+                                col += vec3(1.0, 0.8, 0.0) * w;
+                            }
+                            
+                            // Fog
+                            col = mix(col, vec3(0.05, 0.0, 0.1), 1.0 - exp(-d * 0.02));
+                        } else {
+                            // Sky
+                            col = vec3(0.05, 0.0, 0.1);
+                        }
 
-                        // スケール
-                        uv *= 5.0;
-
-                        // 3D位置に基づいてスケールを変調
-                        uv *= 0.8 + 0.4 * posEffect;
-
-                        // ボロノイ
-                        vec2 v = voronoi(uv);
-
-                        // 法線と位置に基づいてボロノイパターンを変調
-                        v.x = mix(v.x, v.x * normalEffect, 0.3);
-                        v.y = mix(v.y, v.y * posEffect, 0.3);
-
-                        // カラーリング
-                        vec3 color = vec3(0.0);
-                        color = mix(vec3(0.0, 0.0, 0.2), vec3(0.0, 0.5, 1.0), v.x);
-                        color = mix(color, vec3(1.0, 0.5, 0.0), 1.0 - v.y * 0.5);
-
-                        // 法線に基づいて色を調整して3D効果を強化
-                        color = mix(color, color * vec3(vNormal * 0.5 + 0.5), 0.3);
-
-                        // 3D位置に基づいて色を調整
-                        color *= vec3(0.8 + 0.2 * sin(vPosition.x * 3.0 + time),
-                                     0.8 + 0.2 * sin(vPosition.y * 3.0 + time),
-                                     0.8 + 0.2 * sin(vPosition.z * 3.0 + time));
-
-                        gl_FragColor = vec4(color, 1.0);
+                        gl_FragColor = vec4(col, 1.0);
                     }
                 `
             }
         ];
 
-        // DOM要素
-        const gallery = document.getElementById('shader-gallery');
-        const codeModal = document.getElementById('code-modal');
-        const closeModal = document.getElementById('close-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const shaderCode = document.getElementById('shader-code');
-        const fullscreenContainer = document.getElementById('fullscreen-container');
-        const backButton = document.getElementById('back-button');
-        const codeOverlayBtn = document.getElementById('code-overlay-btn');
-        let codeOverlay = document.getElementById('code-overlay');
-        const overlayShaderCode = document.getElementById('overlay-shader-code');
+        // --- GLOBALS ---
+        let scene, camera, renderer, composer;
+        let currentShaderIndex = 0;
+        let material;
+        let mesh;
 
-        // シェーダーカードの生成
-        function createShaderCards() {
-            shaderGallery.forEach(shader => {
-                // カードの作成
-                const card = document.createElement('div');
-                card.className = 'shader-card';
-                card.id = `card-${shader.id}`;
+        // --- INIT ---
+        function init() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-                // キャンバスコンテナ
-                const canvasContainer = document.createElement('div');
-                canvasContainer.className = 'shader-canvas-container';
+            renderer = new THREE.WebGLRenderer({ antialias: false });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-                // キャンバス
-                const canvas = document.createElement('canvas');
-                canvas.className = 'shader-canvas';
-                canvas.id = `canvas-${shader.id}`;
-                canvasContainer.appendChild(canvas);
+            // Post Processing
+            const renderPass = new THREE.RenderPass(scene, camera);
+            const bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                CONFIG.bloomStrength,
+                CONFIG.bloomRadius,
+                CONFIG.bloomThreshold
+            );
 
-                // シェーダー情報
-                const info = document.createElement('div');
-                info.className = 'shader-info';
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderPass);
+            composer.addPass(bloomPass);
 
-                const title = document.createElement('h3');
-                title.className = 'shader-title';
-                title.textContent = shader.title;
-
-                const description = document.createElement('p');
-                description.className = 'shader-description';
-                description.textContent = shader.description;
-
-                const codeBtn = document.createElement('button');
-                codeBtn.className = 'shader-code-btn';
-                codeBtn.textContent = 'コードを見る';
-                codeBtn.dataset.shaderId = shader.id;
-
-                info.appendChild(title);
-                info.appendChild(description);
-                info.appendChild(codeBtn);
-
-                card.appendChild(canvasContainer);
-                card.appendChild(info);
-
-                gallery.appendChild(card);
-
-                // シェーダーの初期化
-                initShader(canvas, shader.fragmentShader);
-
-                // キャンバスクリックイベント（全画面表示）
-                canvasContainer.addEventListener('click', () => {
-                    showFullscreenShader(shader);
-                });
-
-                // コードボタンクリックイベント
-                codeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showShaderCode(shader);
-                });
-            });
-        }
-
-        // シェーダーの初期化 (Three.jsを使用した3D実装)
-        function initShader(canvas, fragmentShaderSource) {
-            // キャンバスサイズの設定
-            resizeCanvas(canvas);
-
-            // Three.jsのシーン、カメラ、レンダラーの設定
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
-            camera.position.z = 2;
-
-            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-            renderer.setSize(canvas.width, canvas.height);
-            renderer.setClearColor(0x000000, 1);
-
-            // OrbitControlsの設定（マウスによる視点操作）
-            const controls = new THREE.OrbitControls(camera, canvas);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.25;
-            controls.enableZoom = true;
-            controls.autoRotate = false;
-
-            // 頂点シェーダーのソース
-            const vertexShaderSource = `
-                varying vec2 vUv;
-                varying vec3 vPosition;
-                varying vec3 vNormal;
-
-                void main() {
-                    vUv = uv;
-                    vPosition = position;
-                    vNormal = normal;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `;
-
-            // マテリアルの作成
-            const material = new THREE.ShaderMaterial({
+            // Initial Shader Mesh (Full Screen Quad)
+            const geometry = new THREE.PlaneGeometry(2, 2);
+            material = new THREE.ShaderMaterial({
                 uniforms: {
-                    time: { value: 0.0 },
-                    resolution: { value: new THREE.Vector2(canvas.width, canvas.height) }
+                    uTime: { value: 0 },
+                    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                    uMouse: { value: new THREE.Vector2(0, 0) }
                 },
-                vertexShader: vertexShaderSource,
-                fragmentShader: fragmentShaderSource
+                vertexShader: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: SHADERS[0].fragment
             });
 
-            // 3Dジオメトリの作成（球体）
-            const geometry = new THREE.SphereGeometry(1, 64, 64);
-            const mesh = new THREE.Mesh(geometry, material);
+            mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
 
-            // アニメーションの開始時間
-            const startTime = Date.now();
+            // Events
+            window.addEventListener('resize', onResize);
+            document.addEventListener('mousemove', onMouseMove);
 
-            // ウィンドウリサイズ時の処理
-            window.addEventListener('resize', () => {
-                if (resizeCanvas(canvas)) {
-                    renderer.setSize(canvas.width, canvas.height);
-                    camera.aspect = canvas.width / canvas.height;
-                    camera.updateProjectionMatrix();
-                    material.uniforms.resolution.value.set(canvas.width, canvas.height);
-                }
+            setupUI();
+
+            // Start Animation
+            animate();
+
+            // Remove Loader
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = 0;
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+                document.getElementById('infoPanel').classList.add('visible');
+            }, 1000);
+        }
+
+        function setupUI() {
+            const nav = document.getElementById('navContainer');
+            SHADERS.forEach((shader, index) => {
+                const dot = document.createElement('div');
+                dot.className = `nav-dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => switchShader(index);
+                nav.appendChild(dot);
             });
 
-            // アニメーションループ
-            function render() {
-                // 現在の時間
-                const time = (Date.now() - startTime) / 1000;
+            updateInfoPanel(0);
 
-                // キャンバスのリサイズ確認
-                if (resizeCanvas(canvas)) {
-                    renderer.setSize(canvas.width, canvas.height);
-                    camera.aspect = canvas.width / canvas.height;
-                    camera.updateProjectionMatrix();
-                    material.uniforms.resolution.value.set(canvas.width, canvas.height);
-                }
-
-                // ユニフォーム変数の更新
-                material.uniforms.time.value = time;
-
-                // コントロールの更新
-                controls.update();
-
-                // レンダリング
-                renderer.render(scene, camera);
-
-                // 次のフレームをリクエスト
-                requestAnimationFrame(render);
-            }
-
-            // レンダリング開始
-            render();
-
-            // リソース管理のためにオブジェクトを返す
-            return {
-                scene: scene,
-                camera: camera,
-                controls: controls,
-                renderer: renderer,
-                material: material,
-                mesh: mesh
+            // Code Overlay
+            document.getElementById('viewCodeBtn').onclick = () => {
+                document.getElementById('codeContent').textContent = SHADERS[currentShaderIndex].fragment;
+                document.getElementById('codeOverlay').style.display = 'block';
+            };
+            document.getElementById('closeCode').onclick = () => {
+                document.getElementById('codeOverlay').style.display = 'none';
             };
         }
 
-        // シェーダーのコンパイル
-        function compileShader(gl, type, source) {
-            const shader = gl.createShader(type);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
+        function switchShader(index) {
+            if (index === currentShaderIndex) return;
 
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                console.error('シェーダーのコンパイルエラー:', gl.getShaderInfoLog(shader));
-                gl.deleteShader(shader);
-                return null;
-            }
+            // Transition Effect
+            currentShaderIndex = index;
+            material.fragmentShader = SHADERS[index].fragment;
+            material.needsUpdate = true;
 
-            return shader;
+            // Update UI
+            document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            updateInfoPanel(index);
         }
 
-        // シェーダープログラムの作成
-        function createProgram(gl, vertexShader, fragmentShader) {
-            const program = gl.createProgram();
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
-            gl.linkProgram(program);
+        function updateInfoPanel(index) {
+            const shader = SHADERS[index];
+            const title = document.getElementById('shaderTitle');
+            const desc = document.getElementById('shaderDesc');
 
-            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-                console.error('プログラムのリンクエラー:', gl.getProgramInfoLog(program));
-                return null;
-            }
-
-            return program;
-        }
-
-        // キャンバスのリサイズ
-        function resizeCanvas(canvas) {
-            const displayWidth = canvas.clientWidth;
-            const displayHeight = canvas.clientHeight;
-
-            if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-                canvas.width = displayWidth;
-                canvas.height = displayHeight;
-                return true;
-            }
-
-            return false;
-        }
-
-        // シェーダーコードの表示
-        function showShaderCode(shader) {
-            modalTitle.textContent = shader.title;
-            shaderCode.textContent = shader.fragmentShader;
-            codeModal.style.display = 'block';
-
-            // コードのシンタックスハイライト（簡易版）
-            highlightCode();
-        }
-
-        // 全画面シェーダーの表示
-        function showFullscreenShader(shader) {
-            // 全画面コンテナをクリア
-            fullscreenContainer.innerHTML = '';
-
-            // コードオーバーレイを再作成
-            const codeOverlayDiv = document.createElement('div');
-            codeOverlayDiv.className = 'code-overlay';
-            codeOverlayDiv.id = 'code-overlay';
-
-            const preElement = document.createElement('pre');
-            preElement.id = 'overlay-shader-code';
-            codeOverlayDiv.appendChild(preElement);
-
-            fullscreenContainer.appendChild(codeOverlayDiv);
-
-            // 新しいキャンバスを作成
-            const canvas = document.createElement('canvas');
-            canvas.className = 'fullscreen-canvas';
-            fullscreenContainer.appendChild(canvas);
-
-            // 全画面表示
-            fullscreenContainer.style.display = 'block';
-            backButton.style.display = 'block';
-            codeOverlayBtn.style.display = 'block';
-
-            // シェーダーの初期化
-            initShader(canvas, shader.fragmentShader);
-
-            // シェーダーコードを保存（オーバーレイ用）
-            overlayShaderCode.textContent = shader.fragmentShader;
-
-            // コードのシンタックスハイライト
-            highlightCodeElement(overlayShaderCode);
-
-            // コードオーバーレイの参照を更新
-            codeOverlay = document.getElementById('code-overlay');
-
-            // コードオーバーレイを自動的に表示
-            codeOverlay.style.display = 'block';
-            codeOverlayBtn.textContent = 'コードを隠す';
-
-            // コードオーバーレイボタンのイベントリスナーを設定
-            codeOverlayBtn.addEventListener('click', () => {
-                if (getComputedStyle(codeOverlay).display !== 'none') {
-                    codeOverlay.style.display = 'none';
-                    codeOverlayBtn.textContent = 'コードを表示';
-                } else {
-                    codeOverlay.style.display = 'block';
-                    codeOverlayBtn.textContent = 'コードを隠す';
+            // GSAP Animation
+            gsap.to('#infoPanel', {
+                opacity: 0, x: -20, duration: 0.3, onComplete: () => {
+                    title.textContent = shader.title;
+                    desc.textContent = shader.desc;
+                    gsap.to('#infoPanel', { opacity: 1, x: 0, duration: 0.5 });
                 }
             });
         }
 
-        // 簡易的なシンタックスハイライト
-        function highlightCode() {
-            highlightCodeElement(shaderCode);
+        function onResize() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         }
 
-        // 指定された要素のコードをハイライト
-        function highlightCodeElement(element) {
-            let code = element.textContent;
-
-            // キーワードの色付け
-            const keywords = ['void', 'float', 'vec2', 'vec3', 'vec4', 'uniform', 'varying', 'precision', 'mediump', 'highp', 'lowp', 'if', 'else', 'for', 'return'];
-
-            keywords.forEach(keyword => {
-                const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-                code = code.replace(regex, `<span style="color: #569CD6;">${keyword}</span>`);
-            });
-
-            // 関数の色付け
-            const functions = ['sin', 'cos', 'tan', 'mix', 'smoothstep', 'length', 'distance', 'dot', 'cross', 'normalize', 'fract', 'floor', 'ceil', 'abs', 'min', 'max', 'clamp', 'pow', 'sqrt', 'exp', 'log'];
-
-            functions.forEach(func => {
-                const regex = new RegExp(`\\b${func}\\b`, 'g');
-                code = code.replace(regex, `<span style="color: #DCDCAA;">${func}</span>`);
-            });
-
-            // コメントの色付け
-            code = code.replace(/\/\/.*$/gm, match => `<span style="color: #6A9955;">${match}</span>`);
-
-            // 数値の色付け
-            code = code.replace(/\b\d+(\.\d+)?\b/g, match => `<span style="color: #B5CEA8;">${match}</span>`);
-
-            element.innerHTML = code;
+        function onMouseMove(e) {
+            material.uniforms.uMouse.value.set(
+                e.clientX / window.innerWidth,
+                1.0 - e.clientY / window.innerHeight
+            );
         }
 
-        // イベントリスナー
-        closeModal.addEventListener('click', () => {
-            codeModal.style.display = 'none';
-        });
+        function animate() {
+            requestAnimationFrame(animate);
+            material.uniforms.uTime.value += 0.01;
+            composer.render();
+        }
 
-        backButton.addEventListener('click', () => {
-            fullscreenContainer.style.display = 'none';
-            backButton.style.display = 'none';
-            codeOverlayBtn.style.display = 'none';
-            codeOverlay.style.display = 'none';
-            codeOverlayBtn.textContent = 'コードを表示';
-        });
-
-        // 元のイベントリスナーは削除（showFullscreenShader内で設定するため）
-        // codeOverlayBtn.addEventListener('click', () => {
-        //     if (codeOverlay.style.display === 'block') {
-        //         codeOverlay.style.display = 'none';
-        //         codeOverlayBtn.textContent = 'コードを表示';
-        //     } else {
-        //         codeOverlay.style.display = 'block';
-        //         codeOverlayBtn.textContent = 'コードを隠す';
-        //     }
-        // });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === codeModal) {
-                codeModal.style.display = 'none';
-            }
-        });
-
-        // ページ読み込み時にシェーダーカードを生成
-        document.addEventListener('DOMContentLoaded', createShaderCards);
+        init();
     </script>
 </body>
+
 </html>
