@@ -20,6 +20,8 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <!-- VRButton (Module version needs import map or type module, using CDN script for simplicity if available, else module) -->
+    <!-- Using module script below for VRButton -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
     <style>
@@ -69,6 +71,7 @@
             justify-content: space-between;
             padding: 40px;
             background: radial-gradient(circle at center, transparent 0%, #000 150%);
+            transition: opacity 0.5s;
         }
 
         header {
@@ -281,7 +284,7 @@
 
     <div id="canvas-container"></div>
 
-    <div class="ui-layer">
+    <div class="ui-layer" id="uiLayer">
         <header>
             <h1>GLSL GALLERY</h1>
             <div class="subtitle">Advanced Raymarching Collection</div>
@@ -305,7 +308,9 @@
         <pre class="code-content" id="codeContent"></pre>
     </div>
 
-    <script>
+    <script type="module">
+        import { VRButton } from 'https://unpkg.com/three@0.128.0/examples/jsm/webxr/VRButton.js';
+
         // --- CONFIGURATION ---
         const CONFIG = {
             bloomStrength: 1.5,
@@ -323,33 +328,27 @@
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform vec2 uMouse;
+                    uniform bool uVRMode;
+                    varying vec3 vWorldPosition;
 
-                    #define MAX_STEPS 100
+                    #define MAX_STEPS 80
                     #define MAX_DIST 100.0
                     #define SURF_DIST 0.001
 
-                    // Rotation matrix
                     mat2 rot(float a) {
                         float s = sin(a), c = cos(a);
                         return mat2(c, -s, s, c);
                     }
 
-                    // Mandelbox Distance Estimator
                     float mandelbox(vec3 p) {
                         float scale = 2.8;
                         vec3 offset = p;
                         float dr = 1.0;
-                        
                         for (int i = 0; i < 10; i++) {
                             p.xy = clamp(p.xy, -1.0, 1.0) * 2.0 - p.xy;
                             float r2 = dot(p, p);
-                            if (r2 < 0.5) { 
-                                p *= 4.0; 
-                                dr *= 4.0; 
-                            } else if (r2 < 1.0) { 
-                                p /= r2; 
-                                dr /= r2; 
-                            }
+                            if (r2 < 0.5) { p *= 4.0; dr *= 4.0; } 
+                            else if (r2 < 1.0) { p /= r2; dr /= r2; }
                             p = p * scale + offset;
                             dr = dr * scale + 1.0;
                         }
@@ -376,17 +375,21 @@
                     vec3 GetNormal(vec3 p) {
                         float d = GetDist(p);
                         vec2 e = vec2(0.001, 0);
-                        vec3 n = d - vec3(
-                            GetDist(p-e.xyy),
-                            GetDist(p-e.yxy),
-                            GetDist(p-e.yyx));
+                        vec3 n = d - vec3(GetDist(p-e.xyy), GetDist(p-e.yxy), GetDist(p-e.yyx));
                         return normalize(n);
                     }
 
                     void main() {
-                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
-                        vec3 ro = vec3(0, 0, -3.5); // Camera position
-                        vec3 rd = normalize(vec3(uv.x, uv.y, 1));
+                        vec3 ro, rd;
+
+                        if (uVRMode) {
+                            ro = vec3(0.0, 0.0, 0.0); // VR camera is at origin of skybox
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0, 0, -3.5);
+                            rd = normalize(vec3(uv.x, uv.y, 1));
+                        }
 
                         float d = RayMarch(ro, rd);
                         vec3 col = vec3(0);
@@ -394,23 +397,15 @@
                         if(d < MAX_DIST) {
                             vec3 p = ro + rd * d;
                             vec3 n = GetNormal(p);
-                            vec3 r = reflect(rd, n);
-
-                            // Lighting
                             vec3 lightPos = vec3(2, 4, -3);
                             float dif = clamp(dot(n, normalize(lightPos)), 0.0, 1.0);
-                            
-                            // Coloring based on position and normal
                             col = vec3(dif);
                             col += 0.5 * sin(p * 2.0 + uTime);
-                            col *= vec3(0.2, 0.8, 1.0); // Cyan tint
-                            
-                            // Glow
+                            col *= vec3(0.2, 0.8, 1.0);
                             float glow = 1.0 / (1.0 + d * d * 0.1);
                             col += glow * vec3(0.1, 0.3, 0.8);
                         } else {
-                            // Background glow
-                            col = vec3(0.05, 0.05, 0.1) * (1.0 - length(uv));
+                            col = vec3(0.05, 0.05, 0.1);
                         }
 
                         gl_FragColor = vec4(col, 1.0);
@@ -425,12 +420,13 @@
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform vec2 uMouse;
+                    uniform bool uVRMode;
+                    varying vec3 vWorldPosition;
 
-                    #define MAX_STEPS 100
+                    #define MAX_STEPS 80
                     #define MAX_DIST 100.0
                     #define SURF_DIST 0.001
 
-                    // Noise functions
                     float hash(float n) { return fract(sin(n) * 43758.5453); }
                     float noise(vec3 x) {
                         vec3 p = floor(x);
@@ -442,7 +438,6 @@
                                    mix(mix(hash(n + 113.0), hash(n + 114.0), f.x),
                                        mix(hash(n + 170.0), hash(n + 171.0), f.x), f.y), f.z);
                     }
-
                     float fbm(vec3 p) {
                         float f = 0.0;
                         f += 0.5000 * noise(p); p *= 2.02;
@@ -452,7 +447,6 @@
                     }
 
                     float GetDist(vec3 p) {
-                        // Distort space with FBM
                         float displacement = fbm(p * 1.5 + uTime * 0.5);
                         return length(p) - 1.5 + displacement * 0.8;
                     }
@@ -471,17 +465,20 @@
                     vec3 GetNormal(vec3 p) {
                         float d = GetDist(p);
                         vec2 e = vec2(0.01, 0);
-                        vec3 n = d - vec3(
-                            GetDist(p-e.xyy),
-                            GetDist(p-e.yxy),
-                            GetDist(p-e.yyx));
+                        vec3 n = d - vec3(GetDist(p-e.xyy), GetDist(p-e.yxy), GetDist(p-e.yyx));
                         return normalize(n);
                     }
 
                     void main() {
-                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
-                        vec3 ro = vec3(0, 0, -4);
-                        vec3 rd = normalize(vec3(uv, 1));
+                        vec3 ro, rd;
+                        if (uVRMode) {
+                            ro = vec3(0.0, 0.0, 0.0);
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0, 0, -4);
+                            rd = normalize(vec3(uv, 1));
+                        }
 
                         float d = RayMarch(ro, rd);
                         vec3 col = vec3(0);
@@ -490,17 +487,11 @@
                             vec3 p = ro + rd * d;
                             vec3 n = GetNormal(p);
                             vec3 r = reflect(rd, n);
-
-                            // Fake Environment Mapping
                             vec3 ref = vec3(0.5) + 0.5 * cos(r * 3.0 + vec3(0, 2, 4) + uTime);
-                            
-                            // Fresnel
                             float fresnel = pow(1.0 + dot(rd, n), 3.0);
-                            
                             col = ref * (0.2 + 0.8 * fresnel);
-                            col += vec3(0.8, 0.9, 1.0) * pow(max(dot(r, vec3(0,1,0)), 0.0), 10.0); // Specular
+                            col += vec3(0.8, 0.9, 1.0) * pow(max(dot(r, vec3(0,1,0)), 0.0), 10.0);
                         }
-
                         gl_FragColor = vec4(col, 1.0);
                     }
                 `
@@ -512,27 +503,33 @@
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
+                    uniform bool uVRMode;
+                    varying vec3 vWorldPosition;
                     
                     void main() {
-                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                        vec3 rd;
+                        if (uVRMode) {
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            rd = normalize(vec3(uv, 1.0)); // Simple projection
+                        }
+
+                        // Map rd to tunnel coordinates
+                        // For tunnel, we need polar coords relative to view
+                        // Let's approximate for VR: use rd.xy
                         
-                        // Polar coordinates
-                        float r = length(uv);
-                        float a = atan(uv.y, uv.x);
+                        vec2 p = uVRMode ? rd.xy / (rd.z + 1.5) : (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
                         
-                        // Tunnel effect
+                        float r = length(p);
+                        float a = atan(p.y, p.x);
                         float z = 1.0 / r + uTime * 2.0;
                         float angle = a / 3.14159 + uTime * 0.2;
-                        
-                        // Grid pattern
                         float grid = abs(sin(z * 10.0) * sin(angle * 10.0));
                         
-                        // Color
                         vec3 col = vec3(0);
-                        col += vec3(0.1, 0.8, 1.0) / abs(sin(z * 10.0) * 2.0 + r * 5.0); // Blue rings
-                        col += vec3(1.0, 0.2, 0.5) * grid * r; // Pink grid
-                        
-                        // Fog
+                        col += vec3(0.1, 0.8, 1.0) / abs(sin(z * 10.0) * 2.0 + r * 5.0);
+                        col += vec3(1.0, 0.2, 0.5) * grid * r;
                         col *= r * 1.5;
                         
                         gl_FragColor = vec4(col, 1.0);
@@ -546,8 +543,9 @@
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
+                    uniform bool uVRMode;
+                    varying vec3 vWorldPosition;
 
-                    // Simple noise
                     float hash(float n) { return fract(sin(n)*753.5453123); }
                     float noise(in vec3 x) {
                         vec3 p = floor(x);
@@ -559,7 +557,6 @@
                                    mix(mix( hash(n+113.0), hash(n+114.0),f.x),
                                        mix( hash(n+270.0), hash(n+271.0),f.x),f.y),f.z);
                     }
-
                     float fbm(vec3 p) {
                         float f = 0.0;
                         f += 0.50000*noise( p ); p = p*2.02;
@@ -569,13 +566,18 @@
                     }
 
                     void main() {
-                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
-                        vec3 ro = vec3(0.0, 0.0, uTime * 2.0);
-                        vec3 rd = normalize(vec3(uv, 1.0));
+                        vec3 ro, rd;
+                        if (uVRMode) {
+                            ro = vec3(0.0, 0.0, uTime * 2.0);
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0.0, 0.0, uTime * 2.0);
+                            rd = normalize(vec3(uv, 1.0));
+                        }
                         
-                        vec3 col = vec3(0.5, 0.7, 0.9) - max(rd.y, 0.0)*0.5; // Sky gradient
+                        vec3 col = vec3(0.5, 0.7, 0.9) - max(rd.y, 0.0)*0.5;
                         
-                        // Raymarch clouds
                         float t = 0.0;
                         for(int i=0; i<64; i++) {
                             vec3 p = ro + t*rd;
@@ -583,12 +585,11 @@
                             if(den > 0.4) {
                                 float dif = clamp((den - fbm(p+0.3))/0.6, 0.0, 1.0);
                                 vec3 lin = vec3(1.0, 0.6, 0.3)*dif + vec3(0.9);
-                                col = mix(col, lin, 0.05 * den); // Blend
+                                col = mix(col, lin, 0.05 * den);
                             }
                             t += 0.2;
                         }
                         
-                        // Sun
                         float sun = pow(max(dot(rd, normalize(vec3(0, 0.2, 1))), 0.0), 32.0);
                         col += vec3(1.0, 0.8, 0.4) * sun;
 
@@ -603,6 +604,8 @@
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
+                    uniform bool uVRMode;
+                    varying vec3 vWorldPosition;
 
                     float sdBox(vec3 p, vec3 b) {
                         vec3 d = abs(p) - b;
@@ -610,14 +613,10 @@
                     }
 
                     float GetDist(vec3 p) {
-                        // Ground
                         float d = p.y + 1.0;
-                        
-                        // Buildings (Repeated)
                         vec3 q = p;
                         q.xz = mod(p.xz + 5.0, 10.0) - 5.0;
                         float b = sdBox(q - vec3(0, 0, 0), vec3(1.0, 4.0 + sin(floor(p.x/10.0)*10.0)*2.0, 1.0));
-                        
                         return min(d, b);
                     }
 
@@ -633,32 +632,31 @@
                     }
 
                     void main() {
-                        vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
-                        vec3 ro = vec3(0, 5, uTime * 5.0);
-                        vec3 rd = normalize(vec3(uv.x, uv.y - 0.2, 1));
+                        vec3 ro, rd;
+                        if (uVRMode) {
+                            ro = vec3(0, 5, uTime * 5.0);
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0, 5, uTime * 5.0);
+                            rd = normalize(vec3(uv.x, uv.y - 0.2, 1));
+                        }
 
                         float d = RayMarch(ro, rd);
                         vec3 col = vec3(0);
 
                         if(d < 100.0) {
                             vec3 p = ro + rd * d;
-                            
-                            // Grid pattern on floor
                             if(p.y < -0.9) {
                                 float grid = step(0.98, fract(p.x)) + step(0.98, fract(p.z));
                                 col = vec3(0.0, 1.0, 1.0) * grid;
                             } else {
-                                // Buildings
                                 col = vec3(0.1, 0.0, 0.2);
-                                // Windows
                                 float w = step(0.8, fract(p.y * 2.0)) * step(0.8, fract(p.x * 2.0));
                                 col += vec3(1.0, 0.8, 0.0) * w;
                             }
-                            
-                            // Fog
                             col = mix(col, vec3(0.05, 0.0, 0.1), 1.0 - exp(-d * 0.02));
                         } else {
-                            // Sky
                             col = vec3(0.05, 0.0, 0.1);
                         }
 
@@ -672,7 +670,8 @@
         let scene, camera, renderer, composer;
         let currentShaderIndex = 0;
         let material;
-        let mesh;
+        let quadMesh, skyboxMesh;
+        let isVR = false;
 
         // --- INIT ---
         function init() {
@@ -683,9 +682,15 @@
             renderer = new THREE.WebGLRenderer({ antialias: false });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.xr.enabled = true; // Enable WebXR
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Post Processing
+            // Add VR Button
+            document.body.appendChild(VRButton.createButton(renderer));
+
+            // Post Processing (Bloom) - Note: Post processing in WebXR is tricky.
+            // For simplicity, we might disable bloom in VR or use a different approach.
+            // Here we keep it for 2D mode.
             const renderPass = new THREE.RenderPass(scene, camera);
             const bloomPass = new THREE.UnrealBloomPass(
                 new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -698,35 +703,57 @@
             composer.addPass(renderPass);
             composer.addPass(bloomPass);
 
-            // Initial Shader Mesh (Full Screen Quad)
-            const geometry = new THREE.PlaneGeometry(2, 2);
+            // --- GEOMETRY SETUP ---
+
+            // 1. Full Screen Quad (for 2D Desktop)
+            const quadGeo = new THREE.PlaneGeometry(2, 2);
             material = new THREE.ShaderMaterial({
                 uniforms: {
                     uTime: { value: 0 },
                     uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-                    uMouse: { value: new THREE.Vector2(0, 0) }
+                    uMouse: { value: new THREE.Vector2(0, 0) },
+                    uVRMode: { value: false }
                 },
                 vertexShader: `
                     varying vec2 vUv;
+                    varying vec3 vWorldPosition;
                     void main() {
                         vUv = uv;
+                        // For Quad, world position isn't really used for ray direction in the same way,
+                        // but we pass it for consistency.
+                        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                        vWorldPosition = worldPosition.xyz;
                         gl_Position = vec4(position, 1.0);
                     }
                 `,
                 fragmentShader: SHADERS[0].fragment
             });
+            quadMesh = new THREE.Mesh(quadGeo, material);
+            scene.add(quadMesh);
 
-            mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
+            // 2. Skybox (for VR)
+            const boxGeo = new THREE.BoxGeometry(10, 10, 10);
+            // Invert normals to see inside
+            boxGeo.scale(-1, 1, 1);
+
+            // We share the material but need to handle uniforms carefully
+            // Actually, let's use the same material instance.
+            skyboxMesh = new THREE.Mesh(boxGeo, material);
+            skyboxMesh.visible = false; // Hidden by default
+            scene.add(skyboxMesh);
 
             // Events
             window.addEventListener('resize', onResize);
             document.addEventListener('mousemove', onMouseMove);
 
+            // VR Session Events
+            renderer.xr.addEventListener('sessionstart', onVRStart);
+            renderer.xr.addEventListener('sessionend', onVREnd);
+
             setupUI();
 
-            // Start Animation
-            animate();
+            // Start Animation Loop (WebXR compatible)
+            renderer.setAnimationLoop(animate);
 
             // Remove Loader
             setTimeout(() => {
@@ -734,6 +761,29 @@
                 setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
                 document.getElementById('infoPanel').classList.add('visible');
             }, 1000);
+        }
+
+        function onVRStart() {
+            isVR = true;
+            quadMesh.visible = false;
+            skyboxMesh.visible = true;
+            material.uniforms.uVRMode.value = true;
+
+            // Hide UI in VR (DOM overlay is separate, usually hidden)
+            document.getElementById('uiLayer').style.display = 'none';
+        }
+
+        function onVREnd() {
+            isVR = false;
+            quadMesh.visible = true;
+            skyboxMesh.visible = false;
+            material.uniforms.uVRMode.value = false;
+
+            document.getElementById('uiLayer').style.display = 'flex';
+
+            // Reset camera for 2D
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            composer.passes[0].camera = camera;
         }
 
         function setupUI() {
@@ -759,13 +809,10 @@
 
         function switchShader(index) {
             if (index === currentShaderIndex) return;
-
-            // Transition Effect
             currentShaderIndex = index;
             material.fragmentShader = SHADERS[index].fragment;
             material.needsUpdate = true;
 
-            // Update UI
             document.querySelectorAll('.nav-dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
@@ -777,7 +824,6 @@
             const title = document.getElementById('shaderTitle');
             const desc = document.getElementById('shaderDesc');
 
-            // GSAP Animation
             gsap.to('#infoPanel', {
                 opacity: 0, x: -20, duration: 0.3, onComplete: () => {
                     title.textContent = shader.title;
@@ -801,9 +847,14 @@
         }
 
         function animate() {
-            requestAnimationFrame(animate);
             material.uniforms.uTime.value += 0.01;
-            composer.render();
+
+            if (isVR) {
+                // In VR, we render the scene directly (no composer for now to save perf/complexity)
+                renderer.render(scene, renderer.xr.getCamera());
+            } else {
+                composer.render();
+            }
         }
 
         init();
