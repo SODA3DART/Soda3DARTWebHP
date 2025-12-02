@@ -22,6 +22,15 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
+    <!-- Import Map for Three.js modules -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+
     <style>
         :root {
             --primary: #00ffff;
@@ -294,6 +303,52 @@
 
         #gyroButton:hover {
             opacity: 1;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 5px;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+            }
+
+            .info-panel {
+                width: 90%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+            }
+
+            .info-panel.visible {
+                left: 50%;
+            }
+
+            .info-title {
+                font-size: 1.2rem;
+            }
+
+            .info-desc {
+                font-size: 0.8rem;
+            }
+
+            .ui-layer {
+                padding: 20px;
+            }
+
+            .back-btn {
+                top: 20px;
+                right: 20px;
+                font-size: 0.8rem;
+            }
+
+            .gallery-nav {
+                bottom: 30px;
+            }
         }
     </style>
 </head>
