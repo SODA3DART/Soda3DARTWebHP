@@ -22,6 +22,14 @@
     <script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
     <!-- Import Map for Three.js modules -->
     <script type="importmap">
         {
@@ -113,7 +121,6 @@
         .gallery-nav {
             position: absolute;
             bottom: 40px;
-            /* Adjusted to avoid overlap */
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -282,11 +289,10 @@
             text-shadow: 0 0 10px #fff;
         }
 
-        /* Action Buttons (Gyro, Camera) */
+        /* Action Buttons */
         .action-btn {
             position: fixed;
             bottom: 100px;
-            /* Moved up to avoid overlap with nav dots */
             right: 20px;
             padding: 12px 24px;
             border: 1px solid #fff;
@@ -318,11 +324,8 @@
             bottom: 150px;
         }
 
-        /* Stacked above Gyro/VR button */
-
         /* Webcam Hidden Elements */
-        #webcam,
-        #motionCanvas {
+        #webcam {
             display: none;
         }
 
@@ -413,11 +416,10 @@
 
     <!-- Action Buttons -->
     <button id="gyroButton" class="action-btn">ENTER 360° MODE</button>
-    <button id="cameraButton" class="action-btn">CAMERA FX: OFF</button>
+    <button id="cameraButton" class="action-btn">HAND TRACKING: OFF</button>
 
-    <!-- Hidden Video/Canvas for Motion Detection -->
-    <video id="webcam" autoplay playsinline></video>
-    <canvas id="motionCanvas"></canvas>
+    <!-- Hidden Video for MediaPipe -->
+    <video id="webcam" playsinline></video>
 
     <div class="code-overlay" id="codeOverlay">
         <div class="close-code" id="closeCode">&times;</div>
@@ -440,14 +442,14 @@
             {
                 id: 'fractal',
                 title: 'FRACTAL COSMOS',
-                desc: '無限に広がるマンデルボックス・フラクタル。数学的構造が織りなす宇宙。',
+                desc: '無限に広がるマンデルボックス・フラクタル。手を握ると空間が収束し、開くと拡散します。',
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform vec2 uMouse;
                     uniform bool uVRMode;
-                    uniform float uMotionStrength;
-                    uniform vec2 uMotionPos;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen; // 0.0 (Closed) to 1.0 (Open)
                     varying vec3 vWorldPosition;
 
                     #define MAX_STEPS 80
@@ -460,7 +462,8 @@
                     }
 
                     float mandelbox(vec3 p) {
-                        float scale = 2.8;
+                        // Hand Interaction: Scale changes with hand open/close
+                        float scale = 2.8 + (1.0 - uHandOpen) * 0.5; 
                         vec3 offset = p;
                         float dr = 1.0;
                         for (int i = 0; i < 10; i++) {
@@ -475,11 +478,17 @@
                     }
 
                     float GetDist(vec3 p) {
-                        // Motion Effect: Warp space
-                        p.xy += uMotionStrength * 0.5 * sin(p.z * 2.0 + uTime);
-                        
                         p.xz *= rot(uTime * 0.1);
                         p.xy *= rot(uTime * 0.05);
+                        
+                        // Hand Interaction: Warp space at hand position
+                        // Map uHandPos (0-1) to world space approx
+                        vec3 handWorld = vec3((uHandPos.x - 0.5) * 4.0, (uHandPos.y - 0.5) * 4.0, -2.0);
+                        float dToHand = length(p - handWorld);
+                        if (dToHand < 1.5) {
+                            p += (handWorld - p) * (1.0 - uHandOpen) * 0.5; // Pull towards hand when closed
+                        }
+
                         return mandelbox(p);
                     }
 
@@ -527,8 +536,8 @@
                             float glow = 1.0 / (1.0 + d * d * 0.1);
                             col += glow * vec3(0.1, 0.3, 0.8);
                             
-                            // Motion Effect: Add color burst
-                            col += vec3(1.0, 0.0, 0.5) * uMotionStrength * 0.5;
+                            // Hand Interaction: Glow color changes
+                            col = mix(vec3(1.0, 0.2, 0.0), col, uHandOpen);
                         } else {
                             col = vec3(0.05, 0.05, 0.1);
                         }
@@ -540,13 +549,14 @@
             {
                 id: 'liquid',
                 title: 'LIQUID CHROME',
-                desc: '流体金属のシミュレーション。環境マッピングによる反射表現。',
+                desc: '流体金属。手を握ると波立ち、開くと静まります。',
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform vec2 uMouse;
                     uniform bool uVRMode;
-                    uniform float uMotionStrength;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
                     varying vec3 vWorldPosition;
 
                     #define MAX_STEPS 80
@@ -573,9 +583,16 @@
                     }
 
                     float GetDist(vec3 p) {
-                        // Motion Effect: Increase turbulence
-                        float displacement = fbm(p * 1.5 + uTime * (0.5 + uMotionStrength * 2.0));
-                        return length(p) - 1.5 + displacement * 0.8;
+                        // Hand Interaction: Turbulence increases when hand is closed
+                        float turbulence = 1.5 + (1.0 - uHandOpen) * 3.0;
+                        float displacement = fbm(p * turbulence + uTime * 0.5);
+                        
+                        // Hand Interaction: Bulge at hand pos
+                        vec3 handWorld = vec3((uHandPos.x - 0.5) * 4.0, (uHandPos.y - 0.5) * 4.0, -1.0);
+                        float dHand = length(p - handWorld);
+                        float bulge = exp(-dHand * 2.0) * (1.0 - uHandOpen);
+                        
+                        return length(p) - 1.5 + displacement * 0.8 - bulge;
                     }
 
                     float RayMarch(vec3 ro, vec3 rd) {
@@ -619,8 +636,8 @@
                             col = ref * (0.2 + 0.8 * fresnel);
                             col += vec3(0.8, 0.9, 1.0) * pow(max(dot(r, vec3(0,1,0)), 0.0), 10.0);
                             
-                            // Motion Effect: Change color
-                            col = mix(col, vec3(1.0, 0.2, 0.2), uMotionStrength * 0.5);
+                            // Hand Interaction: Heat up when closed
+                            col = mix(vec3(1.0, 0.3, 0.1), col, uHandOpen);
                         }
                         gl_FragColor = vec4(col, 1.0);
                     }
@@ -629,12 +646,13 @@
             {
                 id: 'tunnel',
                 title: 'NEON TUNNEL',
-                desc: '無限に続く光の回廊。スピードと色彩の融合。',
+                desc: '光の回廊。手を握ると加速し、開くと減速します。',
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform bool uVRMode;
-                    uniform float uMotionStrength;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
                     varying vec3 vWorldPosition;
                     
                     void main() {
@@ -648,11 +666,14 @@
 
                         vec2 p = uVRMode ? rd.xy / (rd.z + 1.5) : (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
                         
+                        // Hand Interaction: Shift center based on hand pos
+                        p -= (uHandPos - 0.5) * 0.5;
+
                         float r = length(p);
                         float a = atan(p.y, p.x);
                         
-                        // Motion Effect: Speed up
-                        float speed = 2.0 + uMotionStrength * 10.0;
+                        // Hand Interaction: Speed up when closed
+                        float speed = 2.0 + (1.0 - uHandOpen) * 8.0;
                         float z = 1.0 / r + uTime * speed;
                         
                         float angle = a / 3.14159 + uTime * 0.2;
@@ -663,8 +684,8 @@
                         col += vec3(1.0, 0.2, 0.5) * grid * r;
                         col *= r * 1.5;
                         
-                        // Motion Effect: Flash
-                        col += vec3(1.0) * uMotionStrength * 0.2;
+                        // Hand Interaction: Flash white when closed
+                        col += vec3(1.0) * (1.0 - uHandOpen) * 0.3;
                         
                         gl_FragColor = vec4(col, 1.0);
                     }
@@ -673,12 +694,13 @@
             {
                 id: 'clouds',
                 title: 'VOLUMETRIC CLOUDS',
-                desc: 'レイマーチングによる雲の表現。夕暮れの空。',
+                desc: '雲の表現。手を握ると嵐になり、雷が発生します。',
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform bool uVRMode;
-                    uniform float uMotionStrength;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
                     varying vec3 vWorldPosition;
 
                     float hash(float n) { return fract(sin(n)*753.5453123); }
@@ -713,8 +735,8 @@
                         
                         vec3 col = vec3(0.5, 0.7, 0.9) - max(rd.y, 0.0)*0.5;
                         
-                        // Motion Effect: Stormy clouds
-                        float densityThreshold = 0.4 - uMotionStrength * 0.2;
+                        // Hand Interaction: Storm density
+                        float densityThreshold = 0.4 - (1.0 - uHandOpen) * 0.2;
                         
                         float t = 0.0;
                         for(int i=0; i<64; i++) {
@@ -731,8 +753,9 @@
                         float sun = pow(max(dot(rd, normalize(vec3(0, 0.2, 1))), 0.0), 32.0);
                         col += vec3(1.0, 0.8, 0.4) * sun;
                         
-                        // Motion Effect: Lightning
-                        if (uMotionStrength > 0.5 && fract(uTime * 10.0) > 0.9) {
+                        // Hand Interaction: Lightning at hand position (screen space approx)
+                        if (uHandOpen < 0.5 && fract(uTime * 10.0) > 0.8) {
+                            // Simple flash
                             col += vec3(0.8, 0.8, 1.0) * 0.5;
                         }
 
@@ -743,12 +766,13 @@
             {
                 id: 'cyber',
                 title: 'CYBER CITY',
-                desc: 'グリッドとビル群。サイバーパンクな夜景。',
+                desc: 'サイバーパンク夜景。手を握るとグリッチが発生し、ビルが成長します。',
                 fragment: `
                     uniform float uTime;
                     uniform vec2 uResolution;
                     uniform bool uVRMode;
-                    uniform float uMotionStrength;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
                     varying vec3 vWorldPosition;
 
                     float sdBox(vec3 p, vec3 b) {
@@ -760,8 +784,8 @@
                         float d = p.y + 1.0;
                         vec3 q = p;
                         q.xz = mod(p.xz + 5.0, 10.0) - 5.0;
-                        // Motion Effect: Buildings grow
-                        float height = 4.0 + sin(floor(p.x/10.0)*10.0)*2.0 + uMotionStrength * 5.0;
+                        // Hand Interaction: Buildings grow when closed
+                        float height = 4.0 + sin(floor(p.x/10.0)*10.0)*2.0 + (1.0 - uHandOpen) * 10.0;
                         float b = sdBox(q - vec3(0, 0, 0), vec3(1.0, height, 1.0));
                         return min(d, b);
                     }
@@ -806,10 +830,10 @@
                             col = vec3(0.05, 0.0, 0.1);
                         }
                         
-                        // Motion Effect: Glitch overlay
-                        if (uMotionStrength > 0.2) {
+                        // Hand Interaction: Glitch overlay when closed
+                        if (uHandOpen < 0.3) {
                             float glitch = step(0.9, fract(gl_FragCoord.y * 0.1 + uTime * 10.0));
-                            col += vec3(0.2, 1.0, 0.2) * glitch * uMotionStrength;
+                            col += vec3(0.2, 1.0, 0.2) * glitch;
                         }
 
                         gl_FragColor = vec4(col, 1.0);
@@ -825,13 +849,15 @@
         let quadMesh, skyboxMesh;
         let isVR = false;
         let isGyro = false;
-        let controls; // DeviceOrientationControls
+        let controls;
 
-        // Webcam Globals
-        let video, motionCanvas, motionCtx;
-        let prevFrameData = null;
-        let isCameraActive = false;
-        let motionStrength = 0;
+        // MediaPipe Globals
+        let videoElement;
+        let hands;
+        let cameraUtils;
+        let isHandTrackingActive = false;
+        let handPos = new THREE.Vector2(0.5, 0.5);
+        let handOpen = 1.0; // 1.0 = Open, 0.0 = Closed
 
         // --- INIT ---
         function init() {
@@ -842,25 +868,24 @@
             renderer = new THREE.WebGLRenderer({ antialias: false });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.xr.enabled = true; // Enable WebXR
+            renderer.xr.enabled = true;
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Add VR Button (Only if supported)
+            // Add VR Button
             if ('xr' in navigator) {
                 navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
                     if (supported) {
                         const vrBtn = VRButton.createButton(renderer);
-                        // Apply custom style to move it up
                         vrBtn.style.bottom = '100px';
                         vrBtn.style.right = '20px';
-                        vrBtn.style.left = 'auto'; // Override default center
-                        vrBtn.style.transform = 'none'; // Override default center
+                        vrBtn.style.left = 'auto';
+                        vrBtn.style.transform = 'none';
                         document.body.appendChild(vrBtn);
                     }
                 });
             }
 
-            // Add Gyro Button Logic
+            // Gyro Button
             const gyroBtn = document.getElementById('gyroButton');
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             if (isMobile) {
@@ -868,10 +893,10 @@
                 gyroBtn.addEventListener('click', requestGyro);
             }
 
-            // Webcam Setup
-            setupWebcam();
+            // MediaPipe Setup
+            setupMediaPipe();
 
-            // Post Processing (Bloom)
+            // Post Processing
             const renderPass = new THREE.RenderPass(scene, camera);
             const bloomPass = new THREE.UnrealBloomPass(
                 new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -884,7 +909,7 @@
             composer.addPass(renderPass);
             composer.addPass(bloomPass);
 
-            // --- GEOMETRY SETUP ---
+            // Geometry
             const quadGeo = new THREE.PlaneGeometry(2, 2);
             material = new THREE.ShaderMaterial({
                 uniforms: {
@@ -892,8 +917,8 @@
                     uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
                     uMouse: { value: new THREE.Vector2(0, 0) },
                     uVRMode: { value: false },
-                    uMotionStrength: { value: 0 },
-                    uMotionPos: { value: new THREE.Vector2(0, 0) }
+                    uHandPos: { value: new THREE.Vector2(0.5, 0.5) },
+                    uHandOpen: { value: 1.0 }
                 },
                 vertexShader: `
                     varying vec2 vUv;
@@ -932,73 +957,95 @@
             }, 1000);
         }
 
-        // --- WEBCAM LOGIC ---
-        function setupWebcam() {
-            video = document.getElementById('webcam');
-            motionCanvas = document.getElementById('motionCanvas');
-            motionCtx = motionCanvas.getContext('2d');
+        // --- MEDIAPIPE LOGIC ---
+        function setupMediaPipe() {
+            videoElement = document.getElementById('webcam');
 
-            // Downscale for performance
-            motionCanvas.width = 64;
-            motionCanvas.height = 48;
+            hands = new Hands({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                }
+            });
 
-            document.getElementById('cameraButton').addEventListener('click', toggleCamera);
+            hands.setOptions({
+                maxNumHands: 1,
+                modelComplexity: 1,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            hands.onResults(onHandsResults);
+
+            document.getElementById('cameraButton').addEventListener('click', toggleHandTracking);
         }
 
-        function toggleCamera() {
-            if (!isCameraActive) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        video.srcObject = stream;
-                        isCameraActive = true;
-                        document.getElementById('cameraButton').textContent = "CAMERA FX: ON";
-                        document.getElementById('cameraButton').style.borderColor = "#00ffff";
-                    })
-                    .catch(err => {
-                        console.error("Camera access denied", err);
-                        alert("Camera access denied or not available.");
-                    });
+        function toggleHandTracking() {
+            if (!isHandTrackingActive) {
+                isHandTrackingActive = true;
+                document.getElementById('cameraButton').textContent = "HAND TRACKING: ON";
+                document.getElementById('cameraButton').style.borderColor = "#00ffff";
+
+                cameraUtils = new Camera(videoElement, {
+                    onFrame: async () => {
+                        await hands.send({ image: videoElement });
+                    },
+                    width: 640,
+                    height: 480
+                });
+                cameraUtils.start();
             } else {
-                const stream = video.srcObject;
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-                video.srcObject = null;
-                isCameraActive = false;
-                document.getElementById('cameraButton').textContent = "CAMERA FX: OFF";
+                isHandTrackingActive = false;
+                document.getElementById('cameraButton').textContent = "HAND TRACKING: OFF";
                 document.getElementById('cameraButton').style.borderColor = "#fff";
-                motionStrength = 0;
-            }
-        }
-
-        function updateMotionDetection() {
-            if (!isCameraActive || video.readyState !== video.HAVE_ENOUGH_DATA) return;
-
-            motionCtx.drawImage(video, 0, 0, motionCanvas.width, motionCanvas.height);
-            const frame = motionCtx.getImageData(0, 0, motionCanvas.width, motionCanvas.height);
-            const data = frame.data;
-
-            let diffSum = 0;
-
-            if (prevFrameData) {
-                for (let i = 0; i < data.length; i += 4) {
-                    // Simple luminance difference
-                    const r = Math.abs(data[i] - prevFrameData[i]);
-                    const g = Math.abs(data[i + 1] - prevFrameData[i + 1]);
-                    const b = Math.abs(data[i + 2] - prevFrameData[i + 2]);
-                    diffSum += (r + g + b) / 3;
+                // Note: Stopping cameraUtils cleanly is tricky, usually we just ignore updates or reload
+                // For simplicity, we just stop updating uniforms
+                // Ideally we would stop the camera stream
+                const stream = videoElement.srcObject;
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
                 }
             }
+        }
 
-            prevFrameData = data;
+        function onHandsResults(results) {
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
 
-            // Normalize motion strength (heuristic)
-            const rawMotion = diffSum / (data.length / 4);
-            const targetStrength = Math.min(rawMotion / 20.0, 1.0); // Adjust sensitivity here
+                // 1. Hand Position (Palm Center approx by Wrist(0) and Middle Finger MCP(9))
+                const wrist = landmarks[0];
+                const middleMcp = landmarks[9];
+                const centerX = (wrist.x + middleMcp.x) / 2;
+                const centerY = (wrist.y + middleMcp.y) / 2;
 
-            // Smooth transition
-            motionStrength += (targetStrength - motionStrength) * 0.1;
+                // Mirror X for intuitive interaction
+                handPos.set(1.0 - centerX, 1.0 - centerY);
 
-            material.uniforms.uMotionStrength.value = motionStrength;
+                // 2. Hand Open/Close Detection
+                // Calculate distance between Wrist(0) and Middle Finger Tip(12)
+                // Normalize by distance between Wrist(0) and Middle Finger MCP(9) (Hand scale)
+                const palmSize = Math.sqrt(Math.pow(middleMcp.x - wrist.x, 2) + Math.pow(middleMcp.y - wrist.y, 2));
+                const fingerTip = landmarks[12];
+                const fingerDist = Math.sqrt(Math.pow(fingerTip.x - wrist.x, 2) + Math.pow(fingerTip.y - wrist.y, 2));
+
+                // Ratio: Open hand ~ 2.0+, Closed hand ~ 1.0 or less
+                const ratio = fingerDist / palmSize;
+
+                // Map ratio to 0.0 (Closed) - 1.0 (Open)
+                // Tuned values: Closed ~0.8, Open ~2.2
+                let openVal = (ratio - 0.8) / (2.2 - 0.8);
+                openVal = Math.max(0.0, Math.min(1.0, openVal));
+
+                // Smooth transition
+                handOpen += (openVal - handOpen) * 0.2;
+
+            } else {
+                // No hand detected, reset to neutral
+                handOpen += (1.0 - handOpen) * 0.1;
+            }
+
+            material.uniforms.uHandPos.value.copy(handPos);
+            material.uniforms.uHandOpen.value = handOpen;
         }
 
         // --- GYRO LOGIC ---
@@ -1114,8 +1161,6 @@
 
         function animate() {
             material.uniforms.uTime.value += 0.01;
-
-            updateMotionDetection();
 
             if (isVR) {
                 renderer.render(scene, renderer.xr.getCamera());
