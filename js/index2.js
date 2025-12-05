@@ -43,6 +43,8 @@ let targetScrollPos = 0;
 let scene, camera, renderer;
 let timeline = []; // Array of keyframes
 let maxScroll = 0;
+let artworkMeshes = []; // Store meshes for raycasting
+let raycaster, mouse;
 
 // Touch handling
 let touchStartY = 0;
@@ -73,6 +75,10 @@ function initThreeJS() {
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0, 0);
 
+    // Raycaster
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
     // Renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -97,6 +103,7 @@ function initThreeJS() {
     // Touch Events
     window.addEventListener('touchstart', onTouchStart, { passive: false });
     window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('click', onMouseClick, false);
 
     // Animation Loop
     animate();
@@ -119,6 +126,13 @@ function buildCorridor() {
     floor.position.z = -totalLength / 2 + 10;
     floor.receiveShadow = true;
     scene.add(floor);
+
+    // Grid Helper (for visibility)
+    const gridHelper = new THREE.GridHelper(20, 20, 0x888888, 0xeeeeee);
+    gridHelper.position.y = -1.99; // Just above floor
+    gridHelper.position.z = -totalLength / 2 + 10;
+    gridHelper.scale.z = totalLength / 20; // Stretch to fit
+    scene.add(gridHelper);
 
     // Walls
     const wallGeo = new THREE.PlaneGeometry(totalLength, 10);
@@ -171,6 +185,7 @@ function buildCorridor() {
             mesh.castShadow = true;
             mesh.userData = art;
             scene.add(mesh);
+            artworkMeshes.push(mesh); // Add to array for raycasting
 
             // Spotlight
             const spotLight = new THREE.SpotLight(0xffffff, 0.8);
@@ -308,6 +323,37 @@ function onTouchMove(event) {
         touchStartY = touchY;
         event.preventDefault(); // Prevent default scroll
     }
+}
+
+function onMouseClick(event) {
+    // Calculate mouse position in normalized device coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObjects(artworkMeshes);
+
+    if (intersects.length > 0) {
+        const object = intersects[0].object;
+        const distance = object.position.distanceTo(camera.position);
+
+        // Only allow interaction if reasonably close (e.g., < 8 units)
+        if (distance < 10) {
+            showInfoOverlay(object.userData);
+        }
+    }
+}
+
+function showInfoOverlay(data) {
+    const overlay = document.getElementById('info-overlay');
+    const title = overlay.querySelector('.info-title');
+    const desc = overlay.querySelector('.info-desc');
+
+    title.textContent = data.title;
+    desc.textContent = data.desc || 'No description available.';
+
+    overlay.classList.add('active');
 }
 
 function animate() {
