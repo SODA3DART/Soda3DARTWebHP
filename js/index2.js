@@ -1,116 +1,261 @@
-// Index2 Three.js Background Effect
+// Index2 Museum Logic - The White Cube
+
+import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
+
+// Configuration
+const CONFIG = {
+    cameraSpeed: 0.05,
+    corridorWidth: 10,
+    corridorHeight: 6,
+    artSpacing: 8,
+    artworks: [
+        { src: 'images/Fight.jpeg', title: 'Fight!', author: '4th Year Student' },
+        { src: 'images/bos_AY.png', title: 'Melan Lilion', author: '4th Year Student' },
+        { src: 'images/ahiru_fh.jpg', title: 'Duck', author: '2nd Year Student' },
+        { src: 'images/Coffee_mil_FH.jpg', title: 'Coffee Mill', author: '2nd Year Student' },
+        { src: 'images/kansatu_yu.png', title: 'Observation', author: '3rd Year Student' },
+        { src: 'images/edi＿AK.jpg', title: 'Edi', author: '3rd Year Student' },
+        { src: 'images/phi_st.jpeg', title: 'Phi', author: '4th Year Student' },
+        { src: 'images/3df945078f042c64037441d1d08d241d33e59ec4.jpg', title: 'Untitled', author: '3rd Year Student' }
+    ]
+};
+
+// State
+let scrollPos = 0;
+let targetScrollPos = 0;
+let scene, camera, renderer;
+let artworks = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     initThreeJS();
+    initRainbowCursor();
+
+    // Remove loader
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 1000);
+    }, 1000);
 });
 
 function initThreeJS() {
     const container = document.getElementById('canvas-container');
-    
-    // Scene Setup
-    const scene = new THREE.Scene();
-    // Fog for depth
-    scene.fog = new THREE.FogExp2(0x050505, 0.002);
+
+    // Scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+    scene.fog = new THREE.Fog(0xffffff, 10, 40);
 
     // Camera
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 30;
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 5);
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
-    // Particles
-    const geometry = new THREE.BufferGeometry();
-    const count = 2000;
-    const positions = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
 
-    const color1 = new THREE.Color(0x00f3ff); // Cyan
-    const color2 = new THREE.Color(0xff00ff); // Pink
+    // Build Corridor
+    buildCorridor();
 
-    for (let i = 0; i < count; i++) {
-        // Random positions in a sphere
-        const r = 40 * Math.cbrt(Math.random());
-        const theta = Math.random() * 2 * Math.PI;
-        const phi = Math.acos(2 * Math.random() - 1);
-
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
-
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = z;
-
-        // Mix colors
-        const mixedColor = color1.clone().lerp(color2, Math.random());
-        colors[i * 3] = mixedColor.r;
-        colors[i * 3 + 1] = mixedColor.g;
-        colors[i * 3 + 2] = mixedColor.b;
-    }
-
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    const material = new THREE.PointsMaterial({
-        size: 0.2,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.8,
-        sizeAttenuation: true
-    });
-
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-
-    // Mouse Interaction
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-
-    document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX - windowHalfX);
-        mouseY = (event.clientY - windowHalfY);
-    });
+    // Event Listeners
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('wheel', onWheel, { passive: false });
 
     // Animation Loop
-    const clock = new THREE.Clock();
+    animate();
+}
 
-    function animate() {
-        requestAnimationFrame(animate);
+function buildCorridor() {
+    const textureLoader = new THREE.TextureLoader();
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 });
+    const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.5, metalness: 0.1 });
 
-        const elapsedTime = clock.getElapsedTime();
+    // Floor
+    const floorGeo = new THREE.PlaneGeometry(20, 200);
+    const floor = new THREE.Mesh(floorGeo, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -2;
+    floor.position.z = -50;
+    floor.receiveShadow = true;
+    scene.add(floor);
 
-        targetX = mouseX * 0.001;
-        targetY = mouseY * 0.001;
+    // Walls (Left & Right)
+    // We'll just make long walls
+    const wallGeo = new THREE.PlaneGeometry(200, 10);
 
-        // Smooth rotation based on mouse
-        particles.rotation.y += 0.05 * (targetX - particles.rotation.y);
-        particles.rotation.x += 0.05 * (targetY - particles.rotation.x);
+    const leftWall = new THREE.Mesh(wallGeo, wallMaterial);
+    leftWall.position.set(-CONFIG.corridorWidth / 2, 3, -50);
+    leftWall.rotation.y = Math.PI / 2;
+    leftWall.receiveShadow = true;
+    scene.add(leftWall);
 
-        // Constant slow rotation
-        particles.rotation.z += 0.001;
+    const rightWall = new THREE.Mesh(wallGeo, wallMaterial);
+    rightWall.position.set(CONFIG.corridorWidth / 2, 3, -50);
+    rightWall.rotation.y = -Math.PI / 2;
+    rightWall.receiveShadow = true;
+    scene.add(rightWall);
 
-        // Pulse effect
-        const scale = 1 + Math.sin(elapsedTime * 0.5) * 0.1;
-        particles.scale.set(scale, scale, scale);
+    // Artworks
+    CONFIG.artworks.forEach((art, index) => {
+        const isLeft = index % 2 === 0;
+        const zPos = -index * CONFIG.artSpacing - 5;
 
-        renderer.render(scene, camera);
+        textureLoader.load(art.src, (texture) => {
+            // Adjust aspect ratio
+            const aspect = texture.image.width / texture.image.height;
+            const height = 2.5;
+            const width = height * aspect;
+
+            const artGeo = new THREE.PlaneGeometry(width, height);
+            const artMat = new THREE.MeshBasicMaterial({ map: texture });
+            const mesh = new THREE.Mesh(artGeo, artMat);
+
+            // Frame
+            const frameGeo = new THREE.BoxGeometry(width + 0.2, height + 0.2, 0.1);
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+            const frame = new THREE.Mesh(frameGeo, frameMat);
+            frame.position.z = -0.06;
+            mesh.add(frame);
+
+            // Position
+            mesh.position.y = 0.5; // Eye level-ish
+            mesh.position.z = zPos;
+
+            if (isLeft) {
+                mesh.position.x = -CONFIG.corridorWidth / 2 + 0.1;
+                mesh.rotation.y = Math.PI / 2;
+            } else {
+                mesh.position.x = CONFIG.corridorWidth / 2 - 0.1;
+                mesh.rotation.y = -Math.PI / 2;
+            }
+
+            mesh.castShadow = true;
+            mesh.userData = art; // Store info
+            scene.add(mesh);
+            artworks.push(mesh);
+
+            // Spotlight for this art
+            const spotLight = new THREE.SpotLight(0xffffff, 0.8);
+            spotLight.position.set(0, 4, zPos + 3);
+            spotLight.target = mesh;
+            spotLight.angle = Math.PI / 6;
+            spotLight.penumbra = 0.5;
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+            scene.add(spotLight.target);
+        });
+    });
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function onWheel(event) {
+    // Determine scroll direction
+    // DeltaY is positive when scrolling down (moving forward in our case)
+    targetScrollPos += event.deltaY * 0.05;
+
+    // Clamp scroll
+    const maxScroll = CONFIG.artworks.length * CONFIG.artSpacing + 10;
+    targetScrollPos = Math.max(0, Math.min(targetScrollPos, maxScroll));
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    // Smooth scroll
+    scrollPos += (targetScrollPos - scrollPos) * 0.05;
+
+    // Update camera Z
+    camera.position.z = 5 - scrollPos;
+
+    // Subtle camera sway based on mouse
+    // (Optional, keeps it alive)
+
+    renderer.render(scene, camera);
+}
+
+// --- Rainbow Cursor Logic ---
+function initRainbowCursor() {
+    const canvas = document.getElementById('cursor-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const particles = [];
+    let mouse = { x: width / 2, y: height / 2 };
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+
+        // Add particle
+        particles.push(new Particle(mouse.x, mouse.y));
+    });
+
+    window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    });
+
+    class Particle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 5 + 2;
+            this.life = 1;
+            this.decay = 0.02;
+            this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            this.vx = (Math.random() - 0.5) * 1;
+            this.vy = (Math.random() - 0.5) * 1;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life -= this.decay;
+            this.size -= 0.1;
+        }
+
+        draw(ctx) {
+            ctx.globalAlpha = this.life;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 
-    animate();
+    function animateCursor() {
+        ctx.clearRect(0, 0, width, height);
 
-    // Resize Handler
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw(ctx);
+
+            if (particles[i].life <= 0 || particles[i].size <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+
+        requestAnimationFrame(animateCursor);
+    }
+
+    animateCursor();
 }
