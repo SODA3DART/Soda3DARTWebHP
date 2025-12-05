@@ -1,6 +1,6 @@
 // Index2 Museum Logic - The White Cube
 
-import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
+// import * as THREE from 'https://cdn.skypack.dev/three@0.136.0'; // Removed for local compatibility
 
 // Configuration
 const CONFIG = {

@@ -44,14 +44,63 @@
     <div id="info-overlay">
         <div class="info-content">
             <h2 class="info-title">Artwork Title</h2>
-            <p class="info-desc">Description of the artwork goes here.</p>
-            <button class="close-btn"
-                onclick="document.getElementById('info-overlay').classList.remove('active')">CLOSE</button>
-        </div>
-    </div>
+            <!DOCTYPE html>
+            <html lang="ja">
 
-    <!-- Scripts -->
-    <script type="module" src="js/index2.js"></script>
-</body>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>SODA 3D ART | MUSEUM</title>
+                <link rel="stylesheet" href="css/index2.css">
+            </head>
 
-</html>
+            <body>
+
+                <!-- Loading Screen -->
+                <div id="loader">
+                    <div class="loader-text">ENTERING GALLERY...</div>
+                </div>
+
+                <!-- Three.js Canvas -->
+                <div id="canvas-container"></div>
+
+                <!-- Rainbow Cursor Canvas -->
+                <canvas id="cursor-canvas"></canvas>
+
+                <!-- UI Overlay -->
+                <div id="ui-layer">
+                    <header>
+                        <a href="index.html" class="logo">SODA <span>3D ART</span></a>
+                        <nav>
+                            <ul>
+                                <li><a href="index.html">HOME</a></li>
+                                <li><a href="courseinfo.html">ABOUT</a></li>
+                                <li><a href="gallery.html">GALLERY</a></li>
+                            </ul>
+                        </nav>
+                    </header>
+
+                    <div class="scroll-indicator">
+                        <div class="scroll-text">SCROLL TO EXPLORE</div>
+                        <div class="scroll-line"></div>
+                    </div>
+                </div>
+
+                <!-- Info Overlay (Hidden by default) -->
+                <div id="info-overlay">
+                    <div class="info-content">
+                        <h2 class="info-title">Artwork Title</h2>
+                        <p class="info-desc">Description of the artwork goes here.</p>
+                        <button class="close-btn"
+                            onclick="document.getElementById('info-overlay').classList.remove('active')">CLOSE</button>
+                    </div>
+                </div>
+
+                <!-- Scripts -->
+                <!-- Load Three.js as a global script -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                <!-- Load main script (not as module) -->
+                <script src="js/index2.js"></script>
+            </body>
+
+            </html>
