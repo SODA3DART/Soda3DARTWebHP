@@ -12,28 +12,28 @@ const CONFIG = {
     pauseDuration: 4, // Scroll units to stay facing artwork
     artworks: [
         // Sculpture
-        { src: 'images/phi_st.jpeg', title: 'Phi', author: '4th Year Student', type: 'sculpture' },
-        { src: 'images/phi_st2.jpeg', title: 'Phi (Detail)', author: '4th Year Student', type: 'sculpture' },
-        { src: 'images/kansatu_yu.png', title: 'Observation', author: '3rd Year Student', type: 'sculpture' },
-        { src: 'images/phi_MN.jpg', title: 'Sculpture 4', author: '4th Year Student', type: 'sculpture' },
-        { src: 'images/negikamoMN.jpg', title: 'Negikamo', author: '4th Year Student', type: 'sculpture' },
+        { src: 'images/phi_st.jpeg', title: 'Phi', author: '4th Year Student', type: 'sculpture', desc: 'A study of organic forms and metallic textures.' },
+        { src: 'images/phi_st2.jpeg', title: 'Phi (Detail)', author: '4th Year Student', type: 'sculpture', desc: 'Detailed view focusing on the intricate surface patterns.' },
+        { src: 'images/kansatu_yu.png', title: 'Observation', author: '3rd Year Student', type: 'sculpture', desc: 'Capturing the moment of discovery.' },
+        { src: 'images/phi_MN.jpg', title: 'Sculpture 4', author: '4th Year Student', type: 'sculpture', desc: 'Abstract representation of motion.' },
+        { src: 'images/negikamoMN.jpg', title: 'Negikamo', author: '4th Year Student', type: 'sculpture', desc: 'A playful interaction between nature and geometry.' },
 
         // 3DCG
-        { src: 'images/gallery/Kumayuiru.png', title: 'Kumayu', author: '4th Year Student', type: '3dcg' },
-        { src: 'images/sendousya.png', title: 'The Guide', author: '3rd Year Student', type: '3dcg' },
-        { src: 'images/bos_AY.png', title: 'Melan Lilion', author: '4th Year Student', type: '3dcg' },
-        { src: 'images/gallery/Poppy.png', title: 'Poppy', author: '4th Year Student', type: '3dcg' },
+        { src: 'images/gallery/Kumayuiru.png', title: 'Kumayu', author: '4th Year Student', type: '3dcg', desc: 'Character design exploring cuteness and surrealism.' },
+        { src: 'images/sendousya.png', title: 'The Guide', author: '3rd Year Student', type: '3dcg', desc: 'A mysterious figure leading the way into the unknown.' },
+        { src: 'images/bos_AY.png', title: 'Melan Lilion', author: '4th Year Student', type: '3dcg', desc: 'Digital sculpture with a focus on lighting and mood.' },
+        { src: 'images/gallery/Poppy.png', title: 'Poppy', author: '4th Year Student', type: '3dcg', desc: 'Vibrant colors and energetic composition.' },
 
         // Faculty
-        { src: 'images/prof,kiyoshima/A_woman_holing_a_snake.webp', title: 'A woman holding a snake', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/catch_me_if_you_can.webp', title: 'Catch me if you can', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/Don\'t_go_away.webp', title: 'Don\'t go away', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/Drifting_Angel1.webp', title: 'Drifting Angel', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/Le_Spectre_de_la_rose_Nue.webp', title: 'Le Spectre de la rose Nue', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/Ethemeral_liberata.webp', title: 'Ethemeral liberata', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/prof,kiyoshima/LeSpectredelaRose.webp', title: 'Le Spectre de la Rose', author: 'Prof. Kiyoshima', type: 'faculty' },
-        { src: 'images/gallery/HarmonyKeys.png', title: 'Harmony Keys', author: 'Akira Sakamoto', type: 'faculty' },
-        { src: 'images/gallery/shaderThumb.png', title: 'Shader Gallery', author: 'Akira Sakamoto', type: 'faculty' }
+        { src: 'images/prof,kiyoshima/A_woman_holing_a_snake.webp', title: 'A woman holding a snake', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Exploration of classical themes in a modern digital medium.' },
+        { src: 'images/prof,kiyoshima/catch_me_if_you_can.webp', title: 'Catch me if you can', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Dynamic composition capturing a fleeting moment.' },
+        { src: 'images/prof,kiyoshima/Don\'t_go_away.webp', title: 'Don\'t go away', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Emotional narrative conveyed through digital art.' },
+        { src: 'images/prof,kiyoshima/Drifting_Angel1.webp', title: 'Drifting Angel', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Ethereal figures floating in a digital void.' },
+        { src: 'images/prof,kiyoshima/Le_Spectre_de_la_rose_Nue.webp', title: 'Le Spectre de la rose Nue', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Reinterpretation of the classic ballet theme.' },
+        { src: 'images/prof,kiyoshima/Ethemeral_liberata.webp', title: 'Ethemeral liberata', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'A visual poem about freedom and transience.' },
+        { src: 'images/prof,kiyoshima/LeSpectredelaRose.webp', title: 'Le Spectre de la Rose', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Another perspective on the Rose Spirit.' },
+        { src: 'images/gallery/HarmonyKeys.png', title: 'Harmony Keys', author: 'Akira Sakamoto', type: 'faculty', desc: 'Visualizing music through generative art.' },
+        { src: 'images/gallery/shaderThumb.png', title: 'Shader Gallery', author: 'Akira Sakamoto', type: 'faculty', desc: 'Experimental shader programming results.' }
     ]
 };
 
@@ -67,7 +67,7 @@ function initThreeJS() {
     // Scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 5, 30);
+    scene.fog = new THREE.Fog(0xffffff, 15, 40);
 
     // Camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -105,7 +105,7 @@ function initThreeJS() {
 function buildCorridor() {
     const textureLoader = new THREE.TextureLoader();
     // Changed wall color to light gray to be visible against white background
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, roughness: 0.8 });
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.8 });
     const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.5, metalness: 0.1 });
 
     // Calculate total length needed
@@ -234,7 +234,8 @@ function generateTimeline() {
             zStart: currentZ,
             zEnd: currentZ, // Stay put
             rotStart: 0,
-            rotEnd: targetRot
+            rotEnd: targetRot,
+            artIndex: index // Store index for caption
         });
         currentScroll += CONFIG.turnDuration;
 
@@ -246,7 +247,8 @@ function generateTimeline() {
             zStart: currentZ,
             zEnd: currentZ,
             rotStart: targetRot,
-            rotEnd: targetRot
+            rotEnd: targetRot,
+            artIndex: index // Store index for caption
         });
         currentScroll += CONFIG.pauseDuration;
 
@@ -258,7 +260,8 @@ function generateTimeline() {
             zStart: currentZ,
             zEnd: currentZ,
             rotStart: targetRot,
-            rotEnd: 0
+            rotEnd: 0,
+            artIndex: index // Store index for caption (fade out during this)
         });
         currentScroll += CONFIG.turnDuration;
     });
@@ -331,12 +334,43 @@ function updateCameraFromTimeline(scroll) {
 
         // Interpolate Rotation
         camera.rotation.y = THREE.MathUtils.lerp(segment.rotStart, segment.rotEnd, progress);
+
+        // Update Caption
+        updateCaption(segment);
+
     } else if (scroll >= maxScroll) {
         // End of timeline
         const last = timeline[timeline.length - 1];
         camera.position.z = last.zEnd;
         camera.rotation.y = last.rotEnd;
+        hideCaption();
     }
+}
+
+function updateCaption(segment) {
+    const captionContainer = document.getElementById('caption-container');
+    const titleEl = document.getElementById('caption-title');
+    const authorEl = document.getElementById('caption-author');
+    const descEl = document.getElementById('caption-desc');
+
+    if (segment.type === 'view' || segment.type === 'turn') {
+        // Show caption
+        if (segment.artIndex !== undefined) {
+            const art = CONFIG.artworks[segment.artIndex];
+            titleEl.textContent = art.title;
+            authorEl.textContent = art.author;
+            descEl.textContent = art.desc || '';
+            captionContainer.classList.add('visible');
+        }
+    } else {
+        // Hide caption
+        captionContainer.classList.remove('visible');
+    }
+}
+
+function hideCaption() {
+    const captionContainer = document.getElementById('caption-container');
+    captionContainer.classList.remove('visible');
 }
 
 // --- Rainbow Cursor Logic ---
