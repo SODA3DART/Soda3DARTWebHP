@@ -4,7 +4,7 @@
 height = window.innerHeight;
 canvas.width = width;
 canvas.height = height;
-    });
+
 
 class Particle {
     constructor(x, y) {
