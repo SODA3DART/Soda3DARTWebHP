@@ -33,7 +33,7 @@ const CONFIG = {
         { src: 'images/prof,kiyoshima/Ethemeral_liberata.webp', title: 'Ethemeral liberata', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'A visual poem about freedom and transience.' },
         { src: 'images/prof,kiyoshima/LeSpectredelaRose.webp', title: 'Le Spectre de la Rose', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Another perspective on the Rose Spirit.' },
         { src: 'images/gallery/HarmonyKeys.png', title: 'Harmony Keys', author: 'Akira Sakamoto', type: 'faculty', desc: 'Visualizing music through generative art.' },
-        { src: 'images/gallery/shaderThumb.png', title: 'Shader Gallery', author: 'Akira Sakamoto', type: 'faculty', desc: 'Experimental shader programming results.' }
+        { src: 'images/gallery/shaderThumb.png', title: 'Shader Gallery', author: 'Akira Sakamoto', type: 'faculty', desc: 'Experimental shader programming results.', url: 'shadergallery.html' }
     ]
 };
 
@@ -148,6 +148,16 @@ function buildCorridor() {
     rightWall.rotation.y = -Math.PI / 2;
     rightWall.receiveShadow = true;
     scene.add(rightWall);
+
+    // Wall Grids
+    const wallGridHelper = new THREE.GridHelper(totalLength, 40, 0x888888, 0xeeeeee);
+    wallGridHelper.rotation.z = Math.PI / 2;
+    wallGridHelper.position.set(-CONFIG.corridorWidth / 2 + 0.01, 3, -totalLength / 2 + 10); // Left Wall
+    scene.add(wallGridHelper);
+
+    const rightWallGrid = wallGridHelper.clone();
+    rightWallGrid.position.set(CONFIG.corridorWidth / 2 - 0.01, 3, -totalLength / 2 + 10); // Right Wall
+    scene.add(rightWallGrid);
 
     // Artworks
     CONFIG.artworks.forEach((art, index) => {
@@ -326,6 +336,9 @@ function onTouchMove(event) {
 }
 
 function onMouseClick(event) {
+    // Prevent interaction if clicking on UI elements (like the close button)
+    if (event.target.tagName !== 'CANVAS') return;
+
     // Calculate mouse position in normalized device coordinates
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -338,9 +351,14 @@ function onMouseClick(event) {
         const object = intersects[0].object;
         const distance = object.position.distanceTo(camera.position);
 
-        // Only allow interaction if reasonably close (e.g., < 8 units)
+        // Only allow interaction if reasonably close (e.g., < 10 units)
         if (distance < 10) {
-            showInfoOverlay(object.userData);
+            // Check for URL
+            if (object.userData.url) {
+                window.location.href = object.userData.url;
+            } else {
+                showInfoOverlay(object.userData);
+            }
         }
     }
 }
