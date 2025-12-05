@@ -149,16 +149,6 @@ function buildCorridor() {
     rightWall.receiveShadow = true;
     scene.add(rightWall);
 
-    // Wall Grids
-    const wallGridHelper = new THREE.GridHelper(totalLength, 40, 0x888888, 0xeeeeee);
-    wallGridHelper.rotation.z = Math.PI / 2;
-    wallGridHelper.position.set(-CONFIG.corridorWidth / 2 + 0.01, 3, -totalLength / 2 + 10); // Left Wall
-    scene.add(wallGridHelper);
-
-    const rightWallGrid = wallGridHelper.clone();
-    rightWallGrid.position.set(CONFIG.corridorWidth / 2 - 0.01, 3, -totalLength / 2 + 10); // Right Wall
-    scene.add(rightWallGrid);
-
     // Artworks
     CONFIG.artworks.forEach((art, index) => {
         const isLeft = index % 2 === 0;
