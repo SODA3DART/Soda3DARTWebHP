@@ -69,7 +69,7 @@ function initThreeJS() {
     // Scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 15, 40);
+    scene.fog = new THREE.Fog(0xffffff, 20, 60); // Pushed fog back
 
     // Camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -111,8 +111,8 @@ function initThreeJS() {
 
 function buildCorridor() {
     const textureLoader = new THREE.TextureLoader();
-    // Changed wall color to light gray to be visible against white background
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.8 });
+    // Darker wall color and adjusted roughness
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x999999, roughness: 0.8 });
     const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.5, metalness: 0.1 });
 
     // Calculate total length needed
