@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+import { XRHandModelFactory } from 'three/addons/webxr/XRHandModelFactory.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // --- Global Variables ---
@@ -8,6 +9,7 @@ let camera, scene, renderer;
 let controls;
 let controller1, controller2;
 let controllerGrip1, controllerGrip2;
+let hand1, hand2;
 let raycaster;
 
 const intersected = [];
@@ -34,9 +36,9 @@ animate();
 function init() {
     // 1. Scene Setup
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x111111);
+    // scene.background = new THREE.Color(0x111111); // Remove background for AR passthrough
 
-    // Grid helper for floor reference
+    // Grid helper (optional in AR, maybe keep for reference but faint)
     const gridHelper = new THREE.GridHelper(20, 20, 0x333333, 0x222222);
     gridHelper.position.y = -2;
     scene.add(gridHelper);
@@ -65,8 +67,12 @@ function init() {
     controls.target.set(0, 1.6, 0);
     controls.update();
 
-    // 6. WebXR Setup
-    document.body.appendChild(VRButton.createButton(renderer));
+    // 6. WebXR Setup - Use ARButton for Spatial/Passthrough
+    document.body.appendChild(ARButton.createButton(renderer, {
+        requiredFeatures: ['hit-test'],
+        optionalFeatures: ['dom-overlay', 'hand-tracking'],
+        domOverlay: { root: document.body }
+    }));
 
     // Controllers
     controller1 = renderer.xr.getController(0);
@@ -80,7 +86,18 @@ function init() {
     scene.add(controller2);
 
     const controllerModelFactory = new XRControllerModelFactory();
+    const handModelFactory = new XRHandModelFactory();
 
+    // Hands (Vision Pro / Quest Hand Tracking)
+    hand1 = renderer.xr.getHand(0);
+    hand1.add(handModelFactory.createHandModel(hand1));
+    scene.add(hand1);
+
+    hand2 = renderer.xr.getHand(1);
+    hand2.add(handModelFactory.createHandModel(hand2));
+    scene.add(hand2);
+
+    // Keep controller grip for backward compatibility or controllers
     controllerGrip1 = renderer.xr.getControllerGrip(0);
     controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
     scene.add(controllerGrip1);
@@ -88,6 +105,7 @@ function init() {
     controllerGrip2 = renderer.xr.getControllerGrip(1);
     controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
     scene.add(controllerGrip2);
+
 
     // Raycaster for interaction
     raycaster = new THREE.Raycaster();
