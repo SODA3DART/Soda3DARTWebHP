@@ -1,0 +1,187 @@
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-highlight: rgba(255, 255, 255, 0.3);
+    --text-color: #ffffff;
+    --accent-color: #00e5ff;
+    --dang-color: #ff2a2a;
+    --font-family: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #111;
+    font-family: var(--font-family);
+    color: var(--text-color);
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+/* UI Overlay Layer */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    /* Let clicks pass through to canvas */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: var(--accent-color);
+}
+
+/* Controls Toolbar */
+#toolbar {
+    display: flex;
+    gap: 15px;
+    pointer-events: auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#toolbar:hover {
+    transform: translateY(-2px);
+    border-color: var(--glass-highlight);
+}
+
+button {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+button:hover {
+    background: var(--glass-highlight);
+    color: var(--accent-color);
+}
+
+button.primary {
+    background: var(--accent-color);
+    color: #000;
+    font-weight: 700;
+}
+
+button.primary:hover {
+    background: #fff;
+    box-shadow: 0 0 15px var(--accent-color);
+}
+
+/* Node Editor Panel (Hidden by default) */
+#node-editor {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%) translateX(120%);
+    /* Hidden off-screen */
+    width: 300px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#node-editor.active {
+    transform: translateY(-50%) translateX(0);
+}
+
+#node-editor h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+input,
+textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: inherit;
+    resize: none;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* CSV Hidden Input */
+#file-input {
+    display: none;
+}
+
+/* Bottom Bar */
+footer {
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* Hints */
+#hint-text {
+    background: var(--glass-bg);
+    backdrop-filter: blur(5px);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}

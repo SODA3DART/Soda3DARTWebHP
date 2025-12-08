@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SODA 3D ART | Spatial Mind Map</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/spatial_mindmap.css">
+</head>
+
+<body>
+
+    <!-- Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay -->
+    <div id="ui-layer">
+        <header>
+            <div class="logo">SODA <span>SPATIAL MAP</span></div>
+            <div id="toolbar">
+                <button type="button" id="add-node-btn" title="Add Child Node">
+                    <span>+</span> Node
+                </button>
+                <button type="button" id="delete-node-btn" title="Delete Selected">
+                    <span>🗑️</span> Delete
+                </button>
+                <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 5px;"></div>
+                <button type="button" id="layout-2d">2D Flat</button>
+                <button type="button" id="layout-3d" class="primary">3D Spatial</button>
+                <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 5px;"></div>
+                <button type="button" id="export-btn">Export CSV</button>
+                <button type="button" id="import-btn">Import CSV</button>
+                <input type="file" id="file-input" accept=".csv">
+            </div>
+            <!-- Empty div for spacing or user profile -->
+            <div style="width: 100px;"></div>
+        </header>
+
+        <footer>
+            <div id="hint-text">
+                Desktop: Click to select, Drag background to rotate. <br>
+                XR: Use controllers to point & grab. "Enter VR" button below.
+            </div>
+        </footer>
+
+        <!-- Node Editor Panel -->
+        <div id="node-editor">
+            <h3>Edit Node</h3>
+            <textarea id="node-text-input" rows="3" placeholder="Enter idea..."></textarea>
+            <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">
+                Changes apply instantly.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Main Module Script -->
+    <script type="module" src="js/spatial_mindmap.js"></script>
+
+</body>
+
+</html>
