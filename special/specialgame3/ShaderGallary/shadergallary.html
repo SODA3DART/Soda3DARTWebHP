@@ -839,6 +839,225 @@
                         gl_FragColor = vec4(col, 1.0);
                     }
                 `
+            },
+            {
+                id: 'barrier',
+                title: 'ENERGY BARRIER',
+                desc: '高エネルギー防壁。手を握ると出力が上昇し、赤熱化します。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform bool uVRMode;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
+                    varying vec3 vWorldPosition;
+
+                    #define MAX_STEPS 100
+                    #define MAX_DIST 100.0
+                    #define SURF_DIST 0.001
+
+                    // Hexagon pattern
+                    float hex(vec2 p) {
+                        p.x *= 0.57735 * 2.0;
+                        p.y += mod(floor(p.x), 2.0) * 0.5;
+                        p = abs((mod(p, 1.0) - 0.5));
+                        return abs(max(p.x * 1.5 + p.y, p.y * 2.0) - 1.0);
+                    }
+
+                    float GetDist(vec3 p) {
+                        // Hand Interaction: Warp sphere shape based on hand
+                         vec3 handWorld = vec3((uHandPos.x - 0.5) * 5.0, (uHandPos.y - 0.5) * 5.0, -2.0);
+                        float distToHand = length(p - handWorld);
+                        
+                        // Basic Sphere
+                        float d = length(p) - 1.8;
+                        
+                        // Ripple effect
+                        float ripple = sin(d * 20.0 - uTime * 5.0) * 0.02;
+                        d += ripple;
+                        
+                        // Hand distortion
+                        if (distToHand < 1.0) {
+                             d -= 0.2 * (1.0 - uHandOpen) * smoothstep(1.0, 0.0, distToHand);
+                        }
+                        
+                        return d;
+                    }
+
+                    void main() {
+                        vec3 ro, rd;
+                        if (uVRMode) {
+                            ro = vec3(0, 0, 0);
+                            rd = normalize(vWorldPosition);
+                        } else {
+                            vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0, 0, -3.5);
+                            rd = normalize(vec3(uv, 1));
+                        }
+
+                        // Raymarch
+                        float d = 0.0;
+                        float hit = 0.0;
+                        for(int i=0; i<MAX_STEPS; i++) {
+                            vec3 p = ro + rd * d;
+                            float dS = GetDist(p);
+                            d += dS;
+                            if(d > MAX_DIST || abs(dS) < SURF_DIST) {
+                                if(abs(dS) < SURF_DIST) hit = 1.0;
+                                break;
+                            }
+                        }
+                        
+                        vec3 col = vec3(0.0);
+                        
+                        if (hit > 0.5) {
+                            vec3 p = ro + rd * d;
+                            vec3 n = normalize(p); // Sphere normal is just normalized position
+                            
+                            // Hexagon Grid on Sphere surface
+                            // Map 3D pos to UV (approx polar)
+                            vec2 uv = vec2(atan(p.z, p.x), acos(p.y / length(p)));
+                            float grid = hex(uv * 5.0 + uTime * 0.2);
+                            grid = smoothstep(0.9, 0.95, grid);
+                            
+                            // Fresnel
+                            float fresnel = pow(1.0 - dot(-rd, n), 2.0);
+                            
+                            // Color Logic
+                            vec3 baseColor = vec3(0.0, 0.5, 1.0); // Blue default
+                            vec3 hotColor = vec3(1.0, 0.2, 0.0);  // Red hot
+                            
+                            // Hand Interaction: Shift color when closed
+                            vec3 shieldCol = mix(baseColor, hotColor, 1.0 - uHandOpen);
+                            
+                            col = shieldCol * 0.2; // Ambient
+                            col += shieldCol * fresnel * 2.0; // Rim glow
+                            col += vec3(1.0) * grid * (1.0 - uHandOpen); // Highlight grid when energized
+                            
+                            // Pulse
+                            col *= 1.0 + sin(uTime * 10.0) * 0.1;
+                        }
+                        
+                        // Add some background star/dust
+                        col += vec3(fract(sin(dot(rd.xy, vec2(12.9898,78.233))) * 43758.5453)) * 0.02;
+
+                        gl_FragColor = vec4(col, 1.0);
+                    }
+                `
+            },
+            {
+                id: 'hologram',
+                title: 'HOLOGRAM AVATAR',
+                desc: '人物のホログラム投影。手を握ると通信障害（グリッチ）が発生します。',
+                fragment: `
+                    uniform float uTime;
+                    uniform vec2 uResolution;
+                    uniform vec2 uMouse;
+                    uniform bool uVRMode;
+                    uniform vec2 uHandPos;
+                    uniform float uHandOpen;
+                    varying vec3 vWorldPosition;
+
+                    #define MAX_STEPS 64
+                    #define MAX_DIST 50.0
+                    #define SURF_DIST 0.01
+
+                    // SDF Primitives
+                    float sdSphere(vec3 p, float s) { return length(p) - s; }
+                    float sdCapsule(vec3 p, vec3 a, vec3 b, float r) {
+                        vec3 pa = p - a, ba = b - a;
+                        float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+                        return length(pa - ba * h) - r;
+                    }
+                    
+                    mat2 rot(float a) {
+                        float s = sin(a), c = cos(a);
+                        return mat2(c, -s, s, c);
+                    }
+
+                    float GetDist(vec3 p) {
+                        // Hand Interaction: Rotate character
+                        p.xz *= rot(uTime + (uHandPos.x - 0.5) * 4.0);
+                        
+                        // Glitch displacement
+                        if (uHandOpen < 0.5) {
+                            float glitchStr = (0.5 - uHandOpen) * 0.5;
+                            p.x += (fract(sin(p.y * 10.0 + uTime * 20.0) * 43758.5453) - 0.5) * glitchStr;
+                        }
+                        
+                        // Humanoid Construction
+                        vec3 headPos = vec3(0, 1.6, 0);
+                        vec3 bodyStart = vec3(0, 1.4, 0);
+                        vec3 bodyEnd = vec3(0, 0.0, 0);
+                        vec3 armLStart = vec3(-0.4, 1.3, 0);
+                        vec3 armLEnd = vec3(-0.6, 0.4, 0.2);
+                        vec3 armRStart = vec3(0.4, 1.3, 0);
+                        vec3 armREnd = vec3(0.6, 0.4, 0.2);
+                        
+                        // Floating bounce
+                        p.y -= sin(uTime) * 0.1;
+                        
+                        float d = sdSphere(p - headPos, 0.35); // Head
+                        d = min(d, sdCapsule(p, bodyStart, bodyEnd, 0.3)); // Body
+                        d = min(d, sdCapsule(p, armLStart, armLEnd, 0.12)); // Arm L
+                        d = min(d, sdCapsule(p, armRStart, armREnd, 0.12)); // Arm R
+                        
+                        // Legs (fade out towards bottom approx)
+                        d = min(d, sdCapsule(p, vec3(-0.2, 0, 0), vec3(-0.3, -1.2, 0.1), 0.15));
+                        d = min(d, sdCapsule(p, vec3(0.2, 0, 0), vec3(0.3, -1.2, 0.1), 0.15));
+                        
+                        return d;
+                    }
+
+                    void main() {
+                        vec3 ro, rd;
+                        if (uVRMode) {
+                            ro = vec3(0, 1.0, 4.0); // Slightly adjusted view for VR
+                            rd = normalize(vWorldPosition - vec3(0, 1.0, 0)); // Look at centerish
+                        } else {
+                             vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution.xy) / uResolution.y;
+                            ro = vec3(0, 1.0, 4.0);
+                            rd = normalize(vec3(uv, 1));
+                        }
+
+                        // Hologram Raymarch (Volumetric-ish)
+                        vec3 col = vec3(0);
+                        float t = 0.0;
+                        float acc = 0.0;
+                        
+                        for(int i=0; i<MAX_STEPS; i++) {
+                            vec3 p = ro + rd * t;
+                            float d = GetDist(p);
+                            
+                            // Accumulate glow near surface (Hologram logic)
+                            // "Thickness" of the hologram shell
+                            float shellThickness = 0.05;
+                            if (d < shellThickness) {
+                                float val = (shellThickness - d) / shellThickness;
+                                // Additive scanline
+                                float scanline = 0.5 + 0.5 * sin(p.y * 100.0 - uTime * 10.0);
+                                acc += val * scanline * 0.15; // Accumulate density
+                            }
+                            
+                            t += max(d * 0.5, SURF_DIST); // Slow march near surface for accumulation
+                            if(t > MAX_DIST || acc > 1.0) break;
+                        }
+                        
+                        // Color grading
+                        vec3 holoColor = vec3(0.1, 0.9, 0.8); // Cyan
+                        if (uHandOpen < 0.5) holoColor = vec3(1.0, 0.1, 0.1); // Red glitch
+                        
+                        col = holoColor * acc;
+                        
+                        // Vignette / Background
+                        col += vec3(0.05, 0.1, 0.1) * (1.0 - length(gl_FragCoord.xy / uResolution.xy - 0.5));
+
+                        // Scanline Noise overlay (Screen space)
+                        if (mod(gl_FragCoord.y, 4.0) < 2.0) col *= 0.8;
+                        
+                        gl_FragColor = vec4(col, 1.0);
+                    }
+                `
             }
         ];
 
