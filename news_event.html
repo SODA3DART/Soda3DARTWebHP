@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="images/logohedder.webp" type="image/webp">
@@ -9,11 +10,11 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FRSVB211GG"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'G-FRSVB211GG');
+        gtag('config', 'G-FRSVB211GG');
     </script>
 
     <style>
@@ -385,6 +386,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- ヘッダー -->
     <header>
@@ -395,9 +397,9 @@
             </div>
             <div class="mobile-menu" id="mobileMenu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 12H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 6H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 18H21" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </div>
             <nav id="nav">
@@ -482,12 +484,28 @@
         const mobileMenu = document.getElementById('mobileMenu');
         const nav = document.getElementById('nav');
 
-        mobileMenu.addEventListener('click', function() {
+        mobileMenu.addEventListener('click', function () {
             nav.classList.toggle('active');
         });
 
+
+
         // サンプルニュースデータ（実際の環境では、サーバーから取得するか、HTMLファイルを解析して取得します）
         const newsData = [
+            {
+                id: 12,
+                date: '2025年12月8日',
+                title: '熊本市イメージキャラクター「ひごまる」巨大モニュメント公開',
+                excerpt: '3Dアートコースの学生が制作した、熊本市イメージキャラクター「ひごまる」の巨大モニュメントが、12月8日（日）よりサクラマチクマモトにて公開されました。',
+                content: `<p>3Dアートコースの学生が制作した、熊本市イメージキャラクター「ひごまる」の巨大モニュメントが、12月8日（日）よりサクラマチクマモト（熊本市中央区）にて公開されました。</p>
+                <p>このプロジェクトは、今月で開設10周年を迎える西日本シティ銀行熊本営業部様との連携により実現したものです。来年4月で熊本地震の発生から10年という節目を迎えるにあたり、復興への想いと未来への希望を込めて共同制作を行いました。</p>
+                <p>高さ約2メートルに及ぶこの「ひごまる」は、発泡スチロールを削り出す「カーヴィング」技法を用いて学生たちが精巧に造形し、その表面を地域の方々から収集されたペットボトルキャップ約1万個で彩っています。</p>
+                <p>学生たちは夏ごろから約3カ月の期間をかけて、立体造形の技術とキャップの色分け・配置の計算を組み合わせ、2mを超えるアート作品として完成させました。</p>
+                <p>本作品は、以下の日程で展示される予定です。学生たちの力作を、ぜひ現地でご覧ください。</p>
+                <p><a href="https://www.sojo-u.ac.jp/news/media/2025/251211_006704.html" target="_blank" style="color: #4285f4; text-decoration: none;">→ メディア掲載情報（崇城大学公式サイト）</a></p>`,
+                image: 'images/Exhibition/other/content.webp',
+                fullArticle: 'https://www.sojo-u.ac.jp/news/media/2025/251211_006704.html'
+            },
             {
                 id: 10,
                 date: '2025年9月30日',
@@ -619,7 +637,7 @@
                 const normalizeDate = (dateStr) => {
                     return dateStr.replace(/年/g, '-').replace(/月/g, '-').replace(/日/g, '');
                 };
-                
+
                 const dateA = new Date(normalizeDate(a.date));
                 const dateB = new Date(normalizeDate(b.date));
                 return dateB - dateA;
@@ -632,8 +650,8 @@
                 newsItem.dataset.id = news.id;
 
                 // ニュースの全文記事がある場合はそのリンクを使用
-                const fullArticleLink = news.fullArticle ? 
-                    `<a href="${news.fullArticle}" class="read-more-btn">詳細を見る</a>` : 
+                const fullArticleLink = news.fullArticle ?
+                    `<a href="${news.fullArticle}" class="read-more-btn">詳細を見る</a>` :
                     '';
 
                 newsItem.innerHTML = `
@@ -809,7 +827,7 @@
         }
 
         // ストレージイベントリスナーを設定（他のタブでの変更を検知）
-        window.addEventListener('storage', function(e) {
+        window.addEventListener('storage', function (e) {
             if (e.key === 'newsArticles' || e.key === NEWS_LAST_UPDATED_KEY) {
                 loadStoredNewsArticles();
                 renderNewsItems();
@@ -817,9 +835,32 @@
         });
 
         // ページ読み込み時に保存されたニュース記事を読み込んでから、ニュース記事を生成
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadStoredNewsArticles();
             renderNewsItems();
+
+            // URLパラメータからIDを取得して、該当するニュース記事を開く
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id');
+
+            if (newsId) {
+                // 少し遅延させてレンダリング完了を待つ（念のため）
+                setTimeout(() => {
+                    const newsItem = document.querySelector(`.news-item[data-id="${newsId}"]`);
+                    if (newsItem) {
+                        // ニュースアイテムまでスクロール
+                        newsItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                        // 詳細を開く
+                        const header = newsItem.querySelector('.news-header');
+                        const content = newsItem.querySelector('.news-content');
+                        if (header && content) {
+                            newsItem.classList.add('active');
+                            content.classList.add('active');
+                        }
+                    }
+                }, 300);
+            }
 
             // 定期的にニュース更新をチェック（5秒ごと）
             setInterval(checkForNewsUpdates, 5000);
@@ -828,4 +869,5 @@
     <!-- Logo Transition Animation -->
     <script src="js/logoTransition.js"></script>
 </body>
+
 </html>
