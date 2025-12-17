@@ -24,6 +24,10 @@ const CONFIG = {
         { src: 'images/bos_AY.png', title: 'Melan Lilion', author: '4th Year Student', type: '3dcg', desc: 'Digital sculpture with a focus on lighting and mood.' },
         { src: 'images/gallery/Poppy.png', title: 'Poppy', author: '4th Year Student', type: '3dcg', desc: 'Vibrant colors and energetic composition.' },
 
+        // Animation
+        { src: 'images/gallery/SeihitsuNoMuse.jpg', title: '静謐のミューズたち', author: '2年生', type: 'animation', desc: 'Unreal Editor for Fortnitht(UEFN)を用いて作成された自身のデジタル作品を彩る空間と映像作品', url: 'https://youtu.be/TzpSweVMw40' },
+
+
         // Faculty
         { src: 'images/prof,kiyoshima/A_woman_holing_a_snake.webp', title: 'A woman holding a snake', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Exploration of classical themes in a modern digital medium.' },
         { src: 'images/prof,kiyoshima/catch_me_if_you_can.webp', title: 'Catch me if you can', author: 'Prof. Kiyoshima', type: 'faculty', desc: 'Dynamic composition capturing a fleeting moment.' },
