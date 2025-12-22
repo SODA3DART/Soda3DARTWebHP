@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Label Studio</title>
+    <link rel="stylesheet" href="css/caption_maker.css">
+    <!-- Scripts for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Gallery Label Studio</h1>
+            <p>展覧会用キャプション作成ツール</p>
+        </header>
+
+        <main>
+            <div class="editor-section">
+                <div class="input-group">
+                    <label for="input-title">Title (作品名)</label>
+                    <input type="text" id="input-title" placeholder="作品名を入力 (例: 柔)" value="柔">
+                </div>
+
+                <div class="input-group">
+                    <label for="input-author">Author (作者名)</label>
+                    <input type="text" id="input-author" placeholder="作者名を入力 (例: 田代 土竜)" value="田代 土竜">
+                </div>
+
+                <div class="input-group">
+                    <label for="input-size">Size (サイズ)</label>
+                    <input type="text" id="input-size" placeholder="サイズを入力 (例: H1890 mm × W500 mm × D770 mm)"
+                        value="H1890 mm × W500 mm × D770 mm">
+                </div>
+
+                <div class="input-group">
+                    <label for="input-material">Material (素材)</label>
+                    <input type="text" id="input-material" placeholder="素材を入力 (例: アクリル樹脂)" value="アクリル樹脂">
+                </div>
+
+                <div class="actions">
+                    <button id="add-card-btn" class="btn primary">リストに追加</button>
+                    <button id="download-pdf-btn" class="btn secondary">PDFダウンロード</button>
+                </div>
+
+                <div class="preview-area">
+                    <h2>Preview</h2>
+                    <div id="preview-card" class="caption-card">
+                        <div class="card-content">
+                            <div class="card-top">
+                                <div class="caption-title" id="preview-title">柔</div>
+                            </div>
+                            <div class="card-bottom">
+                                <div class="caption-author" id="preview-author">田代 土竜</div>
+                                <div class="caption-size" id="preview-size">H1890 mm × W500 mm × D770 mm</div>
+                                <div class="caption-material" id="preview-material">アクリル樹脂</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-section">
+                <h2>Collection (印刷予定リスト)</h2>
+                <div id="card-collection" class="card-grid">
+                    <!-- Added cards will appear here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/caption_maker.js"></script>
+</body>
+
+</html>
