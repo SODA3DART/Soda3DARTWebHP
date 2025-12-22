@@ -225,6 +225,53 @@ main {
     justify-content: flex-start;
 }
 
+/* Card Interaction overlay */
+.caption-card {
+    position: relative;
+    /* ensure overlay stays within */
+}
+
+/* Only show overlay actions in the collection list, not the preview */
+.card-grid .caption-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 0;
+    /* Cards are sharp usually */
+}
+
+.overlay-btn {
+    padding: 8px 12px;
+    background: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.overlay-btn:hover {
+    background: #f0f0f0;
+}
+
+.overlay-btn.delete {
+    color: #cc0000;
+}
+
 /* Print Specifics */
 @media print {
     body {
