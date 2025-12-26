@@ -34,15 +34,61 @@ document.addEventListener('DOMContentLoaded', () => {
     addBtn.addEventListener('click', () => {
         const cardClone = document.getElementById('preview-card').cloneNode(true);
         cardClone.id = ''; // Remove ID to avoid duplicates
+        cardClone.style.cursor = 'default'; // Reset cursor
+        cardClone.title = ''; // Reset title
 
-        // Add a remove button overlay for user convenience (not visible in print ideally, but keep simple for now)
-        cardClone.style.cursor = 'pointer';
-        cardClone.title = 'Click to remove';
-        cardClone.addEventListener('click', () => {
+        // Create Overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'card-overlay';
+
+        // Delete Button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'overlay-btn delete';
+        deleteBtn.textContent = '削除';
+        deleteBtn.onclick = (e) => {
+            e.stopPropagation();
             if (confirm('このカードをリストから削除しますか？')) {
                 cardClone.remove();
             }
-        });
+        };
+
+        // Download Image Button
+        const dlBtn = document.createElement('button');
+        dlBtn.className = 'overlay-btn';
+        dlBtn.textContent = '画像保存';
+        dlBtn.onclick = async (e) => {
+            e.stopPropagation();
+            const originalText = dlBtn.textContent;
+            dlBtn.textContent = '保存中...';
+
+            try {
+                // Get title for filename
+                const titleText = cardClone.querySelector('.caption-title').textContent || 'caption';
+                // Sanitize filename
+                const safeTitle = titleText.replace(/[^a-z0-9\u3000-\u30Fe\u4e00-\u9fa5]/gi, '_').substring(0, 20);
+
+                const canvas = await html2canvas(cardClone, {
+                    scale: 3,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    ignoreElements: (element) => element.classList.contains('card-overlay')
+                });
+
+                const link = document.createElement('a');
+                link.download = `${safeTitle}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error(err);
+                alert('画像の保存に失敗しました');
+            } finally {
+                dlBtn.textContent = originalText;
+            }
+        };
+
+        overlay.appendChild(dlBtn);
+        overlay.appendChild(deleteBtn);
+        cardClone.appendChild(overlay);
 
         collectionGrid.appendChild(cardClone);
     });
@@ -112,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     scale: 3,
                     useCORS: true,
                     logging: false,
-                    backgroundColor: '#ffffff' // Ensure white background
+                    backgroundColor: '#ffffff', // Ensure white background
+                    ignoreElements: (element) => element.classList.contains('card-overlay')
                 });
 
                 const imgData = canvas.toDataURL('image/png');
