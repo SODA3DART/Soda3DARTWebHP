@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Babylon.js + GLSL Sample</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        body, html { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+        #renderCanvas { width: 100%; height: 100%; touch-action: none; }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        // --- 1. GLSL シェーダーの定義 ---
+        
+        // Vertex Shader: 頂点の位置を計算（形状を変える）
+        BABYLON.Effect.ShadersStore["customVertexShader"] = `
+            precision highp float;
+
+            // 属性 (Babylonから自動的に送られる)
+            attribute vec3 position;
+            attribute vec3 normal;
+            attribute vec2 uv;
+
+            // ユニフォーム (JSから送られる変数)
+            uniform mat4 worldViewProjection;
+            uniform float time;
+
+            // フラグメントシェーダーへ送る変数
+            varying vec2 vUV;
+            varying vec3 vPosition;
+            varying vec3 vNormal;
+
+            void main() {
+                vUV = uv;
+                vNormal = normal;
+                vPosition = position;
+
+                // 法線方向に波のような動きを加える
+                vec3 p = position;
+                float wave = sin(time * 2.0 + position.y * 4.0) * 0.1;
+                p += normal * wave;
+
+                gl_Position = worldViewProjection * vec4(p, 1.0);
+            }
+        `;
+
+        // Fragment Shader: ピクセルの色を決定（色を変える）
+        BABYLON.Effect.ShadersStore["customFragmentShader"] = `
+            precision highp float;
+
+            varying vec2 vUV;
+            varying vec3 vPosition;
+            varying vec3 vNormal;
+
+            uniform float time;
+
+            void main() {
+                // 時間と位置に基づいた色の変化
+                float r = sin(vUV.x * 10.0 + time) * 0.5 + 0.5;
+                float g = cos(vUV.y * 10.0 + time) * 0.5 + 0.5;
+                float b = sin((vPosition.x + vPosition.y) * 5.0 + time) * 0.5 + 0.5;
+
+                // フレネル効果（縁を光らせる）のような演出
+                float fresnel = dot(normalize(vNormal), vec3(0, 0, 1));
+                vec3 color = vec3(r, g, b) * (0.5 + 0.5 * fresnel);
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        // --- 2. Babylon.js シーン構築 ---
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+
+            // カメラ
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new BABYLON.Vector3(0, 0, 0), scene);
+            camera.attachControl(canvas, true);
+
+            // 光源（シェーダー内で計算しない場合は単純な環境光として機能）
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
+
+            // 球体の作成
+            const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 1.5, segments: 64}, scene);
+
+            // シェーダーマテリアルの作成
+            const shaderMaterial = new BABYLON.ShaderMaterial("shader", scene, {
+                vertex: "custom",
+                fragment: "custom",
+            },
+            {
+                attributes: ["position", "normal", "uv"],
+                uniforms: ["worldViewProjection", "time"]
+            });
+
+            // マテリアルを球体に適用
+            sphere.material = shaderMaterial;
+
+            // --- 3. アニメーションループ ---
+            
+            let time = 0;
+            scene.registerBeforeRender(function () {
+                time += 0.01;
+                // シェーダー内の 'uniform float time' に値を渡す
+                shaderMaterial.setFloat("time", time);
+            });
+
+            return scene;
+        };
+
+        const scene = createScene();
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
