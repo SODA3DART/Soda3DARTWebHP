@@ -42,19 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
             titleEl.style.textAlign = 'center';
         } else if (mode === 'shrink') {
             titleEl.style.whiteSpace = 'nowrap';
-            
+            titleEl.style.textAlign = 'center';
+
             // Layout thrashing triggers reflow, but needed for calculation
             // Reset to reasonable max first
-            let currentSize = 24; 
+            let currentSize = 24;
             titleEl.style.fontSize = `${currentSize}pt`;
 
             // We need to ensure the element is actually rendered to check scrollWidth
             // Since we are just setting styles, it should be fine if connected to DOM
-            
+
             // Simple shrink loop
             // Use specific container width for calculation if needed, but titleEl parent has width
             const parentWidth = titleEl.parentElement.clientWidth;
-            
+
             // Check if overflow
             while (titleEl.scrollWidth > parentWidth && currentSize > 6) {
                 currentSize -= 1;
