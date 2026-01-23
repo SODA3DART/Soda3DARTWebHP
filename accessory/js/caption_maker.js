@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
         title: document.getElementById('input-title'),
         author: document.getElementById('input-author'),
         size: document.getElementById('input-size'),
-        material: document.getElementById('input-material')
+        material: document.getElementById('input-material'),
+        titleMode: document.getElementById('input-title-mode')
     };
 
     const preview = {
@@ -20,10 +21,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Live Preview Update
     function updatePreview() {
-        preview.title.textContent = inputs.title.value;
+        const mode = inputs.titleMode.value;
+        const titleEl = preview.title;
+
+        // Reset basic content
+        titleEl.textContent = inputs.title.value;
         preview.author.textContent = inputs.author.value;
         preview.size.textContent = inputs.size.value;
         preview.material.textContent = inputs.material.value;
+
+        // Reset styles to defaults before applying mode
+        titleEl.style.whiteSpace = 'normal';
+        titleEl.style.textAlign = 'left';
+        titleEl.style.fontSize = '24pt'; // Default CSS size
+        titleEl.style.width = '100%';
+        titleEl.style.display = 'block';
+
+        // Apply Mode Logic
+        if (mode === 'center') {
+            titleEl.style.textAlign = 'center';
+        } else if (mode === 'shrink') {
+            titleEl.style.whiteSpace = 'nowrap';
+            
+            // Layout thrashing triggers reflow, but needed for calculation
+            // Reset to reasonable max first
+            let currentSize = 24; 
+            titleEl.style.fontSize = `${currentSize}pt`;
+
+            // We need to ensure the element is actually rendered to check scrollWidth
+            // Since we are just setting styles, it should be fine if connected to DOM
+            
+            // Simple shrink loop
+            // Use specific container width for calculation if needed, but titleEl parent has width
+            const parentWidth = titleEl.parentElement.clientWidth;
+            
+            // Check if overflow
+            while (titleEl.scrollWidth > parentWidth && currentSize > 6) {
+                currentSize -= 1;
+                titleEl.style.fontSize = `${currentSize}pt`;
+            }
+        }
     }
 
     Object.values(inputs).forEach(input => {

@@ -22,7 +22,14 @@
             <div class="editor-section">
                 <div class="input-group">
                     <label for="input-title">Title (作品名)</label>
-                    <input type="text" id="input-title" placeholder="作品名を入力 (例: 色彩)" value="色彩">
+                    <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                        <select id="input-title-mode" style="padding: 4px; border-radius: 4px; border: 1px solid #ddd; flex-shrink: 0;">
+                            <option value="wrap">改行 (左寄せ)</option>
+                            <option value="center">改行 (中央)</option>
+                            <option value="shrink">自動縮小 (1行)</option>
+                        </select>
+                        <input type="text" id="input-title" placeholder="作品名を入力 (例: 色彩)" value="色彩" style="flex-grow: 1;">
+                    </div>
                 </div>
 
                 <div class="input-group">
