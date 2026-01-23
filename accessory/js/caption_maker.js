@@ -53,11 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Since we are just setting styles, it should be fine if connected to DOM
 
             // Simple shrink loop
-            // Use specific container width for calculation if needed, but titleEl parent has width
+            const parentStyle = window.getComputedStyle(titleEl.parentElement);
+            const paddingX = parseFloat(parentStyle.paddingLeft) + parseFloat(parentStyle.paddingRight);
             const parentWidth = titleEl.parentElement.clientWidth;
+            const maxWidth = parentWidth - paddingX;
 
             // Check if overflow
-            while (titleEl.scrollWidth > parentWidth && currentSize > 6) {
+            while (titleEl.scrollWidth > maxWidth && currentSize > 6) {
                 currentSize -= 1;
                 titleEl.style.fontSize = `${currentSize}pt`;
             }
