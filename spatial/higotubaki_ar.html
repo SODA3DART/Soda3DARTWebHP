@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <title>Higotubaki AR</title>
+</head>
+
+<body>
+    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/05/targets-miyabi.mind;" color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false">
+        <a-assets>
+            <a-asset-item id="higotubaki" src="../3dartensyu3/ar/05/higotubakikan.glb"></a-asset-item>
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+            <!-- Using 0.5 scale as a safe default, can be adjusted -->
+            <a-entity gltf-model="#higotubaki" rotation="0 0 0" position="0 0 0" scale="0.5 0.5 0.5"
+                animation-mixer="clip: *; loop: repeat;"></a-entity>
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
