@@ -203,7 +203,8 @@
 
     <!-- AR Scene -->
     <!-- targets4.mindを使用してtaitoru.jpgを認識し、ue.glbモデルを表示 -->
-    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/01/targets4.mind; uiLoading: no; uiError: no; uiScanning: no;"
+    <a-scene
+        mindar-image="imageTargetSrc: ../3dartensyu3/ar/01/targets4.mind; uiLoading: no; uiError: no; uiScanning: no;"
         color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
@@ -217,11 +218,7 @@
         <!-- ターゲットエンティティ (targets4.mindの最初のターゲット = taitoru.jpg) -->
         <a-entity mindar-image-target="targetIndex: 0">
             <!-- 3Dモデルを表示 -->
-            <a-gltf-model 
-                src="#ue-model" 
-                position="0 0 0" 
-                rotation="0 0 0" 
-                scale="1 1 1"
+            <a-gltf-model src="#ue-model" position="0 0 0" rotation="0 0 0" scale="1 1 1"
                 animation="property: position; to: 0 0.1 0; dir: alternate; dur: 2000; loop: true">
             </a-gltf-model>
         </a-entity>
