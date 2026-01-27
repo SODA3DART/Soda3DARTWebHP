@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飛び出すARキャラクター | Soda3DART</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        :root {
+            --primary-accent: #00c6ff;
+            --secondary-accent: #0072ff;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(0, 198, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 114, 255, 0.05) 0%, transparent 50%);
+            color: var(--text-main);
+            font-family: 'Zen Kaku Gothic New', 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            overflow: hidden;
+            /* Prevent scroll for carousel feel */
+        }
+
+        #root {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // Data for AR Projects
+        const projects = [
+            {
+                id: 1,
+                title: "ARタイトル",
+                link: "ar_taitoru.html",
+                image: "../3dartensyu3/ar/01/taitoru.jpg",
+                desc: "タイトルロゴの立体表現"
+            },
+            {
+                id: 2,
+                title: "キツネAR",
+                link: "fox_ar.html",
+                image: "../3dartensyu3/ar/03/poster.png",
+                desc: "動き回るキツネのアニメーション"
+            },
+            {
+                id: 3,
+                title: "肥後椿AR",
+                link: "higotubaki_ar.html",
+                image: "../3dartensyu3/ar/05/肥後椿マーカー画像.png",
+                desc: "美しく咲く肥後椿"
+            },
+            {
+                id: 4,
+                title: "空っぺAR",
+                link: "sorappe_ar.html",
+                image: "../3dartensyu3/ar/04/poster.png",
+                desc: "空を飛ぶキャラクター"
+            },
+            {
+                id: 5,
+                title: "結AR",
+                link: "yui_ar.html",
+                image: "../3dartensyu3/ar/02/ポスター.png",
+                desc: "オリジナルキャラクター結"
+            }
+        ];
+
+        const Header = () => (
+            <header style={{
+                textAlign: 'center',
+                padding: '30px 20px',
+                zIndex: 10,
+                position: 'relative',
+                flexShrink: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
+                <h1 style={{
+                    fontSize: '2.5rem',
+                    fontWeight: '800',
+                    background: 'linear-gradient(135deg, var(--secondary-accent), var(--primary-accent))',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'transparent',
+                    margin: '0 0 25px 0',
+                    letterSpacing: '0.05em',
+                    textShadow: '0 10px 20px rgba(0,198,255,0.15)'
+                }}>
+                    飛び出すARキャラクター
+                </h1>
+
+                <div style={{
+                    maxWidth: '640px',
+                    width: '100%',
+                    background: 'rgba(255, 255, 255, 0.65)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(255, 255, 255, 0.8)',
+                    borderRadius: '24px',
+                    padding: '24px 32px',
+                    boxSizing: 'border-box',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255,255,255,0.5)',
+                    textAlign: 'left'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
+                        <span style={{
+                            display: 'inline-block',
+                            width: '4px',
+                            height: '1.2em',
+                            background: 'var(--primary-accent)',
+                            marginRight: '10px',
+                            borderRadius: '2px'
+                        }}></span>
+                        <span style={{ fontWeight: '700', color: 'var(--secondary-accent)', fontSize: '0.9rem', letterSpacing: '0.1em' }}>ABOUT CONCEPT</span>
+                    </div>
+                    <p style={{
+                        fontSize: '0.95rem',
+                        lineHeight: '1.8',
+                        color: 'var(--text-main)',
+                        margin: 0,
+                        fontWeight: '500'
+                    }}>
+                        3年生の「飛び出すARキャラクター」のページです。<br />
+                        ゲームキャラクターをテーマとして主人公、ラスボスをデザイン・モデリングしました。<br />
+                        <span style={{ display: 'block', marginTop: '10px', fontSize: '0.9rem', color: 'var(--text-sub)' }}>
+                            ゲームデザインでは、キャラクターの個性や特徴を記号化することが重要です。
+                            このプロジェクトでは、その学びの集大成として、実際に動作するARキャラクターを制作しました。
+                        </span>
+                    </p>
+                </div>
+            </header>
+        );
+
+        const Carousel = () => {
+            const [activeIndex, setActiveIndex] = useState(0);
+            const [isDragging, setIsDragging] = useState(false);
+            const [startX, setStartX] = useState(0);
+            const [dragOffset, setDragOffset] = useState(0);
+            const containerRef = useRef(null);
+
+            const getWrappedIndex = (index) => {
+                const len = projects.length;
+                return ((index % len) + len) % len;
+            };
+
+            const handleDragStart = (e) => {
+                setIsDragging(true);
+                const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                setStartX(clientX);
+            };
+
+            const handleDragMove = (e) => {
+                if (!isDragging) return;
+                const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                const offset = clientX - startX;
+                setDragOffset(offset);
+            };
+
+            const handleDragEnd = () => {
+                setIsDragging(false);
+                const threshold = 50;
+                if (dragOffset > threshold) {
+                    setActiveIndex((prev) => getWrappedIndex(prev - 1));
+                } else if (dragOffset < -threshold) {
+                    setActiveIndex((prev) => getWrappedIndex(prev + 1));
+                }
+                setDragOffset(0);
+            };
+
+            const goNext = () => setActiveIndex((prev) => getWrappedIndex(prev + 1));
+            const goPrev = () => setActiveIndex((prev) => getWrappedIndex(prev - 1));
+
+            return (
+                <div style={{ flexGrow: 1, position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+
+                    {/* Navigation Arrows */}
+                    <div onClick={goPrev} style={{
+                        position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)',
+                        zIndex: 200, cursor: 'pointer',
+                        background: 'rgba(255,255,255,0.8)', borderRadius: '50%', width: '40px', height: '40px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                    }}>
+                        ◀
+                    </div>
+                    <div onClick={goNext} style={{
+                        position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
+                        zIndex: 200, cursor: 'pointer',
+                        background: 'rgba(255,255,255,0.8)', borderRadius: '50%', width: '40px', height: '40px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+                    }}>
+                        ▶
+                    </div>
+
+                    <div
+                        ref={containerRef}
+                        style={{
+                            flexGrow: 1,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '100%',
+                            cursor: isDragging ? 'grabbing' : 'grab',
+                            touchAction: 'none'
+                        }}
+                        onMouseDown={handleDragStart}
+                        onMouseMove={handleDragMove}
+                        onMouseUp={handleDragEnd}
+                        onMouseLeave={handleDragEnd}
+                        onTouchStart={handleDragStart}
+                        onTouchMove={handleDragMove}
+                        onTouchEnd={handleDragEnd}
+                    >
+                        {projects.map((project, index) => {
+                            const len = projects.length;
+                            let offset = index - activeIndex;
+
+                            if (offset > len / 2) offset -= len;
+                            if (offset < -len / 2) offset += len;
+
+                            const dragShift = dragOffset / 300;
+                            const effectiveOffset = offset + dragShift;
+
+                            const isActive = Math.round(effectiveOffset) === 0;
+
+                            const distance = Math.abs(effectiveOffset);
+                            const scale = Math.max(0.75, 1 - distance * 0.15);
+                            const opacity = Math.max(0.5, 1 - distance * 0.3);
+                            const zIndex = 100 - Math.round(distance * 10);
+
+                            const x = effectiveOffset * 65;
+
+                            const display = distance > 2.5 ? 'none' : 'block';
+
+                            return (
+                                <div key={project.id} style={{
+                                    position: 'absolute',
+                                    width: '280px',
+                                    background: 'white',
+                                    borderRadius: '30px',
+                                    padding: '30px',
+                                    boxSizing: 'border-box',
+                                    boxShadow: 'var(--shadow-hover)',
+                                    transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                                    transform: `translateX(${x}%) scale(${scale})`,
+                                    opacity: opacity,
+                                    zIndex: zIndex,
+                                    display: display,
+                                    pointerEvents: isActive && !isDragging ? 'auto' : 'none',
+                                    textAlign: 'center',
+                                    border: isActive ? `2px solid var(--primary-accent)` : '1px solid transparent'
+                                }}>
+                                    <div style={{
+                                        width: '140px',
+                                        height: '140px',
+                                        borderRadius: '50%',
+                                        margin: '0 auto 20px',
+                                        overflow: 'hidden',
+                                        border: '4px solid #f0f0f0',
+                                        boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+                                    }}>
+                                        <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    </div>
+                                    <h3 style={{ margin: '0 0 10px 0', fontSize: '1.4rem' }}>{project.title}</h3>
+                                    <p style={{ color: 'var(--text-sub)', fontSize: '0.9rem', marginBottom: '20px', minHeight: '3em' }}>{project.desc}</p>
+                                    <a href={project.link} style={{
+                                        display: 'inline-block',
+                                        padding: '12px 30px',
+                                        background: 'linear-gradient(135deg, var(--secondary-accent), var(--primary-accent))',
+                                        color: 'white',
+                                        textDecoration: 'none',
+                                        borderRadius: '50px',
+                                        fontWeight: '600',
+                                        opacity: isActive ? 1 : 0,
+                                        transform: isActive ? 'scale(1)' : 'scale(0.8)',
+                                        transition: 'opacity 0.3s, transform 0.3s'
+                                    }}>
+                                        ARを見る
+                                    </a>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Bottom Slider/Dots */}
+                    <div style={{
+                        textAlign: 'center',
+                        padding: '20px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        zIndex: 200
+                    }}>
+                        {projects.map((_, idx) => (
+                            <div
+                                key={idx}
+                                onClick={() => setActiveIndex(idx)}
+                                style={{
+                                    width: activeIndex === idx ? '30px' : '10px',
+                                    height: '10px',
+                                    borderRadius: '5px',
+                                    background: activeIndex === idx ? 'var(--primary-accent)' : 'rgba(0,0,0,0.2)',
+                                    transition: 'all 0.3s',
+                                    cursor: 'pointer'
+                                }}
+                            />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Header />
+                    <Carousel />
+                    <footer style={{
+                        textAlign: 'center',
+                        padding: '20px',
+                        color: 'var(--text-sub)',
+                        fontSize: '0.8rem',
+                        opacity: 0.7
+                    }}>
+                        &copy; Soda3DART Class Project
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
