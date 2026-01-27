@@ -6,6 +6,22 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script>
+        AFRAME.registerComponent('double-sided', {
+            init: function () {
+                this.el.addEventListener('model-loaded', () => {
+                    const obj = this.el.getObject3D('mesh');
+                    if (obj) {
+                        obj.traverse((node) => {
+                            if (node.isMesh) {
+                                node.material.side = THREE.DoubleSide;
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
     <title>Yui AR</title>
 </head>
 
@@ -25,7 +41,7 @@
 
         <a-entity mindar-image-target="targetIndex: 0">
             <a-entity gltf-model="#yui" rotation="0 0 0" position="0 0 0" scale="0.5 0.5 0.5"
-                animation-mixer="clip: *; loop: repeat;"></a-entity>
+                animation-mixer="clip: *; loop: repeat;" double-sided></a-entity>
             <a-entity gltf-model="#haikei-bg" rotation="0 0 0" position="0 0 0" scale="0.5 0.5 0.5"
                 animation-mixer="clip: *; loop: repeat;"></a-entity>
         </a-entity>
