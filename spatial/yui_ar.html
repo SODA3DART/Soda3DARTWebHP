@@ -14,7 +14,15 @@
                     if (obj) {
                         obj.traverse((node) => {
                             if (node.isMesh) {
-                                node.material.side = THREE.DoubleSide;
+                                // Check if the mesh is an outline
+                                const nodeName = node.name.toLowerCase();
+                                const matName = node.material.name ? node.material.name.toLowerCase() : '';
+                                if (nodeName.includes('outline') || matName.includes('outline')) {
+                                    // Skip double-sided for outlines to avoid occlusion
+                                    console.log('Skipping double-sided for outline:', node.name);
+                                } else {
+                                    node.material.side = THREE.DoubleSide;
+                                }
                             }
                         });
                     }
