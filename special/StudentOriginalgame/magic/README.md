@@ -16,5 +16,21 @@ View your app in AI Studio: https://ai.studio/apps/drive/1Zuft7O2i5B1MYJMZGBhFE4
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+3. Run the app (Development mode):
    `npm run dev`
+
+## Deployment (GitHub Pages)
+
+This project uses React/Vite and **must be built** before it can run in a browser.
+
+1. Build the project:
+   `npm run build`
+   
+   This creates a `dist` folder containing the playable game (`index.html`, `assets`, etc).
+
+2. To see the built version locally:
+   `npm run preview`
+
+3. **Deploying to GitHub Pages:**
+   - **Option A (Recommended):** Use a GitHub Action or deploy script to publish the `dist` folder to the `gh-pages` branch.
+   - **Option B (Quick manual check):** The files in `dist/` are the ones that work. You cannot link directly to `src/index.html` or `magic/index.html` (the source code) on GitHub Pages. You must link to the deployed build output.
