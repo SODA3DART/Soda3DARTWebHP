@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOJO UNIVERSITY 3D ART EXHIBITION 2025 - 崇城のリッタイ展</title>
+    <link rel="icon" href="../images/logohedder.webp" type="image/webp">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Zen+Kaku+Gothic+New:wght@300;500;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.19/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #f0f0f0;
+            --accent-color: #ccff00;
+            /* Neon Lime */
+            --secondary-accent: #555;
+            --font-main: 'Zen Kaku Gothic New', sans-serif;
+            --font-display: 'Syncopate', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* Smooth Scroll Setup */
+        html.lenis {
+            height: auto;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
+
+        /* Reusable Components */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-color);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--bg-color);
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        section {
+            padding: 100px 5%;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .back-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .back-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s;
+        }
+
+        .back-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('../images/events/Takasegura/poster.webp') center/cover no-repeat;
+            opacity: 0.25;
+            filter: grayscale(100%) contrast(1.2);
+            z-index: -1;
+            transform: scale(1.1);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 10rem);
+            line-height: 0.9;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .hero-title .outline {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 300;
+            max-width: 600px;
+            margin-top: 30px;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 20px;
+        }
+
+        .hero-date {
+            position: absolute;
+            bottom: 50px;
+            right: 5%;
+            text-align: right;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        /* Introduction */
+        .intro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .intro-text h2 {
+            font-size: 4rem;
+            margin-bottom: 40px;
+            line-height: 1.1;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        .intro-desc {
+            font-size: 1.1rem;
+            line-height: 2;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        .intro-image {
+            width: 100%;
+            height: 600px;
+            background: url('../images/Exhibition/Takasegura/Image (6).webp') center/cover no-repeat;
+            filter: grayscale(100%);
+            transition: filter 0.5s;
+        }
+
+        .intro-image:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Info Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2px;
+            background: #222;
+            /* Gap color creates border effect */
+            border: 1px solid #222;
+        }
+
+        .info-card {
+            background: var(--bg-color);
+            padding: 60px 40px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .info-card:hover {
+            background: #0a0a0a;
+        }
+
+        .info-label {
+            font-family: var(--font-display);
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .info-value small {
+            font-size: 1rem;
+            color: #888;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Gallery - Horizontal Scroll */
+        .gallery-wrap {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .gallery-title-sticky {
+            padding: 0 5%;
+            margin-bottom: 50px;
+        }
+
+        .gallery-title-sticky h2 {
+            font-size: 6rem;
+            font-family: var(--font-display);
+            color: transparent;
+            -webkit-text-stroke: 1px #fff;
+            opacity: 0.3;
+        }
+
+        .gallery-track {
+            display: flex;
+            gap: 40px;
+            padding: 0 5%;
+            width: fit-content;
+        }
+
+        .gallery-item {
+            width: 400px;
+            height: 550px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.5s;
+        }
+
+        .gallery-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(0.98);
+        }
+
+        /* Access & Map */
+        .access {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+            padding: 0;
+        }
+
+        .access-info {
+            padding: 100px 50px;
+            background: #111;
+        }
+
+        .access-map {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+        }
+
+        .access-map iframe {
+            width: 100%;
+            height: 100%;
+            filter: grayscale(100%) invert(100%) contrast(1.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px 5%;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 15vw;
+            }
+
+            .intro {
+                grid-template-columns: 1fr;
+            }
+
+            .intro-text h2 {
+                font-size: 2.5rem;
+            }
+
+            .access {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item {
+                width: 300px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">SODA 3D ART</div>
+        <nav class="back-nav">
+            <a href="../index.html">BACK TO HOME</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-bg" id="heroBg"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <div class="reveal">RITTAI</div>
+                    <div class="reveal outline">EXHIBITION</div>
+                    <div class="reveal">2025</div>
+                </h1>
+                <p class="hero-subtitle">
+                    デジタルとフィジカルの境界を溶かす、<br>
+                    崇城大学 芸術学部 3Dアートコースの挑戦。
+                </p>
+            </div>
+            <div class="hero-date">
+                11.09 - 11.22
+            </div>
+        </section>
+
+        <!-- Intro -->
+        <section class="intro">
+            <div class="intro-text">
+                <h2>CROSSING<br><span style="color:var(--accent-color)">REALITIES</span></h2>
+                <div class="intro-desc">
+                    <p>3Dアートコースによる、デジタル・フィジカルのリッタイ作品が展示されるコース展示です。彫刻作品展示のほか、フィギュア3DCG作品や映像作品など、学生たちの学びと新たな発見を感じていただける作品を展示します。
+                    </p>
+                </div>
+                <a href="#gallery" class="btn">VIEW WORKS</a>
+            </div>
+            <div class="intro-image"></div>
+        </section>
+
+        <!-- Information -->
+        <section class="info-section">
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-label">DATE</span>
+                    <div class="info-value">2025.11.09 - 11.22</div>
+                    <div class="info-value"><small>Sat - Fri</small></div>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">TIME</span>
+                    <div class="info-value">10:00 - 19:00</div>
+                    <div class="info-value"><small>Final day until 15:00</small></div>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">ADMISSION</span>
+                    <div class="info-value">FREE</div>
+                    <div class="info-value"><small>入場無料</small></div>
+                </div>
+                <div class="info-card">
+                    <span class="info-label">VENUE</span>
+                    <div class="info-value">TAKASEGURA</div>
+                    <div class="info-value"><small>髙瀬蔵ホール</small></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="gallery-wrap" id="gallery">
+            <div class="gallery-title-sticky">
+                <h2>HIGHLIGHTS</h2>
+            </div>
+            <div class="gallery-track">
+                <!-- Using path from original file -->
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (6).webp"
+                        alt="Exhibition View 1"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (7).webp"
+                        alt="Exhibition View 2"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (8).webp"
+                        alt="Exhibition View 3"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (9).webp"
+                        alt="Exhibition View 4"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (10).webp"
+                        alt="Exhibition View 5"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (11).webp"
+                        alt="Exhibition View 6"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (12).webp"
+                        alt="Exhibition View 7"></div>
+                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (13).webp"
+                        alt="Exhibition View 8"></div>
+            </div>
+        </section>
+
+        <!-- Access -->
+        <section class="access">
+            <div class="access-info">
+                <h2 style="font-family:var(--font-display); font-size:3rem; margin-bottom:30px;">ACCESS</h2>
+                <p style="margin-bottom:20px; font-size:1.1rem;">
+                    <strong>髙瀬蔵ホール</strong><br>
+                    〒865-0025<br>
+                    熊本県玉名市高瀬蔵155-1
+                </p>
+                <a href="tel:0968-72-2480"
+                    style="color:var(--accent-color); text-decoration:none; font-size:1.2rem;">0968-72-2480</a>
+                <br><br>
+                <a href="https://takasegura.jp/" target="_blank" class="btn">OFFICIAL SITE</a>
+            </div>
+            <div class="access-map">
+                <iframe src="https://www.google.com/maps?output=embed&q=髙瀬蔵ホール+熊本県玉名市高瀬蔵155-1" style="border:0;"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-logo">SODA</div>
+        <div class="footer-links">
+            <a href="#">X (Twitter)</a>
+            <a href="#">Instagram</a>
+            <p style="margin-top:10px; font-size:0.8rem; color:#444;">&copy; 2025 Sojo University 3D Art Course.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Lenis Smooth Scroll
+        const lenis = new Lenis();
+
+        lenis.on('scroll', ScrollTrigger.update);
+
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+
+        gsap.ticker.lagSmoothing(0);
+
+        // Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Parallax
+        gsap.to("#heroBg", {
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            },
+            y: 200,
+            scale: 1.2
+        });
+
+        // Horizontal Scroll for Gallery
+        let sections = gsap.utils.toArray(".gallery-item");
+        let track = document.querySelector(".gallery-track");
+
+        let scrollTween = gsap.to(sections, {
+            xPercent: -100 * (sections.length - 1),
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".gallery-wrap",
+                pin: true,
+                scrub: 1,
+                end: "+=3000", /* Scroll distance */
+            }
+        });
+
+        // Reveal Animations
+        gsap.utils.toArray('.reveal').forEach(text => {
+            gsap.from(text, {
+                y: 100,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: text,
+                    start: "top 80%",
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
