@@ -1,0 +1,6 @@
+{
+  "name": "Magic",
+  "description": "A Mario-like 3D side-scrolling platformer game built with React, Three.js, and Tailwind CSS. Control the player with your keyboard.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
