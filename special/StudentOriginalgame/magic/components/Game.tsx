@@ -7,6 +7,7 @@ interface GameProps {
   onWin: () => void;
   onLoseLife: () => void;
   onGainLife: () => void;
+  onCollectCoin: () => void;
   isPaused: boolean;
   input: {
     get: (code: string) => boolean;
@@ -22,9 +23,10 @@ interface Enemy {
     isDefeated: boolean;
 }
 
-const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, input }) => {
+const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, onCollectCoin, isPaused, input }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const isPausedRef = useRef(isPaused);
+  const effectRunIdRef = useRef(0);
 
   useEffect(() => {
     isPausedRef.current = isPaused;
@@ -36,6 +38,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
       enemies: [] as Enemy[],
       goal: null as THREE.Mesh | null,
       healthItems: [] as THREE.Mesh[],
+      coins: [] as THREE.Mesh[],
       projectiles: [] as THREE.Mesh[],
       playerVelocity: new THREE.Vector3(0, 0, 0),
       isPlayerGrounded: false,
@@ -68,6 +71,8 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
   }, [onLoseLife]);
 
   const createLevel = useCallback((scene: THREE.Scene) => {
+    gameStateRef.current.coins = [];
+    gameStateRef.current.healthItems = [];
     const platformMaterial = new THREE.MeshStandardMaterial({ color: 0x8BC34A, roughness: 0.8 });
     
     const platformPositions = [
@@ -157,6 +162,47 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
         gameStateRef.current.healthItems.push(healthItem);
     });
 
+    // コインの作成と配置
+    const coinGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.1, 16);
+    const coinMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xffd700, 
+      emissive: 0xffaa00, 
+      emissiveIntensity: 0.5, 
+      roughness: 0.3,
+      metalness: 0.8
+    });
+    
+    // コインの配置位置（各プラットフォーム上に配置）
+    const coinPositions = [
+      new THREE.Vector3(7, 0.8, 0),
+      new THREE.Vector3(14, 2.8, 0),
+      new THREE.Vector3(25, 0.8, 0),
+      new THREE.Vector3(38, 2.8, 0),
+      new THREE.Vector3(46, 0.8, 0),
+      new THREE.Vector3(58, 4.8, 0),
+      new THREE.Vector3(70, 2.8, 0),
+      new THREE.Vector3(83, 0.8, 0),
+      new THREE.Vector3(90, -1.2, 0),
+      new THREE.Vector3(103, 0.8, 0),
+      new THREE.Vector3(110, 2.8, 0),
+      new THREE.Vector3(123, 4.8, 0),
+      new THREE.Vector3(135, 2.8, 0),
+      new THREE.Vector3(145, 0.8, 0),
+      new THREE.Vector3(158, 2.8, 0),
+      new THREE.Vector3(170, 4.8, 0),
+    ];
+
+    coinPositions.forEach(pos => {
+      const coin = new THREE.Mesh(coinGeometry.clone(), coinMaterial.clone());
+      coin.position.copy(pos);
+      coin.rotation.x = Math.PI / 2; // コインを横向きに
+      coin.castShadow = true;
+      scene.add(coin);
+      coin.userData.originalY = coin.position.y;
+      coin.userData.collected = false; // 収集済みフラグを追加
+      gameStateRef.current.coins.push(coin);
+    });
+
   }, []);
 
   const updateEnemies = useCallback(() => {
@@ -210,7 +256,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
   }, []);
 
   const updatePlayer = useCallback(() => {
-    const { player, playerVelocity, isPlayerGrounded, platforms, goal, isGameWon, enemies, scene } = gameStateRef.current;
+    const { player, playerVelocity, isPlayerGrounded, platforms, goal, isGameWon, enemies, scene, coins } = gameStateRef.current;
     if (!player || isGameWon) return;
 
     if (input.get('ArrowLeft') || input.get('KeyA')) {
@@ -308,6 +354,19 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
         }
         return true;
     });
+
+    // コイン収集の処理
+    gameStateRef.current.coins = gameStateRef.current.coins.filter(coin => {
+        if(!coin.userData.collected && playerBox.intersectsBox(new THREE.Box3().setFromObject(coin))) {
+            coin.userData.collected = true; // 収集済みフラグを立てる
+            onCollectCoin();
+            scene?.remove(coin);
+            coin.geometry.dispose();
+            (coin.material as THREE.Material).dispose();
+            return false;
+        }
+        return true;
+    });
     
     if (player.position.y < -20) { handlePlayerRespawn(); return; }
     for (const enemy of enemies) {
@@ -320,7 +379,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
         gameStateRef.current.isGameWon = true;
         onWin();
     }
-  }, [input, onWin, onGainLife, handlePlayerRespawn]);
+  }, [input, onWin, onGainLife, onCollectCoin, handlePlayerRespawn]);
   
   const updateCamera = useCallback(() => {
     const { camera, player, playerDirection } = gameStateRef.current;
@@ -335,10 +394,11 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
     }
   }, []);
 
-  const animate = useCallback(() => {
-    const { renderer, scene, camera, goal, isGameWon, healthItems } = gameStateRef.current;
+  const animate = useCallback((runId?: number) => {
+    if (runId !== undefined && effectRunIdRef.current !== runId) return;
+    const { renderer, scene, camera, goal, isGameWon, healthItems, coins } = gameStateRef.current;
     if (!renderer || !scene || !camera) {
-      gameStateRef.current.animationFrameId = requestAnimationFrame(animate);
+      gameStateRef.current.animationFrameId = requestAnimationFrame(() => animate(runId));
       return;
     }
     if (!isPausedRef.current) {
@@ -350,9 +410,14 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
             item.rotation.y += 0.03;
             item.position.y = item.userData.originalY + Math.sin(time + item.position.x) * 0.15;
         });
+        // コインのアニメーション（回転と上下動）
+        coins.forEach(coin => {
+            coin.rotation.z += 0.05;
+            coin.position.y = coin.userData.originalY + Math.sin(time + coin.position.x) * 0.2;
+        });
     }
     renderer.render(scene, camera);
-    gameStateRef.current.animationFrameId = requestAnimationFrame(animate);
+    gameStateRef.current.animationFrameId = requestAnimationFrame(() => animate(runId));
   }, [updatePlayer, updateCamera, updateEnemies, updateProjectiles]);
 
   useLayoutEffect(() => {
@@ -404,6 +469,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
 
     createLevel(scene);
 
+    const runId = ++effectRunIdRef.current;
     const handleResize = () => {
         const { camera, renderer } = gameStateRef.current;
         if (camera && renderer && currentMount) {
@@ -415,7 +481,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, isPaused, in
         }
     };
     window.addEventListener('resize', handleResize);
-    animate();
+    animate(runId);
 
     return () => {
       cancelAnimationFrame(gameStateRef.current.animationFrameId);

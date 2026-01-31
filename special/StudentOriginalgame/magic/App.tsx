@@ -133,6 +133,8 @@ const App: React.FC = () => {
   const [lives, setLives] = useState(3);
   const [gameKey, setGameKey] = useState(0);
   const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
+  const [totalCoins, setTotalCoins] = useState(16); // コイン総数（createLevelで配置した数に合わせる）
+  const [collectedCoins, setCollectedCoins] = useState(0); // 獲得コイン数
   
   const input = useKeyboard();
 
@@ -158,6 +160,10 @@ const App: React.FC = () => {
     setLives(prevLives => Math.min(prevLives + 1, 3));
   }, []);
 
+  const handleCollectCoin = useCallback(() => {
+    setCollectedCoins(prev => prev + 1);
+  }, []);
+
   useEffect(() => {
     if (lives <= 0 && gameState === 'playing') {
       setGameState('game-over');
@@ -168,6 +174,7 @@ const App: React.FC = () => {
     input.reset();
     setGameState('playing');
     setLives(3);
+    setCollectedCoins(0); // リセット
     setGameKey(prevKey => prevKey + 1);
   };
 
@@ -175,6 +182,7 @@ const App: React.FC = () => {
     input.reset();
     setGameState('stage-select');
     setLives(3);
+    setCollectedCoins(0); // リセット
     setGameKey(prevKey => prevKey + 1);
   };
   
@@ -182,6 +190,7 @@ const App: React.FC = () => {
     input.reset();
     setGameState('start');
     setLives(3);
+    setCollectedCoins(0); // リセット
     setGameKey(prevKey => prevKey + 1);
   };
 
@@ -218,13 +227,26 @@ const App: React.FC = () => {
                 </button>
               )}
             </div>
-            <div className="flex items-center space-x-1 sm:space-x-2 p-2 bg-black/30 rounded-lg">
-              <span className="font-bold text-xs sm:text-lg hidden xs:inline">Lives:</span>
-              {[...Array(3)].map((_, i) => (
-                <svg key={i} className={`w-4 h-4 sm:w-8 sm:h-8 ${i < lives ? 'text-red-500' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+            <div className="flex items-center space-x-4">
+              {/* ライフ表示 */}
+              <div className="flex items-center space-x-1 sm:space-x-2 p-2 bg-black/30 rounded-lg">
+                <span className="font-bold text-xs sm:text-lg hidden xs:inline">Lives:</span>
+                {[...Array(3)].map((_, i) => (
+                  <svg key={i} className={`w-4 h-4 sm:w-8 sm:h-8 ${i < lives ? 'text-red-500' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                  </svg>
+                ))}
+              </div>
+              {/* コイン表示 */}
+              <div className="flex items-center space-x-1 sm:space-x-2 p-2 bg-black/30 rounded-lg">
+                <svg className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
                 </svg>
-              ))}
+                <span className="font-bold text-xs sm:text-lg text-yellow-400">
+                  {collectedCoins}/{totalCoins}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -241,6 +263,7 @@ const App: React.FC = () => {
           onWin={handleWin}
           onLoseLife={handleLoseLife}
           onGainLife={handleGainLife}
+          onCollectCoin={handleCollectCoin}
           isPaused={isPaused || gameState !== 'playing'}
         />
       </div>
