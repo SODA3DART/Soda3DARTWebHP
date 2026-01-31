@@ -133,7 +133,7 @@ const App: React.FC = () => {
   const [lives, setLives] = useState(3);
   const [gameKey, setGameKey] = useState(0);
   const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
-  const [totalCoins, setTotalCoins] = useState(16); // コイン総数（createLevelで配置した数に合わせる）
+  const [totalCoins, setTotalCoins] = useState(20); // コイン総数（床の上15 + 床間5）
   const [collectedCoins, setCollectedCoins] = useState(0); // 獲得コイン数
   
   const input = useKeyboard();

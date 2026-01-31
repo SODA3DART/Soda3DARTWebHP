@@ -156,6 +156,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, onCollectCoi
     healthItemPositions.forEach(pos => {
         const healthItem = new THREE.Mesh(healthItemGeometry.clone(), healthItemMaterial.clone());
         healthItem.position.copy(pos);
+        healthItem.rotation.x = Math.PI; // ハートを正しい向きに
         healthItem.castShadow = true;
         scene.add(healthItem);
         healthItem.userData.originalY = healthItem.position.y;
@@ -172,24 +173,30 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, onCollectCoi
       metalness: 0.8
     });
     
-    // コインの配置位置（各プラットフォーム上に配置）
+    // コインの配置位置（床の上 + 床間はジャンプ頂点より上、床より下のコインはなし）
     const coinPositions = [
-      new THREE.Vector3(7, 0.8, 0),
-      new THREE.Vector3(14, 2.8, 0),
-      new THREE.Vector3(25, 0.8, 0),
-      new THREE.Vector3(38, 2.8, 0),
-      new THREE.Vector3(46, 0.8, 0),
-      new THREE.Vector3(58, 4.8, 0),
-      new THREE.Vector3(70, 2.8, 0),
-      new THREE.Vector3(83, 0.8, 0),
-      new THREE.Vector3(90, -1.2, 0),
-      new THREE.Vector3(103, 0.8, 0),
-      new THREE.Vector3(110, 2.8, 0),
-      new THREE.Vector3(123, 4.8, 0),
-      new THREE.Vector3(135, 2.8, 0),
-      new THREE.Vector3(145, 0.8, 0),
-      new THREE.Vector3(158, 2.8, 0),
-      new THREE.Vector3(170, 4.8, 0),
+      // 床の上
+      new THREE.Vector3(7, 1.6, 0),
+      new THREE.Vector3(14, 3.6, 0),
+      new THREE.Vector3(23, 1.6, 0),   // ハート(25,1.0)と被らないようXをずらす
+      new THREE.Vector3(38, 3.6, 0),
+      new THREE.Vector3(46, 1.6, 0),
+      new THREE.Vector3(58, 5.6, 0),
+      new THREE.Vector3(70, 3.6, 0),
+      new THREE.Vector3(83, 1.6, 0),
+      new THREE.Vector3(103, 1.6, 0),
+      new THREE.Vector3(108, 3.6, 0),  // ハート(110,3.0)と被らないようXをずらす
+      new THREE.Vector3(123, 5.6, 0),
+      new THREE.Vector3(135, 3.6, 0),
+      new THREE.Vector3(145, 1.6, 0),
+      new THREE.Vector3(158, 3.6, 0),
+      new THREE.Vector3(170, 5.6, 0),
+      // 床間コイン（一枚目削除・高さ二倍）
+      new THREE.Vector3(31.5, 6.0, 0),
+      new THREE.Vector3(52, 8.6, 0),
+      new THREE.Vector3(76.5, 6.0, 0),
+      new THREE.Vector3(116.5, 9.6, 0),
+      new THREE.Vector3(151.5, 6.0, 0),
     ];
 
     coinPositions.forEach(pos => {
