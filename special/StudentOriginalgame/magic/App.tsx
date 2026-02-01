@@ -55,10 +55,10 @@ const StartScreen: React.FC<{ onStart: () => void }> = ({ onStart }) => (
   </div>
 );
 
-const StageSelectScreen: React.FC<{ onSelectStage: (stageId: string) => void }> = ({ onSelectStage }) => {
+const StageSelectScreen: React.FC<{ onSelectStage: (stageId: string) => void; clearedStages: string[] }> = ({ onSelectStage, clearedStages }) => {
   const stages = [
     { id: '1-1', name: 'Grassy Plains', locked: false },
-    { id: '1-2', name: '???', locked: true },
+    { id: '1-2', name: '???', locked: !clearedStages.includes('1-1') },
     { id: '1-3', name: '???', locked: true },
     { id: '1-4', name: '???', locked: true },
   ];
@@ -101,7 +101,7 @@ const PauseMenu: React.FC<{
       Paused
     </h2>
     <div className="flex flex-col space-y-4 px-6 w-full max-w-xs">
-       <button
+      <button
         onClick={onResume}
         className="w-full px-6 py-4 bg-green-500 text-white font-bold text-lg rounded-full shadow-lg transition-transform transform animate-button-boing hover-animate-wiggle"
         style={{ animationDelay: '0.1s' }}
@@ -115,7 +115,7 @@ const PauseMenu: React.FC<{
       >
         Stage Select
       </button>
-       <button
+      <button
         onClick={onQuit}
         className="w-full px-6 py-4 bg-red-600 text-white font-bold text-lg rounded-full shadow-lg transition-transform transform animate-button-boing hover-animate-wiggle"
         style={{ animationDelay: '0.3s' }}
@@ -135,7 +135,8 @@ const App: React.FC = () => {
   const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
   const [totalCoins, setTotalCoins] = useState(20); // コイン総数（床の上15 + 床間5）
   const [collectedCoins, setCollectedCoins] = useState(0); // 獲得コイン数
-  
+  const [clearedStages, setClearedStages] = useState<string[]>([]); // Set 1-2 unlocked logic
+
   const input = useKeyboard();
 
   useEffect(() => {
@@ -149,6 +150,10 @@ const App: React.FC = () => {
   const handleWin = useCallback(() => {
     if (gameState === 'playing') {
       setGameState('won');
+      setClearedStages(prev => {
+        if (!prev.includes('1-1')) return [...prev, '1-1'];
+        return prev;
+      });
     }
   }, [gameState]);
 
@@ -185,7 +190,7 @@ const App: React.FC = () => {
     setCollectedCoins(0); // リセット
     setGameKey(prevKey => prevKey + 1);
   };
-  
+
   const handleQuitGame = () => {
     input.reset();
     setGameState('start');
@@ -199,10 +204,10 @@ const App: React.FC = () => {
   return (
     <main className="relative w-screen h-screen bg-gray-900 text-white overflow-hidden">
       {isPortrait && <OrientationWarning />}
-      
+
       {gameState === 'start' && <StartScreen onStart={() => setGameState('stage-select')} />}
-      {gameState === 'stage-select' && <StageSelectScreen onSelectStage={(stageId) => { if (stageId === '1-1') setGameState('playing'); }} />}
-      
+      {gameState === 'stage-select' && <StageSelectScreen onSelectStage={(stageId) => { if (stageId === '1-1') setGameState('playing'); }} clearedStages={clearedStages} />}
+
       {isGameVisible && (
         <>
           <div className="absolute top-0 left-0 p-4 sm:p-6 z-10 w-full flex justify-between items-start bg-gradient-to-b from-gray-900/90 to-transparent">
@@ -215,7 +220,7 @@ const App: React.FC = () => {
                   Move: Arrows/WASD, Jump: Space, Attack: F
                 </p>
               </div>
-               {gameState === 'playing' && (
+              {gameState === 'playing' && (
                 <button
                   onClick={() => setIsPaused(true)}
                   className="p-2 bg-black/40 rounded-full text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white transition active:scale-90"
