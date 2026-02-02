@@ -156,7 +156,7 @@ const Game: React.FC<GameProps> = ({ onWin, onLoseLife, onGainLife, onCollectCoi
     healthItemPositions.forEach(pos => {
       const healthItem = new THREE.Mesh(healthItemGeometry.clone(), healthItemMaterial.clone());
       healthItem.position.copy(pos);
-      // healthItem.rotation.x = Math.PI; // Rotation removed to fix orientation
+      healthItem.rotation.z = Math.PI; // Correctly flip the heart shape
       healthItem.castShadow = true;
       scene.add(healthItem);
       healthItem.userData.originalY = healthItem.position.y;
