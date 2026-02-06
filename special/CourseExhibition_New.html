@@ -175,6 +175,7 @@
             opacity: 1;
             filter: saturate(0.8);
             z-index: -100;
+            will-change: transform;
             /* transform: scale(1.1); */
         }
 
@@ -326,6 +327,7 @@
             gap: 40px;
             padding: 0 5%;
             width: fit-content;
+            will-change: transform;
         }
 
         .gallery-item {
@@ -505,21 +507,21 @@
             <div class="gallery-track">
                 <!-- Using path from original file -->
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_062200089_iOS.webp"
-                        alt="Exhibition View 1"></div>
+                        alt="Exhibition View 1" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042423507_iOS.webp"
-                        alt="Exhibition View 2"></div>
+                        alt="Exhibition View 2" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042521704_iOS.webp"
-                        alt="Exhibition View 3"></div>
+                        alt="Exhibition View 3" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260203_090531329_iOS.webp"
-                        alt="Exhibition View 4"></div>
+                        alt="Exhibition View 4" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042546628_iOS.webp"
-                        alt="Exhibition View 5"></div>
+                        alt="Exhibition View 5" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_043357445_iOS.webp"
-                        alt="Exhibition View 6"></div>
+                        alt="Exhibition View 6" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_043345152_iOS.webp"
-                        alt="Exhibition View 7"></div>
+                        alt="Exhibition View 7" loading="lazy" decoding="async"></div>
                 <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_091754700_iOS.webp"
-                        alt="Exhibition View 8"></div>
+                        alt="Exhibition View 8" loading="lazy" decoding="async"></div>
             </div>
         </section>
 
@@ -533,7 +535,8 @@
                     style="overflow:hidden; padding-bottom:56.25%; position:relative; height:0;">
                     <iframe src="https://www.youtube.com/embed/6z6O8mbZA24" title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen style="left:0; top:0; height:100%; width:100%; position:absolute;"></iframe>
+                        allowfullscreen loading="lazy"
+                        style="left:0; top:0; height:100%; width:100%; position:absolute;"></iframe>
                 </div>
                 <p style="margin-top: 20px; color: #888;">3Dアートコースの学生たちの1年間の学び</p>
             </div>
