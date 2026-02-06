@@ -22,10 +22,10 @@
 
     <style>
         :root {
-            --bg-color: #050505;
-            --text-color: #f0f0f0;
-            --accent-color: #ccff00;
-            /* Neon Lime */
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --accent-color: #FF6600;
+            /* Orange */
             --secondary-accent: #555;
             --font-main: 'Zen Kaku Gothic New', sans-serif;
             --font-display: 'Syncopate', sans-serif;
@@ -166,16 +166,16 @@
         }
 
         .hero-bg {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: url('../images/events/Takasegura/poster.webp') center/cover no-repeat;
-            opacity: 0.25;
-            filter: grayscale(100%) contrast(1.2);
-            z-index: -1;
-            transform: scale(1.1);
+            height: 100vh;
+            background: url('../images/Exhibition/gallery/3dコース展.webp') center 45%/95% no-repeat;
+            opacity: 1;
+            filter: saturate(0.8);
+            z-index: -100;
+            /* transform: scale(1.1); */
         }
 
         .hero-title {
@@ -184,13 +184,21 @@
             line-height: 0.9;
             font-weight: 700;
             text-transform: uppercase;
-            color: #fff;
+            color: var(--text-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 10px 20px;
+            border-radius: 8px;
+            width: fit-content;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50px);
         }
 
         .hero-title .outline {
             color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+            -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
         }
 
         .hero-subtitle {
@@ -198,8 +206,12 @@
             font-weight: 300;
             max-width: 600px;
             margin-top: 30px;
-            border-left: 3px solid var(--accent-color);
             padding-left: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent-color);
         }
 
         .hero-date {
@@ -210,6 +222,7 @@
             font-family: var(--font-display);
             font-size: 1.5rem;
             color: var(--accent-color);
+            font-weight: bold;
         }
 
         /* Introduction */
@@ -231,20 +244,19 @@
         .intro-desc {
             font-size: 1.1rem;
             line-height: 2;
-            color: #ccc;
+            color: #555;
             margin-bottom: 40px;
         }
 
         .intro-image {
             width: 100%;
             height: 600px;
-            background: url('../images/Exhibition/Takasegura/Image (6).webp') center/cover no-repeat;
-            filter: grayscale(100%);
+            background: url('../images/Exhibition/gallery/20260206_062200089_iOS.webp') center/cover no-repeat;
             transition: filter 0.5s;
         }
 
         .intro-image:hover {
-            filter: grayscale(0%);
+            /* filter: grayscale(0%); */
         }
 
         /* Info Section */
@@ -252,20 +264,21 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2px;
-            background: #222;
+            background: rgba(238, 238, 238, 0.5);
             /* Gap color creates border effect */
-            border: 1px solid #222;
+            border: 1px solid rgba(238, 238, 238, 0.5);
         }
 
         .info-card {
-            background: var(--bg-color);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             padding: 60px 40px;
             position: relative;
             transition: background 0.3s;
         }
 
         .info-card:hover {
-            background: #0a0a0a;
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .info-label {
@@ -274,6 +287,7 @@
             font-size: 0.9rem;
             margin-bottom: 15px;
             display: block;
+            font-weight: bold;
         }
 
         .info-value {
@@ -303,7 +317,7 @@
             font-size: 6rem;
             font-family: var(--font-display);
             color: transparent;
-            -webkit-text-stroke: 1px #fff;
+            -webkit-text-stroke: 1px #000;
             opacity: 0.3;
         }
 
@@ -325,12 +339,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%);
             transition: all 0.5s;
         }
 
         .gallery-item:hover img {
-            filter: grayscale(0%);
+            /* filter: grayscale(0%); */
             transform: scale(0.98);
         }
 
@@ -344,7 +357,8 @@
 
         .access-info {
             padding: 100px 50px;
-            background: #111;
+            background: rgba(249, 249, 249, 0.85);
+            backdrop-filter: blur(10px);
         }
 
         .access-map {
@@ -356,13 +370,14 @@
         .access-map iframe {
             width: 100%;
             height: 100%;
-            filter: grayscale(100%) invert(100%) contrast(1.2);
         }
 
         /* Footer */
         footer {
             padding: 50px 5%;
-            border-top: 1px solid #222;
+            border-top: 1px solid rgba(238, 238, 238, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -428,26 +443,27 @@
             <div class="hero-bg" id="heroBg"></div>
             <div class="hero-content">
                 <h1 class="hero-title">
-                    <div class="reveal">RITTAI</div>
-                    <div class="reveal outline">EXHIBITION</div>
-                    <div class="reveal">2025</div>
+                    <div class="reveal">崇城の</div>
+                    <div class="reveal outline">リッタイ</div>
+                    <div class="reveal">2026</div>
                 </h1>
                 <p class="hero-subtitle">
-                    デジタルとフィジカルの境界を溶かす、<br>
+                    <ruby>伝統<rt>フィジカル</rt></ruby>と<ruby>未来<rt>デジタル</rt></ruby>の境界を溶かす、<br>
                     崇城大学 芸術学部 3Dアートコースの挑戦。
                 </p>
             </div>
             <div class="hero-date">
-                11.09 - 11.22
+                2.03 - 2.15
             </div>
         </section>
 
         <!-- Intro -->
         <section class="intro">
-            <div class="intro-text">
+            <div class="intro-text"
+                style="background: rgba(255,255,255,0.7); backdrop-filter: blur(5px); padding: 40px; border-radius: 8px;">
                 <h2>CROSSING<br><span style="color:var(--accent-color)">REALITIES</span></h2>
                 <div class="intro-desc">
-                    <p>3Dアートコースによる、デジタル・フィジカルのリッタイ作品が展示されるコース展示です。彫刻作品展示のほか、フィギュア3DCG作品や映像作品など、学生たちの学びと新たな発見を感じていただける作品を展示します。
+                    <p> 3Dアートコースによる、デジタル・フィジカルのリッタイ作品が展示されるコース展示です。<br>彫刻作品のほか、フィギュア作品や3DCG作品や映像作品など、3Dアートコースの学生たちの1年間の学びと新たな発見を感じていただける作品を展示します。<br>また、卒業制作展に先行して本コースの４年生の作品の一部も展示されています。
                     </p>
                 </div>
                 <a href="#gallery" class="btn">VIEW WORKS</a>
@@ -460,12 +476,12 @@
             <div class="info-grid">
                 <div class="info-card">
                     <span class="info-label">DATE</span>
-                    <div class="info-value">2025.11.09 - 11.22</div>
-                    <div class="info-value"><small>Sat - Fri</small></div>
+                    <div class="info-value">2026.2.03 - 2.15</div>
+                    <div class="info-value"><small>Tue - Sun</small></div>
                 </div>
                 <div class="info-card">
                     <span class="info-label">TIME</span>
-                    <div class="info-value">10:00 - 19:00</div>
+                    <div class="info-value">10:00 - 18:00</div>
                     <div class="info-value"><small>Final day until 15:00</small></div>
                 </div>
                 <div class="info-card">
@@ -475,8 +491,8 @@
                 </div>
                 <div class="info-card">
                     <span class="info-label">VENUE</span>
-                    <div class="info-value">TAKASEGURA</div>
-                    <div class="info-value"><small>髙瀬蔵ホール</small></div>
+                    <div class="info-value">SOJO GALLERY</div>
+                    <div class="info-value"><small>崇城大学ギャラリー</small></div>
                 </div>
             </div>
         </section>
@@ -488,22 +504,38 @@
             </div>
             <div class="gallery-track">
                 <!-- Using path from original file -->
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (6).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_062200089_iOS.webp"
                         alt="Exhibition View 1"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (7).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042423507_iOS.webp"
                         alt="Exhibition View 2"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (8).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042521704_iOS.webp"
                         alt="Exhibition View 3"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (9).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260203_090531329_iOS.webp"
                         alt="Exhibition View 4"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (10).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_042546628_iOS.webp"
                         alt="Exhibition View 5"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (11).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_043357445_iOS.webp"
                         alt="Exhibition View 6"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (12).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_043345152_iOS.webp"
                         alt="Exhibition View 7"></div>
-                <div class="gallery-item"><img src="../images/Exhibition/Takasegura/Image (13).webp"
+                <div class="gallery-item"><img src="../images/Exhibition/gallery/20260206_091754700_iOS.webp"
                         alt="Exhibition View 8"></div>
+            </div>
+        </section>
+
+        </section>
+
+        <!-- Movie -->
+        <section class="movie-section" style="text-align: center; padding: 100px 5%;">
+            <div class="movie-container" style="max-width: 1000px; margin: 0 auto;">
+                <h2 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 50px;">COURSE MOVIE</h2>
+                <div class="video-responsive"
+                    style="overflow:hidden; padding-bottom:56.25%; position:relative; height:0;">
+                    <iframe src="https://www.youtube.com/embed/6z6O8mbZA24" title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen style="left:0; top:0; height:100%; width:100%; position:absolute;"></iframe>
+                </div>
+                <p style="margin-top: 20px; color: #888;">3Dアートコースの学生たちの1年間の学び</p>
             </div>
         </section>
 
@@ -512,17 +544,19 @@
             <div class="access-info">
                 <h2 style="font-family:var(--font-display); font-size:3rem; margin-bottom:30px;">ACCESS</h2>
                 <p style="margin-bottom:20px; font-size:1.1rem;">
-                    <strong>髙瀬蔵ホール</strong><br>
-                    〒865-0025<br>
-                    熊本県玉名市高瀬蔵155-1
+                    <strong>SOJO GALLERY</strong><br>
+                    〒860-0806<br>
+                    熊本市中央区花畑町10-22<br>
+                    ダイワロイネットホテル熊本1F
                 </p>
-                <a href="tel:0968-72-2480"
-                    style="color:var(--accent-color); text-decoration:none; font-size:1.2rem;">0968-72-2480</a>
+                <a href="tel:096-288-0801"
+                    style="color:var(--accent-color); text-decoration:none; font-size:1.2rem;">096-288-0801</a>
                 <br><br>
-                <a href="https://takasegura.jp/" target="_blank" class="btn">OFFICIAL SITE</a>
+                <a href="https://www.sojo-u.ac.jp/faculty/arts/sojo_gallery/" target="_blank" class="btn">GALLERY
+                    OFFICIAL SITE</a>
             </div>
             <div class="access-map">
-                <iframe src="https://www.google.com/maps?output=embed&q=髙瀬蔵ホール+熊本県玉名市高瀬蔵155-1" style="border:0;"
+                <iframe src="https://www.google.com/maps?output=embed&q=SOJO+GALLERY+熊本市中央区花畑町10-22" style="border:0;"
                     allowfullscreen="" loading="lazy"></iframe>
             </div>
         </section>
@@ -539,30 +573,34 @@
 
     <script>
         // Lenis Smooth Scroll
-        const lenis = new Lenis();
-
-        lenis.on('scroll', ScrollTrigger.update);
-
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000);
-        });
-
-        gsap.ticker.lagSmoothing(0);
+        let lenis;
+        if (typeof Lenis !== 'undefined') {
+            lenis = new Lenis();
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            gsap.ticker.lagSmoothing(0);
+        } else {
+            console.warn('Lenis is not defined. Smooth scroll disabled.');
+        }
 
         // Animations
         gsap.registerPlugin(ScrollTrigger);
 
         // Hero Parallax
-        gsap.to("#heroBg", {
-            scrollTrigger: {
-                trigger: ".hero",
-                start: "top top",
-                end: "bottom top",
-                scrub: true
-            },
-            y: 200,
-            scale: 1.2
-        });
+        if (typeof ScrollTrigger !== 'undefined') {
+            gsap.to("#heroBg", {
+                scrollTrigger: {
+                    trigger: ".hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                },
+                y: 200,
+                scale: 1.2 /* Scale maintained here for parallax effect, but initial css transform removed */
+            });
+        }
 
         // Horizontal Scroll for Gallery
         let sections = gsap.utils.toArray(".gallery-item");
@@ -592,6 +630,27 @@
                 }
             });
         });
+
+        // Day/Night Image Switcher (JST 10:00 - 18:00 is Day)
+        // Day/Night Image Switcher (JST 10:00 - 18:00 is Day)
+        function updateIntroImage() {
+            const now = new Date();
+            // Calculate JST hour (UTC+9)
+            const jstHour = (now.getUTCHours() + 9) % 24;
+
+            const introImageDiv = document.querySelector('.intro-image');
+
+            const dayImage = '../images/Exhibition/gallery/20260206_062200089_iOS.webp';
+            const nightImage = '../images/Exhibition/gallery/20260206_091543351_iOS.webp';
+
+            // 10:00 <= hour < 18:00
+            const isDay = jstHour >= 10 && jstHour < 18;
+
+            introImageDiv.style.backgroundImage = `url('${isDay ? dayImage : nightImage}')`;
+        }
+
+        // Run immediately
+        updateIntroImage();
 
     </script>
 </body>
