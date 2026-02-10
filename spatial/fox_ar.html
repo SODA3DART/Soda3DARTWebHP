@@ -13,23 +13,41 @@
     <a href="ar_character_hub.html"
         style="position: absolute; top: 20px; left: 20px; z-index: 1000; padding: 8px 20px; background: rgba(20, 20, 30, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; text-decoration: none; font-family: sans-serif; backdrop-filter: blur(10px);">←
         一覧に戻る</a>
-    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/03/targets.mind;" color-space="sRGB"
+    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/03/ロゴ target.mind;" color-space="sRGB"
         renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
+
         <a-assets>
             <a-asset-item id="fox-motion" src="../3dartensyu3/ar/03/fox._motion.glb"></a-asset-item>
             <a-asset-item id="fox-behind" src="../3dartensyu3/ar/03/fox._bhindglb.glb"></a-asset-item>
+            <audio id="bgm" src="../3dartensyu3/ar/03/プラネット・ブレイク.mp3" preload="auto"></audio>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0">
+        <a-entity mindar-image-target="targetIndex: 0" id="target">
             <a-entity gltf-model="#fox-motion" rotation="0 180 0" position="0 0 0" scale="0.5 0.5 0.5"
                 animation-mixer="clip: *; loop: repeat;"></a-entity>
             <a-entity gltf-model="#fox-behind" rotation="0 180 0" position="0.5 -0.2 0" scale="0.5 0.5 0.5"
                 animation-mixer="clip: *; loop: repeat;"></a-entity>
         </a-entity>
     </a-scene>
+
+    <script>
+        const target = document.querySelector('#target');
+        const audio = document.querySelector('#bgm');
+
+        target.addEventListener("targetFound", event => {
+            console.log("target found");
+            audio.play();
+        });
+
+        target.addEventListener("targetLost", event => {
+            console.log("target lost");
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    </script>
 </body>
 
 </html>
