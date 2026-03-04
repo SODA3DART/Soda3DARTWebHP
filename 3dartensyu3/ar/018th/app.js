@@ -36,16 +36,26 @@ const placeObject = (scene, x, y, z) => {
   newEl.setAttribute('rotation', { x: 0, y: Math.random() * 360, z: 0 });
   newEl.setAttribute('scale', '0.001 0.001 0.001');
   newEl.setAttribute('visible', 'true');
-  newEl.setAttribute('shadow', 'cast: true; receive: true');
 
-  const box = document.createElement('a-box');
-  box.setAttribute('width', '0.2');
-  box.setAttribute('height', '0.2');
-  box.setAttribute('depth', '0.2');
-  box.setAttribute('material', 'roughness: 0.8; metalness: 0.2; color: #DD0065');
-  box.setAttribute('animation', 'property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic');
-  newEl.appendChild(box);
+  const motion = document.createElement('a-entity');
+  motion.setAttribute('gltf-model', '#fox-motion');
+  motion.setAttribute('rotation', '240 180 0');
+  motion.setAttribute('position', '0 0 0');
+  motion.setAttribute('scale', '1 1 1');
+  motion.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+  motion.setAttribute('shadow', 'cast: true; receive: true');
+  newEl.appendChild(motion);
 
+  const behind = document.createElement('a-entity');
+  behind.setAttribute('gltf-model', '#fox-behind');
+  behind.setAttribute('rotation', '240 180 0');
+  behind.setAttribute('position', '0 0.2 0');
+  behind.setAttribute('scale', '1 1 1');
+  behind.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+  behind.setAttribute('shadow', 'cast: true; receive: true');
+  newEl.appendChild(behind);
+
+  newEl.setAttribute('animation', 'property: scale; to: 0.3 0.3 0.3; dur: 500; easing: easeOutElastic');
   scene.appendChild(newEl);
 };
 

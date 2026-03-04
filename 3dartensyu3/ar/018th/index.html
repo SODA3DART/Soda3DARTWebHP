@@ -11,6 +11,9 @@
     <!-- XR Extras (ロード画面・エラーハンドリング・タップリセンタ等) -->
     <script src="https://cdn.8thwall.com/web/xrextras/xrextras.js"></script>
 
+    <!-- アニメーション用 (GLB clip) -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+
     <!-- 8th Wall Engine (セルフホスティング: libs/ に配置した xr.js) -->
     <script async src="./libs/xr.js" data-preload-chunks="slam"></script>
 
@@ -51,12 +54,21 @@
         <a-entity light="type: ambient; intensity: 0.6"></a-entity>
         <a-entity light="type: directional; intensity: 0.8; castShadow: true; position: 2 4 2" shadow="cast: true"></a-entity>
 
+        <!-- 03のモデル (fox) -->
+        <a-assets>
+            <a-asset-item id="fox-motion" src="../03/fox._motion.glb"></a-asset-item>
+            <a-asset-item id="fox-behind" src="../03/fox._bhindglb.glb"></a-asset-item>
+        </a-assets>
+
         <!-- タップ配置は app.js の XR8.XrController.hitTest() で実行 -->
 
-        <!-- 初期配置オブジェクト (実寸大・空間固定 = 6DoF) -->
-        <a-box id="base-object" position="0 0 -2" rotation="0 45 0" width="0.3" height="0.3" depth="0.3"
-            material="roughness: 0.8; metalness: 0.2; color: #00EDAF" shadow="cast: true; receive: true">
-        </a-box>
+        <!-- 初期配置オブジェクト: 03のフォックス (実寸大・空間固定 = 6DoF) -->
+        <a-entity id="base-object" position="0 0 -2" rotation="0 0 0" scale="0.3 0.3 0.3">
+            <a-entity gltf-model="#fox-motion" rotation="240 180 0" position="0 0 0" scale="1 1 1"
+                animation-mixer="clip: *; loop: repeat" shadow="cast: true; receive: true"></a-entity>
+            <a-entity gltf-model="#fox-behind" rotation="240 180 0" position="0 0.2 0" scale="1 1 1"
+                animation-mixer="clip: *; loop: repeat" shadow="cast: true; receive: true"></a-entity>
+        </a-entity>
 
     </a-scene>
 
