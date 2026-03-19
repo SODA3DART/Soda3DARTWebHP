@@ -22,95 +22,143 @@
             background: linear-gradient(135deg, #2c3e50 0%, #3f5871 55%, #4e7092 100%);
             color: #fff;
             border-radius: 18px;
-            padding: 38px 28px;
+            padding: 36px 28px;
             box-shadow: 0 16px 30px rgba(44, 62, 80, 0.2);
-            margin-bottom: 30px;
-        }
-
-        .faculty-hero-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 999px;
-            padding: 6px 14px;
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            margin-bottom: 14px;
+            margin-bottom: 28px;
         }
 
         .faculty-hero h1 {
-            font-size: 2.4rem;
+            font-size: 2.3rem;
             line-height: 1.25;
             margin-bottom: 10px;
         }
 
         .faculty-hero p {
             font-size: 1rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.92);
         }
 
-        .faculty-overview {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-            margin-bottom: 36px;
-        }
-
-        .overview-card {
-            background: #fff;
-            border: 1px solid #e5eaf0;
-            border-radius: 14px;
-            padding: 18px 16px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
-        }
-
-        .overview-label {
-            font-size: 0.82rem;
-            color: #6c7a89;
-            margin-bottom: 6px;
-            letter-spacing: 0.06em;
-        }
-
-        .overview-value {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .faculty-group {
+        .faculty-section {
             margin-bottom: 26px;
             background: #fff;
             border: 1px solid #e5eaf0;
             border-radius: 16px;
-            padding: 24px 24px 26px;
+            padding: 24px;
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
         }
 
-        .faculty-group.course-chief {
-            border-top: 5px solid #2c3e50;
-        }
-
-        .faculty-group.digital {
-            border-top: 5px solid #4285f4;
-        }
-
-        .faculty-group.physical {
-            border-top: 5px solid #5b4b8a;
-        }
-
-        .faculty-group h2 {
+        .faculty-section h2 {
             font-size: 1.45rem;
             color: #2c3e50;
             margin-bottom: 16px;
         }
 
-        .faculty-grid {
+        .group-photo-box {
+            width: 100%;
+            aspect-ratio: 16 / 7;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #e9eef4 0%, #d9e3ee 100%);
+            border: 1px solid #d5e0eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f7183;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-photo-box::before {
+            content: "教員集合写真";
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(95, 113, 131, 0.2);
+            color: #425567;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .chief-profile {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 18px;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .chief-photo {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #eef2f6 0%, #dde6ee 100%);
+            border: 1px solid #dbe4ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #607182;
+            font-weight: 700;
+        }
+
+        .chief-name {
+            font-size: 1.45rem;
+            color: #1f2d3a;
+            margin-bottom: 8px;
+        }
+
+        .chief-title {
+            display: inline-block;
+            background: #f2f6fb;
+            color: #395369;
+            border: 1px solid #dbe6f1;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .profile-list {
+            list-style: none;
+        }
+
+        .profile-list li {
+            margin-bottom: 10px;
+            color: #445566;
+            font-size: 0.97rem;
+            line-height: 1.7;
+            padding-left: 1.05em;
+            text-indent: -1.05em;
+        }
+
+        .profile-list li::before {
+            content: "・";
+            color: #2c3e50;
+            font-weight: 700;
+            margin-right: 3px;
+        }
+
+        .faculty-scroll-wrap {
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: #9fb2c5 #eef3f8;
+        }
+
+        .faculty-scroll {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(250px, 280px);
+            gap: 16px;
+            scroll-snap-type: x mandatory;
         }
 
         .faculty-card {
+            scroll-snap-align: start;
             border-radius: 14px;
             border: 1px solid #e8edf3;
             overflow: hidden;
@@ -155,7 +203,7 @@
             color: #1f2d3a;
         }
 
-        .faculty-role {
+        .faculty-specialty {
             display: inline-block;
             background: #f2f6fb;
             color: #395369;
@@ -166,9 +214,34 @@
             font-weight: 600;
         }
 
-        @media (max-width: 960px) {
-            .faculty-overview {
+        .faculty-profile-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .faculty-profile-list li {
+            margin-bottom: 7px;
+            color: #445566;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            padding-left: 1.05em;
+            text-indent: -1.05em;
+        }
+
+        .faculty-profile-list li::before {
+            content: "・";
+            color: #2c3e50;
+            font-weight: 700;
+            margin-right: 3px;
+        }
+
+        @media (max-width: 900px) {
+            .chief-profile {
                 grid-template-columns: 1fr;
+            }
+
+            .chief-photo {
+                max-width: 260px;
             }
         }
 
@@ -186,7 +259,7 @@
                 font-size: 1.9rem;
             }
 
-            .faculty-group {
+            .faculty-section {
                 padding: 20px 18px 22px;
             }
         }
@@ -224,69 +297,69 @@
     <main class="faculty-page-main">
         <div class="container">
             <section class="faculty-hero">
-                <span class="faculty-hero-badge">SOJO UNIVERSITY 3D ART COURSE</span>
                 <h1>教員紹介</h1>
-                <p>デジタルとフィジカルを横断しながら学びを支える、3Dアートコース教員の紹介です。</p>
+                <p>3Dアートコースの教員プロフィールです。作品制作と研究を横断する専門領域をご紹介します。</p>
             </section>
 
-            <section class="faculty-overview" aria-label="教員体制概要">
-                <article class="overview-card">
-                    <p class="overview-label">コース主任教員</p>
-                    <p class="overview-value">清島浩徳 教授</p>
-                </article>
-                <article class="overview-card">
-                    <p class="overview-label">デジタル側担当</p>
-                    <p class="overview-value">山口典子 / 坂元旭</p>
-                </article>
-                <article class="overview-card">
-                    <p class="overview-label">フィジカル側担当</p>
-                    <p class="overview-value">清島浩徳 / 堀川仁彦</p>
-                </article>
+            <section class="faculty-section">
+                <h2>教員紹介</h2>
+                <div class="group-photo-box">集合写真準備中</div>
             </section>
 
-            <section class="faculty-group course-chief">
-                <h2>コース主任教員</h2>
-                <div class="faculty-grid">
-                    <article class="faculty-card">
-                        <div class="faculty-photo-placeholder">写真準備中</div>
-                        <div class="faculty-card-body">
-                            <h3 class="faculty-name">清島浩徳 教授</h3>
-                            <p class="faculty-role">コース主任教員・フィジカル側担当</p>
-                        </div>
-                    </article>
+            <section class="faculty-section">
+                <h2>コース主任教員プロフィール</h2>
+                <div class="chief-profile">
+                    <div class="chief-photo">写真準備中</div>
+                    <div class="chief-text">
+                        <h3 class="chief-name">清島浩徳 教授</h3>
+                        <p class="chief-title">コース主任教員</p>
+                        <ul class="profile-list">
+                            <li>専門：立体表現・彫刻・公共空間における造形研究</li>
+                            <li>好きなこと：自然や都市空間の観察、素材研究、対話から発想を深めること</li>
+                            <li>プロフィール文は後日掲載予定</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <section class="faculty-group digital">
-                <h2>デジタル側担当</h2>
-                <div class="faculty-grid">
-                    <article class="faculty-card">
-                        <div class="faculty-photo-placeholder">写真準備中</div>
-                        <div class="faculty-card-body">
-                            <h3 class="faculty-name">山口典子 助教</h3>
-                            <p class="faculty-role">デジタル側担当</p>
-                        </div>
-                    </article>
-                    <article class="faculty-card">
-                        <div class="faculty-photo-placeholder">写真準備中</div>
-                        <div class="faculty-card-body">
-                            <h3 class="faculty-name">坂元旭</h3>
-                            <p class="faculty-role">デジタル側担当</p>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="faculty-group physical">
-                <h2>フィジカル側担当</h2>
-                <div class="faculty-grid">
-                    <article class="faculty-card">
-                        <div class="faculty-photo-placeholder">写真準備中</div>
-                        <div class="faculty-card-body">
-                            <h3 class="faculty-name">堀川仁彦</h3>
-                            <p class="faculty-role">フィジカル側担当</p>
-                        </div>
-                    </article>
+            <section class="faculty-section">
+                <h2>教員プロフィール</h2>
+                <div class="faculty-scroll-wrap" aria-label="教員一覧 横スクロール">
+                    <div class="faculty-scroll">
+                        <article class="faculty-card">
+                            <div class="faculty-photo-placeholder">写真準備中</div>
+                            <div class="faculty-card-body">
+                                <h3 class="faculty-name">坂元旭</h3>
+                                <p class="faculty-specialty">プロフィール</p>
+                                <ul class="faculty-profile-list">
+                                    <li>専門：空間コンピューティング、3DCG、AI</li>
+                                    <li>好きなこと：ものづくりが好き。フレンチホルンの演奏、まだ誰も見たことが無い世界を創ること</li>
+                                </ul>
+                            </div>
+                        </article>
+                        <article class="faculty-card">
+                            <div class="faculty-photo-placeholder">写真準備中</div>
+                            <div class="faculty-card-body">
+                                <h3 class="faculty-name">堀川仁彦</h3>
+                                <p class="faculty-specialty">プロフィール（テンプレ）</p>
+                                <ul class="faculty-profile-list">
+                                    <li>専門：彫刻・立体造形（※後で差し替え）</li>
+                                    <li>好きなこと：素材と向き合いながらかたちをつくること（※後で差し替え）</li>
+                                </ul>
+                            </div>
+                        </article>
+                        <article class="faculty-card">
+                            <div class="faculty-photo-placeholder">写真準備中</div>
+                            <div class="faculty-card-body">
+                                <h3 class="faculty-name">山口典子 助教</h3>
+                                <p class="faculty-specialty">プロフィール（テンプレ）</p>
+                                <ul class="faculty-profile-list">
+                                    <li>専門：3DCG・デジタル制作（※後で差し替え）</li>
+                                    <li>好きなこと：新しい表現技法の研究と制作（※後で差し替え）</li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </section>
         </div>
