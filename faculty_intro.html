@@ -10,88 +10,184 @@
     <link rel="stylesheet" href="css/index_optimized.css?v=1.1">
     <style>
         .faculty-page-main {
-            padding-top: 120px;
-            padding-bottom: 80px;
-            background-color: #f8f9fa;
+            padding-top: 110px;
+            padding-bottom: 90px;
+            background:
+                radial-gradient(circle at 8% 10%, rgba(44, 62, 80, 0.08), transparent 40%),
+                radial-gradient(circle at 92% 20%, rgba(66, 133, 244, 0.08), transparent 38%),
+                #f8f9fa;
         }
 
         .faculty-hero {
-            text-align: center;
-            margin-bottom: 40px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3f5871 55%, #4e7092 100%);
+            color: #fff;
+            border-radius: 18px;
+            padding: 38px 28px;
+            box-shadow: 0 16px 30px rgba(44, 62, 80, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .faculty-hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 14px;
         }
 
         .faculty-hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 12px;
-            color: #2c3e50;
+            font-size: 2.4rem;
+            line-height: 1.25;
+            margin-bottom: 10px;
         }
 
         .faculty-hero p {
-            color: #666;
             font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .faculty-overview {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .overview-card {
+            background: #fff;
+            border: 1px solid #e5eaf0;
+            border-radius: 14px;
+            padding: 18px 16px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .overview-label {
+            font-size: 0.82rem;
+            color: #6c7a89;
+            margin-bottom: 6px;
+            letter-spacing: 0.06em;
+        }
+
+        .overview-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #2c3e50;
         }
 
         .faculty-group {
-            margin-bottom: 42px;
+            margin-bottom: 26px;
+            background: #fff;
+            border: 1px solid #e5eaf0;
+            border-radius: 16px;
+            padding: 24px 24px 26px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .faculty-group.course-chief {
+            border-top: 5px solid #2c3e50;
+        }
+
+        .faculty-group.digital {
+            border-top: 5px solid #4285f4;
+        }
+
+        .faculty-group.physical {
+            border-top: 5px solid #5b4b8a;
         }
 
         .faculty-group h2 {
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             color: #2c3e50;
-            margin-bottom: 18px;
-            padding-left: 12px;
-            border-left: 5px solid #2c3e50;
+            margin-bottom: 16px;
         }
 
         .faculty-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
         }
 
         .faculty-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border-radius: 14px;
+            border: 1px solid #e8edf3;
             overflow: hidden;
-            border: 1px solid #e9ecef;
+            background: #fff;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 24px rgba(44, 62, 80, 0.12);
         }
 
         .faculty-photo-placeholder {
             width: 100%;
-            aspect-ratio: 4 / 3;
-            background: linear-gradient(135deg, #dde4ea 0%, #f3f6f9 100%);
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, #eef2f6 0%, #dde6ee 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #7a8794;
-            font-weight: 600;
+            color: #607182;
+            font-weight: 700;
             letter-spacing: 0.05em;
+            position: relative;
+        }
+
+        .faculty-photo-placeholder::before {
+            content: "📷";
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 1rem;
+            opacity: 0.7;
         }
 
         .faculty-card-body {
-            padding: 16px 18px 20px;
+            padding: 15px 16px 18px;
         }
 
         .faculty-name {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.18rem;
             margin-bottom: 8px;
-            color: #333;
+            color: #1f2d3a;
         }
 
         .faculty-role {
-            font-size: 0.95rem;
-            color: #555;
+            display: inline-block;
+            background: #f2f6fb;
+            color: #395369;
+            border: 1px solid #dbe6f1;
+            border-radius: 999px;
+            padding: 5px 10px;
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 960px) {
+            .faculty-overview {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
             .faculty-page-main {
-                padding-top: 100px;
+                padding-top: 95px;
+                padding-bottom: 70px;
+            }
+
+            .faculty-hero {
+                padding: 30px 20px;
             }
 
             .faculty-hero h1 {
-                font-size: 1.8rem;
+                font-size: 1.9rem;
+            }
+
+            .faculty-group {
+                padding: 20px 18px 22px;
             }
         }
     </style>
@@ -128,11 +224,27 @@
     <main class="faculty-page-main">
         <div class="container">
             <section class="faculty-hero">
+                <span class="faculty-hero-badge">SOJO UNIVERSITY 3D ART COURSE</span>
                 <h1>教員紹介</h1>
-                <p>3Dアートコース教員の紹介ページです。</p>
+                <p>デジタルとフィジカルを横断しながら学びを支える、3Dアートコース教員の紹介です。</p>
             </section>
 
-            <section class="faculty-group">
+            <section class="faculty-overview" aria-label="教員体制概要">
+                <article class="overview-card">
+                    <p class="overview-label">コース主任教員</p>
+                    <p class="overview-value">清島浩徳 教授</p>
+                </article>
+                <article class="overview-card">
+                    <p class="overview-label">デジタル側担当</p>
+                    <p class="overview-value">山口典子 / 坂元旭</p>
+                </article>
+                <article class="overview-card">
+                    <p class="overview-label">フィジカル側担当</p>
+                    <p class="overview-value">清島浩徳 / 堀川仁彦</p>
+                </article>
+            </section>
+
+            <section class="faculty-group course-chief">
                 <h2>コース主任教員</h2>
                 <div class="faculty-grid">
                     <article class="faculty-card">
@@ -145,7 +257,7 @@
                 </div>
             </section>
 
-            <section class="faculty-group">
+            <section class="faculty-group digital">
                 <h2>デジタル側担当</h2>
                 <div class="faculty-grid">
                     <article class="faculty-card">
@@ -165,7 +277,7 @@
                 </div>
             </section>
 
-            <section class="faculty-group">
+            <section class="faculty-group physical">
                 <h2>フィジカル側担当</h2>
                 <div class="faculty-grid">
                     <article class="faculty-card">
