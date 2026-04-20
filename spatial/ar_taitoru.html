@@ -172,6 +172,103 @@
             font-size: 0.85rem;
             text-align: center;
         }
+
+        #marker-ui-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 8px 18px;
+            background: var(--bg-glass);
+            color: #fff;
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        #marker-ui-btn:hover {
+            border-color: rgba(0, 242, 255, 0.4);
+            color: var(--primary-color);
+        }
+
+        .marker-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease;
+            pointer-events: auto;
+        }
+
+        .marker-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .marker-panel {
+            max-width: min(92vw, 440px);
+            background: rgba(20, 20, 30, 0.95);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid var(--border-glass);
+            font-family: 'Outfit', sans-serif;
+            color: #eee;
+        }
+
+        .marker-panel h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .marker-panel p {
+            margin: 0 0 12px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        .marker-panel img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            background: #fff;
+        }
+
+        .marker-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+            gap: 10px;
+        }
+
+        .marker-close {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+        }
+
+        .marker-close:hover {
+            background: rgba(0, 242, 255, 0.2);
+            color: var(--primary-color);
+        }
     </style>
 </head>
 
@@ -188,6 +285,7 @@
         <a href="ar_character_hub.html"
             style="position: absolute; top: 20px; left: 20px; z-index: 1000; padding: 8px 20px; background: rgba(20, 20, 30, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; text-decoration: none; font-family: 'Outfit', sans-serif; backdrop-filter: blur(10px); pointer-events: auto;">←
             一覧に戻る</a>
+        <button type="button" id="marker-ui-btn" aria-expanded="false" aria-controls="marker-overlay">マーカーを表示</button>
         <header>
             <h1>AR Taitoru</h1>
         </header>
@@ -202,6 +300,17 @@
             </div>
             <div id="status-text" class="status-pill">マーカーをスキャン中...</div>
         </footer>
+    </div>
+
+    <div id="marker-overlay" class="marker-overlay" role="dialog" aria-modal="true" aria-labelledby="marker-dialog-title" hidden>
+        <div class="marker-panel">
+            <h2 id="marker-dialog-title">AR Taitoru のマーカー</h2>
+            <p>下の画像（taitoru.jpg）と同じものをカメラで映すと、モデルが表示されます。</p>
+            <img src="../3dartensyu3/ar/01/taitoru.jpg" alt="AR Taitoru 用マーカー画像" />
+            <div class="marker-actions">
+                <button type="button" class="marker-close" id="marker-close-btn">閉じる</button>
+            </div>
+        </div>
     </div>
 
     <!-- AR Scene -->
@@ -260,6 +369,30 @@
                     statusText.textContent = 'マーカーをスキャン中...';
                     statusText.style.borderColor = 'rgba(255,255,255,0.1)';
                     statusText.style.color = 'white';
+                });
+            }
+
+            const markerBtn = document.getElementById('marker-ui-btn');
+            const markerOverlay = document.getElementById('marker-overlay');
+            const markerCloseBtn = document.getElementById('marker-close-btn');
+            if (markerBtn && markerOverlay && markerCloseBtn) {
+                function openMarkerOverlay() {
+                    markerOverlay.hidden = false;
+                    markerOverlay.classList.add('is-open');
+                    markerBtn.setAttribute('aria-expanded', 'true');
+                }
+                function closeMarkerOverlay() {
+                    markerOverlay.classList.remove('is-open');
+                    markerBtn.setAttribute('aria-expanded', 'false');
+                    markerOverlay.hidden = true;
+                }
+                markerBtn.addEventListener('click', () => openMarkerOverlay());
+                markerCloseBtn.addEventListener('click', () => closeMarkerOverlay());
+                markerOverlay.addEventListener('click', (e) => {
+                    if (e.target === markerOverlay) closeMarkerOverlay();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && markerOverlay.classList.contains('is-open')) closeMarkerOverlay();
                 });
             }
         });

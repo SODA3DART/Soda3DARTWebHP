@@ -238,6 +238,43 @@
             height: auto;
             margin: 10px 0;
             border-radius: 5px;
+            cursor: zoom-in;
+        }
+
+        .image-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            padding: 30px;
+        }
+
+        .image-lightbox.active {
+            display: flex;
+        }
+
+        .image-lightbox img {
+            max-width: min(95vw, 1400px);
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
         }
 
         .news-actions {
@@ -429,6 +466,11 @@
         </div>
     </div>
 
+    <div id="imageLightbox" class="image-lightbox" aria-hidden="true">
+        <button type="button" class="image-lightbox-close" id="imageLightboxClose" aria-label="閉じる">×</button>
+        <img id="imageLightboxImg" src="" alt="">
+    </div>
+
     <!-- フッター -->
     <footer>
         <div class="container">
@@ -492,6 +534,21 @@
 
         // サンプルニュースデータ（実際の環境では、サーバーから取得するか、HTMLファイルを解析して取得します）
         const newsData = [
+            {
+                id: 14,
+                date: '2026年4月7日',
+                title: '新入生・大学院生を迎え、新たな学びが始まりました',
+                excerpt: '3Dアートコースは1年生4名、大学院生2名を迎え、新たな学びが始まりました。新入生歓迎会も控えており、メンバー一人一人の創造性と作品づくりを教員・スタッフ一同サポートしてまいります。',
+                content: `<p>3Dアートコースは1年生4名、大学院生2名を迎え、新たな学びが始まりました。</p>
+                <p>新入生歓迎会も控えており、新たなメンバー一人一人が創造性を発揮し、さらに素晴らしい作品が生まれるよう、教員・スタッフ一同サポートしてまいります。</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
+                    <img src="images/course/Image (10).jpg" alt="講義の様子1" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                    <img src="images/course/Image (11).jpg" alt="講義の様子2" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                    <img src="images/course/Image (12).jpg" alt="講義の様子3" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                </div>`,
+                image: 'images/course/Image (10).jpg',
+                fullArticle: null
+            },
             {
                 id: 13,
                 date: '2026年2月3日',
@@ -703,6 +760,47 @@
             });
         }
 
+        function setupImageLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImg = document.getElementById('imageLightboxImg');
+            const closeBtn = document.getElementById('imageLightboxClose');
+            const newsList = document.getElementById('newsList');
+            if (!lightbox || !lightboxImg || !closeBtn || !newsList) return;
+
+            const openLightbox = (src, alt) => {
+                lightboxImg.src = src;
+                lightboxImg.alt = alt || '';
+                lightbox.classList.add('active');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeLightbox = () => {
+                lightbox.classList.remove('active');
+                lightbox.setAttribute('aria-hidden', 'true');
+                lightboxImg.src = '';
+                document.body.style.overflow = '';
+            };
+
+            newsList.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLImageElement)) return;
+                if (!target.closest('.news-full-content')) return;
+                openLightbox(target.src, target.alt);
+            });
+
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (event) => {
+                if (event.target === lightbox) closeLightbox();
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && lightbox.classList.contains('active')) {
+                    closeLightbox();
+                }
+            });
+        }
+
         // ローカルストレージの最終更新時間を保存するキー
         const NEWS_LAST_UPDATED_KEY = 'newsLastUpdated';
 
@@ -733,6 +831,21 @@
         // デフォルトのニュースデータを取得する関数
         function getDefaultNewsData() {
             return [
+                {
+                    id: 14,
+                    date: '2026年4月7日',
+                    title: '新入生・大学院生を迎え、新たな学びが始まりました',
+                    excerpt: '3Dアートコースは1年生4名、大学院生2名を迎え、新たな学びが始まりました。新入生歓迎会も控えており、メンバー一人一人の創造性と作品づくりを教員・スタッフ一同サポートしてまいります。',
+                    content: `<p>3Dアートコースは1年生4名、大学院生2名を迎え、新たな学びが始まりました。</p>
+                    <p>新入生歓迎会も控えており、新たなメンバー一人一人が創造性を発揮し、さらに素晴らしい作品が生まれるよう、教員・スタッフ一同サポートしてまいります。</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
+                        <img src="images/course/Image (10).jpg" alt="講義の様子1" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                        <img src="images/course/Image (11).jpg" alt="講義の様子2" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                        <img src="images/course/Image (12).jpg" alt="講義の様子3" style="width: 32%; min-width: 220px; border-radius: 8px;">
+                    </div>`,
+                    image: 'images/course/Image (10).jpg',
+                    fullArticle: null
+                },
                 {
                     id: 11,
                     date: '2025年10月17日',
@@ -852,6 +965,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             loadStoredNewsArticles();
             renderNewsItems();
+            setupImageLightbox();
 
             // URLパラメータからIDを取得して、該当するニュース記事を開く
             const urlParams = new URLSearchParams(window.location.search);
