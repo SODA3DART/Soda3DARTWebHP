@@ -1,0 +1,18 @@
+{
+  "name": "崇城大学シャトルバス時刻表",
+  "short_name": "シャトルバス",
+  "description": "崇城大学シャトルバスの次の発車とお知らせ",
+  "start_url": "./bus.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E6F3FF",
+  "theme_color": "#87CEEB",
+  "icons": [
+    {
+      "src": "../images/logohedder.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

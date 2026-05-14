@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/logohedder.png" type="image/png">
+    <link rel="icon" href="../images/logohedder.webp" type="image/webp">
+    <link rel="manifest" href="bus-manifest.webmanifest">
+    <meta name="theme-color" content="#87CEEB">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>シャトルバス時刻表</title>
     <meta name="description" content="崇城大学シャトルバス時刻表 - バス停を選択して時刻を確認できます">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -851,6 +854,119 @@
         }
 
         /* レスポンシブデザイン */
+        .notify-panel {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(32, 178, 170, 0.35);
+        }
+
+        .notify-panel h2 {
+            margin: 0 0 12px 0;
+            font-size: 1.15rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notify-panel .notify-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .notify-panel .notify-ios {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: var(--primary-light);
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            line-height: 1.55;
+        }
+
+        .notify-panel .notify-ios strong {
+            color: var(--accent-dark);
+        }
+
+        .notify-thresholds {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px 20px;
+            margin: 12px 0;
+            align-items: center;
+        }
+
+        .notify-thresholds label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .notify-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .notify-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-dark));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+
+        .notify-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .notify-btn.secondary {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+        }
+
+        .notify-status {
+            font-size: 0.88rem;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .notify-status.ok {
+            color: #0f766e;
+            background: rgba(45, 212, 191, 0.15);
+        }
+
+        .notify-status.err {
+            color: #b91c1c;
+            background: rgba(254, 202, 202, 0.5);
+        }
+
+        body.dark-mode .notify-panel .notify-ios {
+            background: #1e293b;
+            color: var(--text-secondary);
+        }
+
+        body.dark-mode .notify-status {
+            background: rgba(30, 41, 59, 0.8);
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 12px;
@@ -922,6 +1038,27 @@
             </div>
         </div>
 
+        <div class="notify-panel" id="busNotifyPanel">
+            <h2><i class="fas fa-bell"></i> 発車のお知らせ（スマホ通知）</h2>
+            <p class="notify-desc">
+                次のバスまでの時間を、端末の通知でお知らせします（時刻表ページと同じ計算です）。<strong>インターネット経由のプッシュではなく、この端末内の予定に基づく通知</strong>です。switchBotWeb の PWA と同様、ホーム画面に追加したあと通知を許可すると安定しやすいです。
+            </p>
+            <div class="notify-ios" id="notifyIosHint">
+                <strong>iPhone（Safari）</strong><br>
+                iOS 16.4 以降では、<strong>「ホーム画面に追加」したアイコンから開いた PWA</strong>でないと Web 通知が使えないことがあります。共有メニューから追加し、そのアイコンからこのページを開いてください。
+            </div>
+            <div class="notify-thresholds">
+                <label><input type="checkbox" id="notifyTh10" checked> 約10分前</label>
+                <label><input type="checkbox" id="notifyTh5" checked> 約5分前</label>
+                <label><input type="checkbox" id="notifyTh1" checked> 約1分前</label>
+            </div>
+            <div class="notify-actions">
+                <button type="button" class="notify-btn" id="btnNotifyEnable">通知を許可してオン</button>
+                <button type="button" class="notify-btn secondary" id="btnNotifyDisable">オフにする</button>
+            </div>
+            <div class="notify-status" id="notifyStatus" style="display:none;"></div>
+        </div>
+
         <div class="bus-info">
             <div class="bus-type">芸術学部・薬学部方面 (Type 1)</div>
             <div id="nextBus1" class="next-bus">
@@ -974,6 +1111,206 @@
 
         // 選択されたバス停
         const selectedBusStop = getSelectedBusStop();
+
+        /** シャトルバス発車通知（ローカル・Service Worker 表示） */
+        let busSwRegistration = null;
+        let busNotifyPollId = null;
+
+        const BUS_NOTIFY_LS = {
+            enabled: 'busShuttleNotifyEnabled',
+            th10: 'busShuttleNotifyTh10',
+            th5: 'busShuttleNotifyTh5',
+            th1: 'busShuttleNotifyTh1'
+        };
+
+        function getNotifyThresholdsEnabled() {
+            const th = [];
+            if (localStorage.getItem(BUS_NOTIFY_LS.th10) !== '0') th.push(10);
+            if (localStorage.getItem(BUS_NOTIFY_LS.th5) !== '0') th.push(5);
+            if (localStorage.getItem(BUS_NOTIFY_LS.th1) !== '0') th.push(1);
+            if (th.length === 0) th.push(5);
+            return th.sort((a, b) => b - a);
+        }
+
+        function isBusNotifyFeatureEnabled() {
+            return localStorage.getItem(BUS_NOTIFY_LS.enabled) === '1';
+        }
+
+        function notifyStorageKey(type, depTime, thresholdMin) {
+            const d = new Date();
+            const ds = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+            return `busShuttleNotified:${ds}:t${type}:${depTime}:th${thresholdMin}`;
+        }
+
+        async function initBusServiceWorker() {
+            if (!('serviceWorker' in navigator)) return;
+            try {
+                busSwRegistration = await navigator.serviceWorker.register('./bus-sw.js', { scope: './' });
+                await busSwRegistration.update();
+            } catch (e) {
+                console.warn('Service Worker の登録に失敗:', e);
+                busSwRegistration = null;
+            }
+        }
+
+        function showNotifyStatus(ok, text) {
+            const el = document.getElementById('notifyStatus');
+            if (!el) return;
+            el.style.display = 'block';
+            el.className = 'notify-status ' + (ok ? 'ok' : 'err');
+            el.textContent = text;
+        }
+
+        function hideNotifyStatus() {
+            const el = document.getElementById('notifyStatus');
+            if (el) el.style.display = 'none';
+        }
+
+        function stopBusNotifyPolling() {
+            if (busNotifyPollId != null) {
+                clearInterval(busNotifyPollId);
+                busNotifyPollId = null;
+            }
+        }
+
+        function startBusNotifyPolling() {
+            stopBusNotifyPolling();
+            if (!isBusNotifyFeatureEnabled()) return;
+            busNotifyPollId = setInterval(function () {
+                maybeLocalBusNotifications();
+            }, 45000);
+        }
+
+        function maybeLocalBusNotifications() {
+            if (!isBusNotifyFeatureEnabled()) return;
+            if (Notification.permission !== 'granted') return;
+            if (!busSwRegistration || !busData.length) return;
+            if (isSundayOrHoliday()) return;
+
+            const thresholds = getNotifyThresholdsEnabled();
+            const stopLabel = selectedBusStop && busStopMapping[selectedBusStop]
+                ? busStopMapping[selectedBusStop].name
+                : '既定（Type1:県立体育館前 / Type2:上熊本駅）';
+            const typeTitle = { 1: '芸術・薬学部方面', 2: '上熊本駅方面' };
+            var iconUrl = '';
+            try {
+                iconUrl = new URL('../images/logohedder.webp', window.location.href).href;
+            } catch (_) {
+                iconUrl = undefined;
+            }
+
+            for (var ti = 0; ti < 2; ti++) {
+                var type = ti === 0 ? 1 : 2;
+                var next = getNextBus(type);
+                if (!next || next.delayed) continue;
+                var m = next.minutesUntil;
+                if (m == null || m < 0) continue;
+
+                var notifiedThisType = false;
+                for (var j = 0; j < thresholds.length && !notifiedThisType; j++) {
+                    var T = thresholds[j];
+                    if (m > T) continue;
+                    var key = notifyStorageKey(type, next.time, T);
+                    if (localStorage.getItem(key)) continue;
+                    localStorage.setItem(key, '1');
+                    notifiedThisType = true;
+
+                    var title = 'シャトルバス · ' + typeTitle[type];
+                    var body = stopLabel + ' — 次の発車 ' + next.time + ' まで 約 ' + m + ' 分です。';
+                    var opts = {
+                        body: body,
+                        tag: 'bus-t' + type + '-' + next.time + '-th' + T,
+                        vibrate: [100, 40, 100]
+                    };
+                    if (iconUrl) {
+                        opts.icon = iconUrl;
+                        opts.badge = iconUrl;
+                    }
+                    busSwRegistration.showNotification(title, opts);
+                }
+            }
+        }
+
+        function syncNotifyCheckboxUi() {
+            var c10 = document.getElementById('notifyTh10');
+            var c5 = document.getElementById('notifyTh5');
+            var c1 = document.getElementById('notifyTh1');
+            if (c10) c10.checked = localStorage.getItem(BUS_NOTIFY_LS.th10) !== '0';
+            if (c5) c5.checked = localStorage.getItem(BUS_NOTIFY_LS.th5) !== '0';
+            if (c1) c1.checked = localStorage.getItem(BUS_NOTIFY_LS.th1) !== '0';
+        }
+
+        function setupBusNotifyUi() {
+            syncNotifyCheckboxUi();
+
+            function saveTh() {
+                localStorage.setItem(BUS_NOTIFY_LS.th10, document.getElementById('notifyTh10').checked ? '1' : '0');
+                localStorage.setItem(BUS_NOTIFY_LS.th5, document.getElementById('notifyTh5').checked ? '1' : '0');
+                localStorage.setItem(BUS_NOTIFY_LS.th1, document.getElementById('notifyTh1').checked ? '1' : '0');
+            }
+
+            ['notifyTh10', 'notifyTh5', 'notifyTh1'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.addEventListener('change', saveTh);
+            });
+
+            var btnOn = document.getElementById('btnNotifyEnable');
+            var btnOff = document.getElementById('btnNotifyDisable');
+
+            if (btnOn) {
+                btnOn.addEventListener('click', function () {
+                    if (!('Notification' in window)) {
+                        showNotifyStatus(false, 'このブラウザは通知に対応していません。');
+                        return;
+                    }
+                    if (!('serviceWorker' in navigator)) {
+                        showNotifyStatus(false, 'Service Worker に対応していないため、通知を出せません。');
+                        return;
+                    }
+                    btnOn.disabled = true;
+                    hideNotifyStatus();
+                    Promise.resolve()
+                        .then(function () {
+                            if (!busSwRegistration) return initBusServiceWorker();
+                        })
+                        .then(function () {
+                            return Notification.requestPermission();
+                        })
+                        .then(function (perm) {
+                            if (perm !== 'granted') {
+                                showNotifyStatus(false, '通知が許可されませんでした。ブラウザの設定から通知を許可してください。');
+                                return;
+                            }
+                            localStorage.setItem(BUS_NOTIFY_LS.enabled, '1');
+                            saveTh();
+                            startBusNotifyPolling();
+                            maybeLocalBusNotifications();
+                            showNotifyStatus(true, 'オンにしました。あと10分・5分・1分前など、選択したタイミングで通知します（ページを閉じると届かない場合があります）。');
+                        })
+                        .catch(function (err) {
+                            showNotifyStatus(false, (err && err.message) ? err.message : String(err));
+                        })
+                        .finally(function () {
+                            btnOn.disabled = false;
+                        });
+                });
+            }
+
+            if (btnOff) {
+                btnOff.addEventListener('click', function () {
+                    localStorage.removeItem(BUS_NOTIFY_LS.enabled);
+                    stopBusNotifyPolling();
+                    showNotifyStatus(true, '通知をオフにしました。');
+                });
+            }
+
+            if (isBusNotifyFeatureEnabled() && Notification.permission === 'granted') {
+                startBusNotifyPolling();
+                showNotifyStatus(true, '通知はオンです。');
+            } else if (Notification.permission === 'denied') {
+                showNotifyStatus(false, '通知がブロックされています。ブラウザ設定でこのサイトの通知を許可してください。');
+            }
+        }
 
         // 現在時刻を表示する関数
         function updateCurrentTime() {
@@ -1327,6 +1664,8 @@
                     schedule2Element.innerHTML = '';
                 }
             }
+
+            maybeLocalBusNotifications();
         }
 
         // 今後のバス時刻を表示する関数
@@ -1434,6 +1773,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             updateCurrentTime();
             updateSelectedBusStopUI();
+            initBusServiceWorker().then(function () {
+                setupBusNotifyUi();
+            });
             loadBusData();
             initThemeToggle();
             trackPageVisit(); // アクセスカウンターを実行
