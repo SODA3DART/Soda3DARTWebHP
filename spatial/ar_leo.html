@@ -7,102 +7,26 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
     <script>
-        AFRAME.registerComponent('toon-render', {
+        AFRAME.registerComponent('double-sided', {
             init: function () {
-                this.gradientMap = this.createGradientMap();
                 this.el.addEventListener('model-loaded', () => {
-                    requestAnimationFrame(() => this.applyToonMaterials());
-                });
-            },
-            createGradientMap: function () {
-                if (!THREE.MeshToonMaterial) return null;
-                const steps = 4;
-                const data = new Uint8Array(steps * 4);
-                for (let i = 0; i < steps; i++) {
-                    const shade = Math.floor(255 * (i / (steps - 1)));
-                    const offset = i * 4;
-                    data[offset] = shade;
-                    data[offset + 1] = shade;
-                    data[offset + 2] = shade;
-                    data[offset + 3] = 255;
-                }
-                const tex = new THREE.DataTexture(data, steps, 1, THREE.RGBAFormat);
-                tex.needsUpdate = true;
-                tex.minFilter = THREE.NearestFilter;
-                tex.magFilter = THREE.NearestFilter;
-                return tex;
-            },
-            isOutlineMesh: function (node, mat) {
-                const nodeName = node.name.toLowerCase();
-                const matName = mat.name ? mat.name.toLowerCase() : '';
-                return nodeName.includes('outline') || matName.includes('outline');
-            },
-            getModelRoot: function () {
-                return this.el.getObject3D('mesh') || this.el.object3D;
-            },
-            createToonMaterial: function (mat) {
-                const useAlpha = mat.transparent || mat.alphaTest > 0;
-                const params = {
-                    color: mat.color ? mat.color.clone() : new THREE.Color(0xffffff),
-                    map: mat.map || null,
-                    normalMap: mat.normalMap || null,
-                    alphaMap: mat.alphaMap || null,
-                    transparent: useAlpha,
-                    opacity: mat.opacity !== undefined ? mat.opacity : 1,
-                    alphaTest: mat.alphaTest || 0,
-                    side: THREE.DoubleSide,
-                    depthWrite: !useAlpha
-                };
-                if (this.gradientMap) params.gradientMap = this.gradientMap;
-                if (mat.emissive) {
-                    params.emissive = mat.emissive.clone();
-                    params.emissiveMap = mat.emissiveMap || null;
-                }
-                return new THREE.MeshToonMaterial(params);
-            },
-            applyToonMaterials: function () {
-                const obj = this.getModelRoot();
-                if (!obj) return;
+                    const obj = this.el.getObject3D('mesh');
+                    if (obj) {
+                        obj.traverse((node) => {
+                            if (node.isMesh) {
+                                node.material.transparent = false;
+                                node.material.depthWrite = true;
 
-                if (!THREE.MeshToonMaterial) {
-                    this.applyDoubleSidedFallback(obj);
-                    return;
-                }
-
-                obj.traverse((node) => {
-                    if (!node.isMesh || !node.material) return;
-
-                    const materials = Array.isArray(node.material) ? node.material : [node.material];
-                    const converted = materials.map((mat) => {
-                        if (this.isOutlineMesh(node, mat)) {
-                            mat.transparent = false;
-                            mat.depthWrite = true;
-                            mat.side = THREE.FrontSide;
-                            return mat;
-                        }
-                        try {
-                            return this.createToonMaterial(mat);
-                        } catch (err) {
-                            console.warn('toon-render: fallback for', node.name, err);
-                            mat.side = THREE.DoubleSide;
-                            mat.depthWrite = true;
-                            return mat;
-                        }
-                    });
-
-                    node.material = Array.isArray(node.material) ? converted : converted[0];
-                });
-            },
-            applyDoubleSidedFallback: function (obj) {
-                obj.traverse((node) => {
-                    if (!node.isMesh || !node.material) return;
-                    const materials = Array.isArray(node.material) ? node.material : [node.material];
-                    materials.forEach((mat) => {
-                        if (!this.isOutlineMesh(node, mat)) {
-                            mat.side = THREE.DoubleSide;
-                        }
-                        mat.depthWrite = true;
-                    });
+                                const nodeName = node.name.toLowerCase();
+                                const matName = node.material.name ? node.material.name.toLowerCase() : '';
+                                if (nodeName.includes('outline') || matName.includes('outline')) {
+                                    console.log('Skipping double-sided for outline:', node.name);
+                                } else {
+                                    node.material.side = THREE.DoubleSide;
+                                }
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -241,10 +165,8 @@
         </div>
     </div>
     <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/06/targets.mind;" color-space="sRGB"
-        renderer="colorManagement: true, physicallyCorrectLights: false" vr-mode-ui="enabled: false"
+        renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
-        <a-light type="ambient" color="#f5f8ff" intensity="0.55"></a-light>
-        <a-light type="directional" color="#ffffff" intensity="0.85" position="1 2 0.5"></a-light>
         <a-assets>
             <a-asset-item id="yui" src="../3dartensyu3/ar/06/Leo.glb"></a-asset-item>
         </a-assets>
@@ -253,7 +175,7 @@
 
         <a-entity mindar-image-target="targetIndex: 0" id="target">
             <a-entity id="leo-model" gltf-model="#yui" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
-                animation-mixer="clip: *; loop: repeat;" toon-render></a-entity>
+                animation-mixer="clip: *; loop: repeat;" double-sided></a-entity>
         </a-entity>
     </a-scene>
     <script>
