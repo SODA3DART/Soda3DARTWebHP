@@ -126,7 +126,7 @@
             }
         });
     </script>
-    <title>Leo AR</title>
+    <title>飛雄・八枝郎 AR</title>
     <style>
         #marker-ui-btn {
             position: fixed;
@@ -269,30 +269,29 @@
     <button type="button" id="marker-ui-btn" aria-expanded="false" aria-controls="marker-overlay">マーカーを表示</button>
     <button type="button" id="view-ui-btn" aria-pressed="false">ソリッドWF</button>
     <button type="button" id="mode-ui-btn" aria-pressed="false">ポスターモード</button>
-    <audio id="bgm" src="../3dartensyu3/ar/06/Dream_diffuser.mp3" preload="auto" loop playsinline></audio>
     <div id="marker-overlay" class="marker-overlay" role="dialog" aria-modal="true" aria-labelledby="marker-dialog-title" hidden>
         <div class="marker-panel">
-            <h2 id="marker-dialog-title">Leo AR のマーカー</h2>
+            <h2 id="marker-dialog-title">飛雄・八枝郎 AR のマーカー</h2>
             <p>下の画像と同じものをカメラで映すと、キャラクターが表示されます。</p>
-            <img src="../3dartensyu3/ar/06/marker.png" alt="Leo AR 用マーカー画像" />
+            <img src="../3dartensyu3/ar/07/poster.png" alt="飛雄・八枝郎 AR 用マーカー画像" />
             <div class="marker-actions">
                 <button type="button" class="marker-close" id="marker-close-btn">閉じる</button>
             </div>
         </div>
     </div>
-    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/06/targets.mind;" color-space="sRGB"
+    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/07/targets.mind;" color-space="sRGB"
         renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
         <a-light type="ambient" color="#ffffff" intensity="0.7"></a-light>
         <a-light type="directional" color="#ffffff" intensity="0.6" position="0 1 1"></a-light>
         <a-assets timeout="120000">
-            <a-asset-item id="leo" src="../3dartensyu3/ar/06/Leo.glb"></a-asset-item>
+            <a-asset-item id="tobio" src="../3dartensyu3/ar/07/Tobio_Haetarou.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0" id="target">
-            <a-entity id="leo-model" gltf-model="#leo" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
+            <a-entity id="tobio-model" gltf-model="#tobio" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
                 animation-mixer="clip: *; loop: repeat;" double-sided solid-wireframe="enabled: false"></a-entity>
         </a-entity>
     </a-scene>
@@ -320,33 +319,29 @@
                 ];
             }
 
-            const scene = document.querySelector('a-scene');
-            const leoModel = document.querySelector('#leo-model');
-            if (leoModel) {
-                leoModel.dataset.standPosition = getPositionString(leoModel);
+            const tobioModel = document.querySelector('#tobio-model');
+            if (tobioModel) {
+                tobioModel.dataset.standPosition = getPositionString(tobioModel);
             }
 
-            if (leoModel) {
-                leoModel.addEventListener('model-error', (e) => {
-                    console.error('Leo model failed to load:', e.detail);
+            if (tobioModel) {
+                tobioModel.addEventListener('model-error', (e) => {
+                    console.error('Tobio model failed to load:', e.detail);
                 });
             }
-            const audio = document.getElementById('bgm');
             const modeBtn = document.getElementById('mode-ui-btn');
             const viewBtn = document.getElementById('view-ui-btn');
             let displayMode = 'stand';
             let wireframeEnabled = false;
-            let audioUnlocked = false;
-            let markerVisible = false;
 
             function applyDisplayMode() {
-                if (leoModel) {
-                    leoModel.setAttribute('rotation', MODE_ROTATION[displayMode]);
-                    const parts = parsePositionString(leoModel.dataset.standPosition);
+                if (tobioModel) {
+                    tobioModel.setAttribute('rotation', MODE_ROTATION[displayMode]);
+                    const parts = parsePositionString(tobioModel.dataset.standPosition);
                     if (displayMode === 'poster') {
-                        leoModel.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
+                        tobioModel.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
                     } else {
-                        leoModel.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
+                        tobioModel.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
                     }
                 }
                 const isPoster = displayMode === 'poster';
@@ -360,9 +355,9 @@
             });
 
             function setWireframeMode(enabled) {
-                if (!leoModel) return;
-                leoModel.setAttribute('solid-wireframe', { enabled: enabled });
-                const wf = leoModel.components['solid-wireframe'];
+                if (!tobioModel) return;
+                tobioModel.setAttribute('solid-wireframe', { enabled: enabled });
+                const wf = tobioModel.components['solid-wireframe'];
                 if (wf) wf.applyMode();
             }
 
@@ -372,67 +367,6 @@
                 viewBtn.textContent = wireframeEnabled ? '通常表示' : 'ソリッドWF';
                 viewBtn.setAttribute('aria-pressed', wireframeEnabled ? 'true' : 'false');
             });
-
-            async function unlockAudio() {
-                if (audioUnlocked || !audio) return;
-                try {
-                    audio.muted = true;
-                    await audio.play();
-                    audio.pause();
-                    audio.currentTime = 0;
-                    audio.muted = false;
-                    audioUnlocked = true;
-                    if (markerVisible) await playBgm();
-                } catch (err) {
-                    console.warn('Audio unlock failed:', err);
-                }
-            }
-
-            async function playBgm() {
-                if (!audio) return;
-                if (!audioUnlocked) {
-                    await unlockAudio();
-                    if (!audioUnlocked) return;
-                }
-                try {
-                    if (audio.paused) await audio.play();
-                } catch (err) {
-                    console.warn('BGM play failed:', err);
-                }
-            }
-
-            function pauseBgm() {
-                if (!audio) return;
-                audio.pause();
-                audio.currentTime = 0;
-            }
-
-            function setupMarkerAudio() {
-                const target = document.querySelector('#target');
-                if (!target) return;
-
-                target.addEventListener('targetFound', () => {
-                    markerVisible = true;
-                    playBgm();
-                });
-
-                target.addEventListener('targetLost', () => {
-                    markerVisible = false;
-                    pauseBgm();
-                });
-            }
-
-            ['click', 'touchstart'].forEach((evt) => {
-                document.body.addEventListener(evt, unlockAudio, { passive: true });
-            });
-
-            if (scene) {
-                if (scene.hasLoaded) {
-                    setupMarkerAudio();
-                } else {
-                    scene.addEventListener('loaded', setupMarkerAudio);
-                }
-            }
 
             applyDisplayMode();
 
