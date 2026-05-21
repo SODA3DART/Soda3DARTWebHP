@@ -230,13 +230,13 @@
                 stand: '90 0 0',
                 poster: '0 0 0'
             };
-            const MODE_POSITION = {
-                stand: '0 0 0',
-                poster: '0 -0.45 0'
-            };
+            const POSTER_Y_OFFSET = -0.45;
 
             const scene = document.querySelector('a-scene');
             const leoModel = document.querySelector('#leo-model');
+            if (leoModel && !leoModel.dataset.standPosition) {
+                leoModel.dataset.standPosition = leoModel.getAttribute('position') || '0 0 0';
+            }
             const audio = document.getElementById('bgm');
             const modeBtn = document.getElementById('mode-ui-btn');
             let displayMode = 'stand';
@@ -246,7 +246,12 @@
             function applyDisplayMode() {
                 if (leoModel) {
                     leoModel.setAttribute('rotation', MODE_ROTATION[displayMode]);
-                    leoModel.setAttribute('position', MODE_POSITION[displayMode]);
+                    const parts = leoModel.dataset.standPosition.split(' ').map(Number);
+                    if (displayMode === 'poster') {
+                        leoModel.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
+                    } else {
+                        leoModel.setAttribute('position', leoModel.dataset.standPosition);
+                    }
                 }
                 const isPoster = displayMode === 'poster';
                 modeBtn.textContent = isPoster ? '立体モード' : 'ポスターモード';

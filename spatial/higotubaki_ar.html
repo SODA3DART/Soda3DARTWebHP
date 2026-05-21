@@ -158,14 +158,27 @@
                 stand: '90 0 0',
                 poster: '0 0 0'
             };
+            const POSTER_Y_OFFSET = -0.45;
 
             const modeBtn = document.getElementById('mode-ui-btn');
             const arModels = document.querySelectorAll('.ar-model');
             let displayMode = 'stand';
 
+            arModels.forEach((el) => {
+                if (!el.dataset.standPosition) {
+                    el.dataset.standPosition = el.getAttribute('position') || '0 0 0';
+                }
+            });
+
             function applyDisplayMode() {
                 arModels.forEach((el) => {
                     el.setAttribute('rotation', MODE_ROTATION[displayMode]);
+                    const parts = el.dataset.standPosition.split(' ').map(Number);
+                    if (displayMode === 'poster') {
+                        el.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
+                    } else {
+                        el.setAttribute('position', el.dataset.standPosition);
+                    }
                 });
                 const isPoster = displayMode === 'poster';
                 modeBtn.textContent = isPoster ? '立体モード' : 'ポスターモード';
