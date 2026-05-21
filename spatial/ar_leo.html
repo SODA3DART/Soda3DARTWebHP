@@ -10,9 +10,12 @@
         AFRAME.registerComponent('toon-render', {
             init: function () {
                 this.gradientMap = this.createGradientMap();
-                this.el.addEventListener('model-loaded', () => this.applyToonMaterials());
+                this.el.addEventListener('model-loaded', () => {
+                    requestAnimationFrame(() => this.applyToonMaterials());
+                });
             },
             createGradientMap: function () {
+                if (!THREE.MeshToonMaterial) return null;
                 const steps = 4;
                 const data = new Uint8Array(steps * 4);
                 for (let i = 0; i < steps; i++) {
@@ -34,9 +37,37 @@
                 const matName = mat.name ? mat.name.toLowerCase() : '';
                 return nodeName.includes('outline') || matName.includes('outline');
             },
+            getModelRoot: function () {
+                return this.el.getObject3D('mesh') || this.el.object3D;
+            },
+            createToonMaterial: function (mat) {
+                const useAlpha = mat.transparent || mat.alphaTest > 0;
+                const params = {
+                    color: mat.color ? mat.color.clone() : new THREE.Color(0xffffff),
+                    map: mat.map || null,
+                    normalMap: mat.normalMap || null,
+                    alphaMap: mat.alphaMap || null,
+                    transparent: useAlpha,
+                    opacity: mat.opacity !== undefined ? mat.opacity : 1,
+                    alphaTest: mat.alphaTest || 0,
+                    side: THREE.DoubleSide,
+                    depthWrite: !useAlpha
+                };
+                if (this.gradientMap) params.gradientMap = this.gradientMap;
+                if (mat.emissive) {
+                    params.emissive = mat.emissive.clone();
+                    params.emissiveMap = mat.emissiveMap || null;
+                }
+                return new THREE.MeshToonMaterial(params);
+            },
             applyToonMaterials: function () {
-                const obj = this.el.getObject3D('mesh');
+                const obj = this.getModelRoot();
                 if (!obj) return;
+
+                if (!THREE.MeshToonMaterial) {
+                    this.applyDoubleSidedFallback(obj);
+                    return;
+                }
 
                 obj.traverse((node) => {
                     if (!node.isMesh || !node.material) return;
@@ -49,28 +80,29 @@
                             mat.side = THREE.FrontSide;
                             return mat;
                         }
-
-                        const toonMat = new THREE.MeshToonMaterial({
-                            color: mat.color ? mat.color.clone() : new THREE.Color(0xffffff),
-                            map: mat.map || null,
-                            normalMap: mat.normalMap || null,
-                            alphaMap: mat.alphaMap || null,
-                            emissive: mat.emissive ? mat.emissive.clone() : new THREE.Color(0x000000),
-                            emissiveMap: mat.emissiveMap || null,
-                            emissiveIntensity: mat.emissiveIntensity || 1,
-                            transparent: false,
-                            opacity: mat.opacity !== undefined ? mat.opacity : 1,
-                            side: THREE.DoubleSide,
-                            gradientMap: this.gradientMap
-                        });
-
-                        toonMat.depthWrite = true;
-                        if (mat.map) toonMat.map = mat.map;
-                        mat.dispose();
-                        return toonMat;
+                        try {
+                            return this.createToonMaterial(mat);
+                        } catch (err) {
+                            console.warn('toon-render: fallback for', node.name, err);
+                            mat.side = THREE.DoubleSide;
+                            mat.depthWrite = true;
+                            return mat;
+                        }
                     });
 
                     node.material = Array.isArray(node.material) ? converted : converted[0];
+                });
+            },
+            applyDoubleSidedFallback: function (obj) {
+                obj.traverse((node) => {
+                    if (!node.isMesh || !node.material) return;
+                    const materials = Array.isArray(node.material) ? node.material : [node.material];
+                    materials.forEach((mat) => {
+                        if (!this.isOutlineMesh(node, mat)) {
+                            mat.side = THREE.DoubleSide;
+                        }
+                        mat.depthWrite = true;
+                    });
                 });
             }
         });
