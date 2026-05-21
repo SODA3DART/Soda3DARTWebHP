@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運航簿 · 運転手（ローカル）</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, "Segoe UI", "Noto Sans JP", sans-serif; margin: 0; padding: 16px; background: #0f172a; color: #e2e8f0; line-height: 1.5; }
+    h1 { font-size: 1.15rem; margin: 0 0 8px; }
+    p.hint { font-size: 0.85rem; color: #94a3b8; margin: 0 0 16px; }
+    section { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #334155; }
+    h2 { font-size: 1rem; margin: 0 0 12px; color: #38bdf8; }
+    label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; }
+    input, textarea, select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #f1f5f9; margin-bottom: 12px; }
+    textarea { min-height: 72px; resize: vertical; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+    button { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .btn-primary { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; }
+    .btn-gps { background: linear-gradient(135deg, #22c55e, #15803d); color: #fff; margin-top: 8px; }
+    .btn-stop { background: #64748b; color: #fff; margin-top: 8px; }
+    .status { font-size: 0.85rem; padding: 10px; border-radius: 8px; background: #0f172a; border: 1px solid #334155; margin-top: 10px; white-space: pre-wrap; }
+    .ok { color: #4ade80; }
+    .err { color: #f87171; }
+    a { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <h1>運航簿（電子）· 運転手</h1>
+  <p class="hint">このページはローカルPC上のサーバーに保存します。HTTPSのngrok URLで開くと、スマホのGPS取得が安定しやすいです。<a href="/dashboard.html">ダッシュボード</a></p>
+
+  <section>
+    <h2>運行系統・バス番号（時刻表から自動）</h2>
+    <p class="hint" style="margin-top:0">時刻表 <code>Busdata/busN.csv</code> をサーバーが読み、<strong>今の時刻で次に来る便</strong>のバスナンバーを入れます（bus.html と同じ既定: Type1＝県立体育館前発、Type2＝上熊本駅発）。</p>
+    <label>運行中の系統</label>
+    <select id="runType" style="margin-bottom:12px;">
+      <option value="1">Type 1（芸術学部・薬学部方面）</option>
+      <option value="2">Type 2（上熊本駅方面）</option>
+    </select>
+    <label>自動割当バス番号（保存・GPSに付与）</label>
+    <input type="text" id="busNumber" readonly style="opacity:0.95;" placeholder="時刻表を読み込み中…">
+    <div class="status" id="scheduleHint" style="margin-top:8px;">時刻表: 未取得</div>
+  </section>
+
+  <section>
+    <h2>識別（任意）</h2>
+    <label>運転手名 / 呼称</label>
+    <input type="text" id="driverLabel" placeholder="例: 山田" autocomplete="name">
+    <label>便・車両メモ（任意・バス番号以外のメモ）</label>
+    <input type="text" id="busLabel" placeholder="例: 車番・連絡メモ">
+  </section>
+
+  <section>
+    <h2>乗降の記録</h2>
+    <label>路線・方面ラベル</label>
+    <input type="text" id="routeLabel" placeholder="例: 上熊本駅方面 / 芸術学部方面">
+    <label>区間・停車（任意）</label>
+    <input type="text" id="legLabel" placeholder="例: 崇城大学前 → 芸術学部">
+    <label>出発時刻（任意・ISOでも可）</label>
+    <input type="datetime-local" id="departedAt">
+    <div class="row2">
+      <div>
+        <label>乗車人数</label>
+        <input type="number" id="passengersOn" min="0" value="0" inputmode="numeric">
+      </div>
+      <div>
+        <label>降車人数</label>
+        <input type="number" id="passengersOff" min="0" value="0" inputmode="numeric">
+      </div>
+    </div>
+    <label>メモ</label>
+    <textarea id="note" placeholder="遅延・混雑・他"></textarea>
+    <button type="button" class="btn-primary" id="btnSaveTrip">運航簿に記録</button>
+    <div class="status" id="tripStatus"></div>
+  </section>
+
+  <section>
+    <h2>GPS 送信</h2>
+    <p class="hint" style="margin-top:0">位置情報を<strong>許可</strong>してください。<strong>Safari（Mac/iPhone）</strong>は高精度GPSを優先します（<strong>±10m前後</strong>を目標に追加取得します。屋内は30m超のことも）。屋外・窓際で試してください。</p>
+    <button type="button" class="btn-gps" id="btnGpsOnce" style="background:linear-gradient(135deg,#6366f1,#4f46e5);margin-top:0;">今の位置を1回だけ送信（テスト）</button>
+    <button type="button" class="btn-gps" id="btnGpsStart">GPS送信を開始（定期）</button>
+    <button type="button" class="btn-stop" id="btnGpsStop">GPS送信を停止</button>
+    <div class="status" id="gpsStatus">停止中</div>
+  </section>
+
+  <script>
+    (function () {
+      var tripStatus = document.getElementById('tripStatus');
+      var gpsStatus = document.getElementById('gpsStatus');
+      var scheduleHint = document.getElementById('scheduleHint');
+      var watchId = null;
+      var intervalId = null;
+      /** Safari/iOS: setInterval だと getCurrentPosition が重なり、5秒スロットルで skipped 続きになるため、終了後にだけ次を予約する */
+      var gpsSerialTimer = null;
+      var gpsSerialActive = false;
+      var suggestTimer = null;
+      var lastGpsPostAt = 0;
+      var GPS_MIN_INTERVAL_MS = 5000;
+      /** 目標の水平誤差（m）。これより粗いときは追加で高精度取得を試す（屋外・窓際で効く） */
+      var TARGET_ACCURACY_M = 10;
+      var MAX_ACCURACY_REFINE = 2;
+      /** Safari（Desktop含む）は watchPosition が不安定なことがあるため、iOS と同様に定期 getCurrentPosition のみにする */
+      var POLL_MS_POLLING_ONLY = 5000;
+
+      function isLikelyIOS() {
+        return /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      }
+
+      function isLikelySafari() {
+        var ua = navigator.userAgent || '';
+        return /Safari/i.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|FxiOS/i.test(ua);
+      }
+
+      function usePollingOnlyGps() {
+        return isLikelyIOS() || isLikelySafari();
+      }
+
+      function geoErrorText(err) {
+        if (!err) return '不明なエラー';
+        var c = err.code;
+        if (c === 1) return '位置情報が拒否されています（設定で許可してください）';
+        if (c === 2) return '位置を取得できませんでした（機内モード・圏外など）';
+        if (c === 3) return 'タイムアウトしました（屋内ではWi‑Fi位置のみになることがあります。屋外で再試行）';
+        return err.message || String(err);
+      }
+
+      function getCurrentPositionOnce(opts) {
+        return new Promise(function (resolve, reject) {
+          navigator.geolocation.getCurrentPosition(resolve, reject, opts);
+        });
+      }
+
+      function horzAccuracyM(pos) {
+        var a = pos && pos.coords ? pos.coords.accuracy : null;
+        if (a == null || !isFinite(a) || a <= 0) return 9999;
+        return a;
+      }
+
+      /** まだ粗いときだけ追加で GPS 寄りの fix を取り、最も誤差の小さい結果を返す */
+      function refinePositionUnder(pos, attempt) {
+        if (horzAccuracyM(pos) <= TARGET_ACCURACY_M || attempt >= MAX_ACCURACY_REFINE) {
+          return Promise.resolve(pos);
+        }
+        return getCurrentPositionOnce({
+          enableHighAccuracy: true,
+          maximumAge: 0,
+          timeout: 22000
+        }).then(function (next) {
+          var use = horzAccuracyM(next) < horzAccuracyM(pos) ? next : pos;
+          return refinePositionUnder(use, attempt + 1);
+        }).catch(function () {
+          return pos;
+        });
+      }
+
+      /** iPhone / Safari: いきなり低精度だと ±30m 前後のキャッシュになりやすいので高精度を先に。Chrome・Edge 等は従来どおり */
+      function acquirePosition() {
+        if (usePollingOnlyGps()) {
+          return getCurrentPositionOnce({
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 30000
+          }).catch(function () {
+            return getCurrentPositionOnce({
+              enableHighAccuracy: false,
+              maximumAge: 60000,
+              timeout: 18000
+            });
+          });
+        }
+        return getCurrentPositionOnce({
+          enableHighAccuracy: true,
+          maximumAge: 5000,
+          timeout: 22000
+        }).catch(function () {
+          return getCurrentPositionOnce({
+            enableHighAccuracy: false,
+            maximumAge: 120000,
+            timeout: 15000
+          });
+        });
+      }
+
+      function setTripStatus(ok, text) {
+        tripStatus.className = 'status ' + (ok ? 'ok' : 'err');
+        tripStatus.textContent = text;
+      }
+      function setGpsStatus(text) {
+        gpsStatus.className = 'status';
+        gpsStatus.textContent = text;
+      }
+
+      function fetchScheduleSuggest() {
+        return fetch('/api/schedule/suggest', { cache: 'no-store' }).then(function (r) { return r.json(); });
+      }
+
+      function applyScheduleSuggest(j) {
+        var runType = document.getElementById('runType').value;
+        var key = runType === '2' ? 'type2' : 'type1';
+        var bn = document.getElementById('busNumber');
+        if (!j.ok) {
+          scheduleHint.textContent = '時刻表: 取得失敗';
+          return;
+        }
+        if (!j.csvFound) {
+          scheduleHint.textContent = j.hint || '時刻表 CSV が見つかりません。';
+          bn.value = '';
+          return;
+        }
+        var slot = j[key];
+        if (!slot) {
+          scheduleHint.textContent = '本日のこの系統の残り便がありません。';
+          bn.value = '';
+          return;
+        }
+        bn.value = String(slot.busNumber);
+        var line = 'Type' + runType + ' 次の便: バス番号 ' + slot.busNumber + ' / 参照発 ' + slot.departureTime;
+        if (slot.delayed) {
+          line += '（予定時刻から遅延ウィンドウ内）';
+        } else {
+          line += '（あと約 ' + slot.minutesUntil + ' 分）';
+        }
+        scheduleHint.textContent = line;
+      }
+
+      function startSchedulePolling() {
+        if (suggestTimer) clearInterval(suggestTimer);
+        fetchScheduleSuggest().then(applyScheduleSuggest).catch(function () {
+          scheduleHint.textContent = '時刻表: 通信エラー';
+        });
+        suggestTimer = setInterval(function () {
+          fetchScheduleSuggest().then(applyScheduleSuggest).catch(function () {});
+        }, 25000);
+      }
+
+      document.getElementById('runType').addEventListener('change', function () {
+        fetchScheduleSuggest().then(applyScheduleSuggest).catch(function () {});
+      });
+
+      document.getElementById('btnSaveTrip').addEventListener('click', function () {
+        var departed = document.getElementById('departedAt').value;
+        var payload = {
+          routeLabel: document.getElementById('routeLabel').value,
+          legLabel: document.getElementById('legLabel').value,
+          departedAt: departed ? new Date(departed).toISOString() : null,
+          passengersOn: document.getElementById('passengersOn').value,
+          passengersOff: document.getElementById('passengersOff').value,
+          busNumber: document.getElementById('busNumber').value,
+          note: document.getElementById('note').value
+        };
+        fetch('/api/trips', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          cache: 'no-store'
+        }).then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+          .then(function (_ref) {
+            var r = _ref.r, j = _ref.j;
+            if (r.ok && j.ok) {
+              setTripStatus(true, '保存しました: ' + j.trip.id);
+            } else {
+              setTripStatus(false, (j && j.error) ? j.error : ('HTTP ' + r.status));
+            }
+          })
+          .catch(function (e) {
+            setTripStatus(false, String(e.message || e));
+          });
+      });
+
+      function postPosition(pos) {
+        var now = Date.now();
+        if (now - lastGpsPostAt < GPS_MIN_INTERVAL_MS) {
+          return Promise.resolve({ ok: true, skipped: true });
+        }
+        lastGpsPostAt = now;
+        var body = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy,
+          heading: pos.coords.heading,
+          speed: pos.coords.speed,
+          recordedAt: pos.timestamp ? new Date(pos.timestamp).toISOString() : new Date().toISOString(),
+          driverLabel: document.getElementById('driverLabel').value,
+          busLabel: document.getElementById('busLabel').value,
+          busNumber: document.getElementById('busNumber').value
+        };
+        return fetch('/api/positions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+          cache: 'no-store'
+        }).then(function (r) {
+          return r.json().then(function (j) {
+            if (!r.ok) {
+              throw new Error((j && j.error) ? j.error : ('HTTP ' + r.status));
+            }
+            return j;
+          });
+        });
+      }
+
+      function sendOnePosition(label) {
+        return acquirePosition()
+          .then(function (pos) {
+            return refinePositionUnder(pos, 0);
+          })
+          .then(function (pos) {
+            return postPosition(pos).then(function (j) {
+              if (j && j.skipped) {
+                return j;
+              }
+              if (j && j.ok) {
+                var acc = j.position.accuracy != null && isFinite(j.position.accuracy)
+                  ? Math.round(j.position.accuracy) + 'm'
+                  : '—';
+                setGpsStatus((label || '送信') + ': ' + j.position.recordedAt + '\n' +
+                  ' lat=' + j.position.lat.toFixed(5) + ' lng=' + j.position.lng.toFixed(5) + '  誤差±' + acc +
+                  '\nダッシュボードで「再読み込み」すると地図に反映されます。');
+              }
+              return j;
+            });
+          });
+      }
+
+      function startGpsSerialPolling() {
+        if (gpsSerialTimer != null || gpsSerialActive) return;
+        gpsSerialActive = true;
+        function scheduleNext() {
+          if (!gpsSerialActive) return;
+          gpsSerialTimer = setTimeout(runTick, POLL_MS_POLLING_ONLY);
+        }
+        function runTick() {
+          gpsSerialTimer = null;
+          if (!gpsSerialActive) return;
+          sendOnePosition('定期(Safari/iOS)')
+            .catch(function (err) {
+              setGpsStatus('位置エラー: ' + geoErrorText(err));
+            })
+            .finally(function () {
+              if (!gpsSerialActive) return;
+              scheduleNext();
+            });
+        }
+        scheduleNext();
+      }
+
+      function startGpsLoop() {
+        if (usePollingOnlyGps()) {
+          startGpsSerialPolling();
+          return;
+        }
+        if (intervalId != null) return;
+        var tickBusy = false;
+        var tick = function () {
+          if (tickBusy) return;
+          tickBusy = true;
+          sendOnePosition('定期')
+            .catch(function (err) {
+              setGpsStatus('位置エラー: ' + geoErrorText(err));
+            })
+            .finally(function () {
+              tickBusy = false;
+            });
+        };
+        intervalId = setInterval(tick, 15000);
+      }
+
+      document.getElementById('btnGpsOnce').addEventListener('click', function () {
+        if (!('geolocation' in navigator)) {
+          setGpsStatus('この端末では位置情報が使えません。');
+          return;
+        }
+        lastGpsPostAt = 0;
+        setGpsStatus('位置を取得しています…');
+        sendOnePosition('手動1回')
+          .catch(function (err) {
+            setGpsStatus('位置エラー: ' + geoErrorText(err));
+          });
+      });
+
+      document.getElementById('btnGpsStart').addEventListener('click', function () {
+        if (!('geolocation' in navigator)) {
+          setGpsStatus('この端末では位置情報が使えません。');
+          return;
+        }
+        if (intervalId != null || watchId != null || gpsSerialTimer != null || gpsSerialActive) {
+          setGpsStatus('すでに送信中です。');
+          return;
+        }
+        setGpsStatus('位置の許可を待っています…');
+        lastGpsPostAt = 0;
+
+        sendOnePosition('初回送信')
+          .then(function () {
+            if (intervalId != null || watchId != null || gpsSerialTimer != null || gpsSerialActive) return;
+
+            if (usePollingOnlyGps()) {
+              startGpsLoop();
+              setGpsStatus('送信開始（Safari / iPhone は watchPosition を使わず、約' + (POLL_MS_POLLING_ONLY / 1000) + '秒ごとに取得・送信）。\n「今の位置を1回だけ」も併用できます。');
+            } else {
+              watchId = navigator.geolocation.watchPosition(
+                function (pos) {
+                  postPosition(pos).then(function (j) {
+                    if (!j || j.skipped) return;
+                    if (j.ok) {
+                      setGpsStatus('最終送信: ' + j.position.recordedAt + '\n' +
+                        ' lat=' + j.position.lat.toFixed(5) + ' lng=' + j.position.lng.toFixed(5));
+                    } else {
+                      setGpsStatus('送信エラー: ' + (j.error || JSON.stringify(j)));
+                    }
+                  }).catch(function (e) {
+                    setGpsStatus('送信失敗: ' + String(e.message || e));
+                  });
+                },
+                function (err) {
+                  setGpsStatus('位置エラー: ' + geoErrorText(err));
+                },
+                { enableHighAccuracy: true, maximumAge: 15000, timeout: 25000 }
+              );
+              startGpsLoop();
+              setGpsStatus('送信を開始しました（約5秒に1回までサーバー送信＋定期取得）。');
+            }
+          })
+          .catch(function (err) {
+            setGpsStatus('位置エラー: ' + geoErrorText(err));
+          });
+      });
+
+      document.getElementById('btnGpsStop').addEventListener('click', function () {
+        gpsSerialActive = false;
+        if (gpsSerialTimer != null) {
+          clearTimeout(gpsSerialTimer);
+          gpsSerialTimer = null;
+        }
+        if (watchId != null) {
+          navigator.geolocation.clearWatch(watchId);
+          watchId = null;
+        }
+        if (intervalId != null) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        setGpsStatus('停止しました。');
+      });
+
+      startSchedulePolling();
+    })();
+  </script>
+</body>
+</html>

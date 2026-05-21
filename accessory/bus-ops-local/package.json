@@ -1,0 +1,17 @@
+{
+  "name": "bus-ops-local",
+  "version": "0.1.0",
+  "private": true,
+  "description": "崇城シャトル運航簿（ローカル）— 乗車記録とGPS。GitHub Pagesとは別にPCで起動し ngrok で公開可",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

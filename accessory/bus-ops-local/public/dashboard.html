@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運航ダッシュボード（ローカル）</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, "Noto Sans JP", sans-serif; margin: 0; background: #0b1220; color: #e2e8f0; }
+    header { padding: 14px 16px; border-bottom: 1px solid #1e293b; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    h1 { font-size: 1.1rem; margin: 0; }
+    header a { color: #38bdf8; }
+    #map { height: 42vh; min-height: 220px; width: 100%; }
+    .panel { padding: 16px; }
+    h2 { font-size: 0.95rem; color: #38bdf8; margin: 0 0 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { border: 1px solid #334155; padding: 8px; text-align: left; }
+    th { background: #1e293b; }
+    tr:nth-child(even) { background: #111827; }
+    .bars { display: flex; flex-direction: column; gap: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; }
+    .bar-label { width: 88px; flex-shrink: 0; font-size: 0.8rem; color: #94a3b8; }
+    .bar-track { flex: 1; height: 10px; background: #1e293b; border-radius: 6px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9, #22c55e); border-radius: 6px; }
+    .err { color: #f87171; font-size: 0.9rem; }
+    button { padding: 8px 14px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; cursor: pointer; font-weight: 600; }
+    button:hover { background: #334155; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>運航ダッシュボード</h1>
+    <span id="posCount" style="font-size:0.85rem;color:#94a3b8;">GPS: —</span>
+    <span id="posPoll" style="font-size:0.8rem;color:#64748b;">更新: 5秒ごと</span>
+    <button type="button" id="btnReload">再読み込み</button>
+    <a href="/driver.html">運転手画面へ</a>
+  </header>
+  <div id="map"></div>
+  <div class="panel">
+    <h2>直近7日 · 乗降合計（記録件数ベース）</h2>
+    <div id="statsErr" class="err" style="display:none;"></div>
+    <div class="bars" id="weekBars"></div>
+  </div>
+  <div class="panel">
+    <h2>直近の運航簿記録</h2>
+    <div id="tripsErr" class="err" style="display:none;"></div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>記録時刻</th>
+            <th>バス</th>
+            <th>路線</th>
+            <th>乗</th>
+            <th>降</th>
+            <th>メモ</th>
+          </tr>
+        </thead>
+        <tbody id="tripsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    (function () {
+      var map = L.map('map', { scrollWheelZoom: true });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+      /** バス番号（未設定は同一キー）ごとに1マーカーだけ。座標は最新受信で上書き */
+      var markersByBus = {};
+      var POLL_MS = 5000;
+
+      function busKey(p) {
+        var bn = p.busNumber != null && String(p.busNumber).trim() !== '' ? String(p.busNumber).trim() : '';
+        return bn || '_unset';
+      }
+
+      function popupHtml(p) {
+        var bn = p.busNumber != null && String(p.busNumber).trim() !== '' ? escapeHtml(String(p.busNumber)) : '（未設定）';
+        return (
+          '<strong>バス ' + bn + '</strong><br>' +
+          (p.recordedAt || '').replace('T', ' ').slice(0, 19) + '<br>' +
+          '±' + (p.accuracy != null ? Math.round(p.accuracy) + 'm' : '-') +
+          (p.driverLabel ? '<br>運転手: ' + escapeHtml(String(p.driverLabel).slice(0, 40)) : '')
+        );
+      }
+
+      function loadPositions() {
+        return fetch('/api/positions/recent?limit=200', { cache: 'no-store' }).then(function (r) { return r.json(); });
+      }
+
+      function loadStats() {
+        return fetch('/api/stats/daily', { cache: 'no-store' }).then(function (r) { return r.json(); });
+      }
+
+      function loadTrips() {
+        return fetch('/api/trips', { cache: 'no-store' }).then(function (r) { return r.json(); });
+      }
+
+      function renderStats(days) {
+        var el = document.getElementById('weekBars');
+        el.innerHTML = '';
+        if (!days || !days.length) {
+          el.textContent = 'まだデータがありません。';
+          return;
+        }
+        var vals = days.map(function (d) { return d.on; });
+        var maxOn = Math.max.apply(null, [1].concat(vals));
+        days.forEach(function (d) {
+          var row = document.createElement('div');
+          row.className = 'bar-row';
+          var pct = Math.round((d.on / maxOn) * 100);
+          row.innerHTML =
+            '<div class="bar-label">' + d.day + '</div>' +
+            '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+            '<div style="font-size:0.75rem;min-width:120px;">乗' + d.on + ' / 降' + d.off + ' (' + d.trips + '件)</div>';
+          el.appendChild(row);
+        });
+      }
+
+      function renderTrips(trips) {
+        var tb = document.getElementById('tripsBody');
+        tb.innerHTML = '';
+        (trips || []).slice(0, 40).forEach(function (t) {
+          var tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>' + (t.createdAt || '').replace('T', ' ').slice(0, 19) + '</td>' +
+            '<td>' + escapeHtml(t.busNumber != null && t.busNumber !== '' ? String(t.busNumber) : '—') + '</td>' +
+            '<td>' + escapeHtml(t.routeLabel || '') + '</td>' +
+            '<td>' + (t.passengersOn != null ? t.passengersOn : '') + '</td>' +
+            '<td>' + (t.passengersOff != null ? t.passengersOff : '') + '</td>' +
+            '<td>' + escapeHtml((t.note || '').slice(0, 80)) + '</td>';
+          tb.appendChild(tr);
+        });
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function refresh() {
+        document.getElementById('statsErr').style.display = 'none';
+        document.getElementById('tripsErr').style.display = 'none';
+
+        loadPositions().then(function (j) {
+          var posEl = document.getElementById('posCount');
+          var pollEl = document.getElementById('posPoll');
+          if (pollEl) pollEl.textContent = '最終取得: ' + new Date().toLocaleTimeString('ja-JP');
+          if (!j.ok) {
+            if (posEl) posEl.textContent = 'GPS: 取得失敗';
+            map.setView([32.8031, 130.7079], 13);
+            return;
+          }
+          if (!j.positions || !j.positions.length) {
+            Object.keys(markersByBus).forEach(function (k) {
+              map.removeLayer(markersByBus[k]);
+              delete markersByBus[k];
+            });
+            if (posEl) posEl.textContent = 'GPS: 0台（運転手画面で送信後、ここは約5秒で更新）';
+            map.setView([32.8031, 130.7079], 13);
+            return;
+          }
+          var latestByBus = {};
+          j.positions.forEach(function (p) {
+            var k = busKey(p);
+            if (!latestByBus[k]) latestByBus[k] = p;
+          });
+          var keys = Object.keys(latestByBus);
+          if (posEl) posEl.textContent = 'GPS: ' + keys.length + '台（バス番号ごとに最新1点）';
+
+          Object.keys(markersByBus).forEach(function (k) {
+            if (!latestByBus[k]) {
+              map.removeLayer(markersByBus[k]);
+              delete markersByBus[k];
+            }
+          });
+
+          var latlngs = [];
+          keys.forEach(function (k) {
+            var p = latestByBus[k];
+            var ll = L.latLng(p.lat, p.lng);
+            latlngs.push(ll);
+            var m = markersByBus[k];
+            if (!m) {
+              m = L.circleMarker(ll, { radius: 10, color: '#38bdf8', fillColor: '#0ea5e9', fillOpacity: 0.85, weight: 2 });
+              m.addTo(map);
+              markersByBus[k] = m;
+            } else {
+              m.setLatLng(ll);
+            }
+            m.bindPopup(popupHtml(p));
+          });
+
+          if (latlngs.length === 1) {
+            map.setView(latlngs[0], 15);
+          } else {
+            map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40], maxZoom: 16 });
+          }
+          setTimeout(function () { map.invalidateSize(); }, 80);
+        }).catch(function (e) {
+          document.getElementById('statsErr').style.display = 'block';
+          document.getElementById('statsErr').textContent = '地図データ取得失敗: ' + String(e.message || e);
+          map.setView([32.8031, 130.7079], 13);
+        });
+
+        loadStats().then(function (j) {
+          if (!j.ok) throw new Error(j.error || 'stats');
+          renderStats(j.days);
+        }).catch(function (e) {
+          document.getElementById('statsErr').style.display = 'block';
+          document.getElementById('statsErr').textContent = '集計取得失敗: ' + String(e.message || e);
+        });
+
+        loadTrips().then(function (j) {
+          if (!j.ok) throw new Error(j.error || 'trips');
+          renderTrips(j.trips);
+        }).catch(function (e) {
+          document.getElementById('tripsErr').style.display = 'block';
+          document.getElementById('tripsErr').textContent = '運航簿取得失敗: ' + String(e.message || e);
+        });
+      }
+
+      document.getElementById('btnReload').addEventListener('click', refresh);
+      map.setView([32.8031, 130.7079], 13);
+      refresh();
+      setInterval(refresh, POLL_MS);
+    })();
+  </script>
+</body>
+</html>
