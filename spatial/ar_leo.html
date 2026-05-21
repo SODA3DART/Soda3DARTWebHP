@@ -230,6 +230,10 @@
                 stand: '90 0 0',
                 poster: '0 0 0'
             };
+            const MODE_POSITION = {
+                stand: '0 0 0',
+                poster: '0 -0.45 0'
+            };
 
             const scene = document.querySelector('a-scene');
             const leoModel = document.querySelector('#leo-model');
@@ -242,6 +246,7 @@
             function applyDisplayMode() {
                 if (leoModel) {
                     leoModel.setAttribute('rotation', MODE_ROTATION[displayMode]);
+                    leoModel.setAttribute('position', MODE_POSITION[displayMode]);
                 }
                 const isPoster = displayMode === 'poster';
                 modeBtn.textContent = isPoster ? '立体モード' : 'ポスターモード';
