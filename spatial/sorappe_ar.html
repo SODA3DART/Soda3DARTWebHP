@@ -160,24 +160,38 @@
             };
             const POSTER_Y_OFFSET = -0.45;
 
+            function getPositionString(el) {
+                const pos = el.getAttribute('position');
+                if (!pos) return '0 0 0';
+                if (typeof pos === 'string') return pos;
+                return `${pos.x || 0} ${pos.y || 0} ${pos.z || 0}`;
+            }
+
+            function parsePositionString(str) {
+                const parts = String(str || '0 0 0').trim().split(/\s+/).map(Number);
+                return [
+                    Number.isFinite(parts[0]) ? parts[0] : 0,
+                    Number.isFinite(parts[1]) ? parts[1] : 0,
+                    Number.isFinite(parts[2]) ? parts[2] : 0
+                ];
+            }
+
             const modeBtn = document.getElementById('mode-ui-btn');
             const arModels = document.querySelectorAll('.ar-model');
             let displayMode = 'stand';
 
             arModels.forEach((el) => {
-                if (!el.dataset.standPosition) {
-                    el.dataset.standPosition = el.getAttribute('position') || '0 0 0';
-                }
+                el.dataset.standPosition = getPositionString(el);
             });
 
             function applyDisplayMode() {
                 arModels.forEach((el) => {
                     el.setAttribute('rotation', MODE_ROTATION[displayMode]);
-                    const parts = el.dataset.standPosition.split(' ').map(Number);
+                    const parts = parsePositionString(el.dataset.standPosition);
                     if (displayMode === 'poster') {
                         el.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
                     } else {
-                        el.setAttribute('position', el.dataset.standPosition);
+                        el.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
                     }
                 });
                 const isPoster = displayMode === 'poster';

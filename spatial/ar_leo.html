@@ -10,23 +10,32 @@
         AFRAME.registerComponent('double-sided', {
             init: function () {
                 this.el.addEventListener('model-loaded', () => {
-                    const obj = this.el.getObject3D('mesh');
-                    if (obj) {
-                        obj.traverse((node) => {
-                            if (node.isMesh) {
-                                node.material.transparent = false;
-                                node.material.depthWrite = true;
+                    const obj = this.el.getObject3D('mesh') || this.el.object3D;
+                    if (!obj) return;
 
-                                const nodeName = node.name.toLowerCase();
-                                const matName = node.material.name ? node.material.name.toLowerCase() : '';
-                                if (nodeName.includes('outline') || matName.includes('outline')) {
-                                    console.log('Skipping double-sided for outline:', node.name);
-                                } else {
-                                    node.material.side = THREE.DoubleSide;
-                                }
+                    obj.traverse((node) => {
+                        if (!node.isMesh || !node.material) return;
+
+                        const materials = Array.isArray(node.material) ? node.material : [node.material];
+                        const nodeName = node.name.toLowerCase();
+
+                        materials.forEach((mat) => {
+                            if (!mat) return;
+                            const matName = mat.name ? mat.name.toLowerCase() : '';
+                            const needsAlpha = mat.transparent || mat.alphaTest > 0 || !!mat.alphaMap;
+
+                            if (nodeName.includes('outline') || matName.includes('outline')) {
+                                mat.side = THREE.FrontSide;
+                                return;
+                            }
+
+                            mat.side = THREE.DoubleSide;
+                            if (!needsAlpha) {
+                                mat.transparent = false;
+                                mat.depthWrite = true;
                             }
                         });
-                    }
+                    });
                 });
             }
         });
@@ -167,14 +176,16 @@
     <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/06/targets.mind;" color-space="sRGB"
         renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
-        <a-assets>
-            <a-asset-item id="yui" src="../3dartensyu3/ar/06/Leo.glb"></a-asset-item>
+        <a-light type="ambient" color="#ffffff" intensity="0.7"></a-light>
+        <a-light type="directional" color="#ffffff" intensity="0.6" position="0 1 1"></a-light>
+        <a-assets timeout="120000">
+            <a-asset-item id="leo" src="../3dartensyu3/ar/06/Leo.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0" id="target">
-            <a-entity id="leo-model" gltf-model="#yui" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
+            <a-entity id="leo-model" gltf-model="#leo" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
                 animation-mixer="clip: *; loop: repeat;" double-sided></a-entity>
         </a-entity>
     </a-scene>
@@ -186,10 +197,32 @@
             };
             const POSTER_Y_OFFSET = -0.45;
 
+            function getPositionString(el) {
+                const pos = el.getAttribute('position');
+                if (!pos) return '0 0 0';
+                if (typeof pos === 'string') return pos;
+                return `${pos.x || 0} ${pos.y || 0} ${pos.z || 0}`;
+            }
+
+            function parsePositionString(str) {
+                const parts = String(str || '0 0 0').trim().split(/\s+/).map(Number);
+                return [
+                    Number.isFinite(parts[0]) ? parts[0] : 0,
+                    Number.isFinite(parts[1]) ? parts[1] : 0,
+                    Number.isFinite(parts[2]) ? parts[2] : 0
+                ];
+            }
+
             const scene = document.querySelector('a-scene');
             const leoModel = document.querySelector('#leo-model');
-            if (leoModel && !leoModel.dataset.standPosition) {
-                leoModel.dataset.standPosition = leoModel.getAttribute('position') || '0 0 0';
+            if (leoModel) {
+                leoModel.dataset.standPosition = getPositionString(leoModel);
+            }
+
+            if (leoModel) {
+                leoModel.addEventListener('model-error', (e) => {
+                    console.error('Leo model failed to load:', e.detail);
+                });
             }
             const audio = document.getElementById('bgm');
             const modeBtn = document.getElementById('mode-ui-btn');
@@ -200,11 +233,11 @@
             function applyDisplayMode() {
                 if (leoModel) {
                     leoModel.setAttribute('rotation', MODE_ROTATION[displayMode]);
-                    const parts = leoModel.dataset.standPosition.split(' ').map(Number);
+                    const parts = parsePositionString(leoModel.dataset.standPosition);
                     if (displayMode === 'poster') {
                         leoModel.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
                     } else {
-                        leoModel.setAttribute('position', leoModel.dataset.standPosition);
+                        leoModel.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
                     }
                 }
                 const isPoster = displayMode === 'poster';
@@ -270,10 +303,12 @@
                 document.body.addEventListener(evt, unlockAudio, { passive: true });
             });
 
-            if (scene.hasLoaded) {
-                setupMarkerAudio();
-            } else {
-                scene.addEventListener('loaded', setupMarkerAudio);
+            if (scene) {
+                if (scene.hasLoaded) {
+                    setupMarkerAudio();
+                } else {
+                    scene.addEventListener('loaded', setupMarkerAudio);
+                }
             }
 
             applyDisplayMode();
