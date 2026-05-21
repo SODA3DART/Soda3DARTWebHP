@@ -126,7 +126,7 @@
             }
         });
     </script>
-    <title>飛雄・八枝郎 AR</title>
+    <title>たる吉 AR</title>
     <style>
         #marker-ui-btn {
             position: fixed;
@@ -269,24 +269,25 @@
     <button type="button" id="marker-ui-btn" aria-expanded="false" aria-controls="marker-overlay">マーカーを表示</button>
     <button type="button" id="view-ui-btn" aria-pressed="false">ソリッドWF</button>
     <button type="button" id="mode-ui-btn" aria-pressed="false">ポスターモード</button>
+    <audio id="bgm" src="../3dartensyu3/ar/08/BGM.mp3" preload="auto" loop playsinline></audio>
     <div id="marker-overlay" class="marker-overlay" role="dialog" aria-modal="true" aria-labelledby="marker-dialog-title" hidden>
         <div class="marker-panel">
-            <h2 id="marker-dialog-title">飛雄・八枝郎 AR のマーカー</h2>
+            <h2 id="marker-dialog-title">たる吉 AR のマーカー</h2>
             <p>下の画像と同じものをカメラで映すと、ステージとキャラクターが表示されます。</p>
-            <img src="../3dartensyu3/ar/07/poster.png" alt="飛雄・八枝郎 AR 用マーカー画像" />
+            <img src="../3dartensyu3/ar/08/たる吉.png" alt="たる吉 AR 用マーカー画像" />
             <div class="marker-actions">
                 <button type="button" class="marker-close" id="marker-close-btn">閉じる</button>
             </div>
         </div>
     </div>
-    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/07/targets.mind;" color-space="sRGB"
+    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/08/targets.mind;" color-space="sRGB"
         renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
         <a-light type="ambient" color="#ffffff" intensity="0.7"></a-light>
         <a-light type="directional" color="#ffffff" intensity="0.6" position="0 1 1"></a-light>
         <a-assets timeout="120000">
-            <a-asset-item id="tobio" src="../3dartensyu3/ar/07/Tobio_Haetarou.glb"></a-asset-item>
-            <a-asset-item id="stage" src="../3dartensyu3/ar/07/stage.glb"></a-asset-item>
+            <a-asset-item id="tarukichi" src="../3dartensyu3/ar/08/たる吉.glb"></a-asset-item>
+            <a-asset-item id="stage" src="../3dartensyu3/ar/08/stage.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -294,7 +295,7 @@
         <a-entity mindar-image-target="targetIndex: 0" id="target">
             <a-entity id="stage-model" class="ar-model" gltf-model="#stage" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
                 animation-mixer="clip: *; loop: repeat;"></a-entity>
-            <a-entity id="tobio-model" class="ar-model" gltf-model="#tobio" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
+            <a-entity id="tarukichi-model" class="ar-model" gltf-model="#tarukichi" rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
                 animation-mixer="clip: *; loop: repeat;" double-sided solid-wireframe="enabled: false"></a-entity>
         </a-entity>
     </a-scene>
@@ -322,17 +323,19 @@
                 ];
             }
 
+            const scene = document.querySelector('a-scene');
             const arModels = document.querySelectorAll('.ar-model');
-            const tobioModel = document.querySelector('#tobio-model');
+            const tarukichiModel = document.querySelector('#tarukichi-model');
             const stageModel = document.querySelector('#stage-model');
+            const audio = document.getElementById('bgm');
 
             arModels.forEach((el) => {
                 el.dataset.standPosition = getPositionString(el);
             });
 
-            if (tobioModel) {
-                tobioModel.addEventListener('model-error', (e) => {
-                    console.error('Tobio model failed to load:', e.detail);
+            if (tarukichiModel) {
+                tarukichiModel.addEventListener('model-error', (e) => {
+                    console.error('Tarukichi model failed to load:', e.detail);
                 });
             }
             if (stageModel) {
@@ -344,6 +347,8 @@
             const viewBtn = document.getElementById('view-ui-btn');
             let displayMode = 'stand';
             let wireframeEnabled = false;
+            let audioUnlocked = false;
+            let markerVisible = false;
 
             function applyDisplayMode() {
                 arModels.forEach((el) => {
@@ -366,9 +371,9 @@
             });
 
             function setWireframeMode(enabled) {
-                if (!tobioModel) return;
-                tobioModel.setAttribute('solid-wireframe', { enabled: enabled });
-                const wf = tobioModel.components['solid-wireframe'];
+                if (!tarukichiModel) return;
+                tarukichiModel.setAttribute('solid-wireframe', { enabled: enabled });
+                const wf = tarukichiModel.components['solid-wireframe'];
                 if (wf) wf.applyMode();
             }
 
@@ -378,6 +383,67 @@
                 viewBtn.textContent = wireframeEnabled ? '通常表示' : 'ソリッドWF';
                 viewBtn.setAttribute('aria-pressed', wireframeEnabled ? 'true' : 'false');
             });
+
+            async function unlockAudio() {
+                if (audioUnlocked || !audio) return;
+                try {
+                    audio.muted = true;
+                    await audio.play();
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.muted = false;
+                    audioUnlocked = true;
+                    if (markerVisible) await playBgm();
+                } catch (err) {
+                    console.warn('Audio unlock failed:', err);
+                }
+            }
+
+            async function playBgm() {
+                if (!audio) return;
+                if (!audioUnlocked) {
+                    await unlockAudio();
+                    if (!audioUnlocked) return;
+                }
+                try {
+                    if (audio.paused) await audio.play();
+                } catch (err) {
+                    console.warn('BGM play failed:', err);
+                }
+            }
+
+            function pauseBgm() {
+                if (!audio) return;
+                audio.pause();
+                audio.currentTime = 0;
+            }
+
+            function setupMarkerAudio() {
+                const target = document.querySelector('#target');
+                if (!target) return;
+
+                target.addEventListener('targetFound', () => {
+                    markerVisible = true;
+                    playBgm();
+                });
+
+                target.addEventListener('targetLost', () => {
+                    markerVisible = false;
+                    pauseBgm();
+                });
+            }
+
+            ['click', 'touchstart'].forEach((evt) => {
+                document.body.addEventListener(evt, unlockAudio, { passive: true });
+            });
+
+            if (scene) {
+                if (scene.hasLoaded) {
+                    setupMarkerAudio();
+                } else {
+                    scene.addEventListener('loaded', setupMarkerAudio);
+                }
+            }
 
             applyDisplayMode();
 
