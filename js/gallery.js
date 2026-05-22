@@ -47,7 +47,10 @@ function initFilterFunctionality() {
                     item.style.display = 'block';
                     // This section has items to display
                     if (parentSection) {
-                        sectionVisibility[parentSection.querySelector('.section-title').textContent] = true;
+                        const sectionId = parentSection.getAttribute('data-section');
+                        if (sectionId) {
+                            sectionVisibility[sectionId] = true;
+                        }
                     }
                 } else {
                     item.style.display = 'none';
@@ -56,8 +59,8 @@ function initFilterFunctionality() {
 
             // Set section visibility
             gallerySections.forEach(section => {
-                const sectionTitle = section.querySelector('.section-title').textContent;
-                if (filterValue === 'all' || sectionVisibility[sectionTitle]) {
+                const sectionId = section.getAttribute('data-section');
+                if (filterValue === 'all' || (sectionId && sectionVisibility[sectionId])) {
                     section.style.display = 'block';
                 } else {
                     section.style.display = 'none';

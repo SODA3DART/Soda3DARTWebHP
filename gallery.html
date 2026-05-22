@@ -90,6 +90,44 @@
     <link href="https://fonts.googleapis.com/earlyaccess/ipaexmincho.css" rel="stylesheet">
     <link rel="stylesheet" href="css/common.min.css">
     <link rel="stylesheet" href="css/gallery.min.css">
+    <style>
+        .language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+        }
+
+        nav ul li.language-switch {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        nav ul li.language-switch:after {
+            display: none;
+        }
+
+        .language-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .language-btn.active {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+    </style>
 </head>
 
 <body>
@@ -109,12 +147,16 @@
             </div>
             <nav id="nav">
                 <ul>
-                    <li><a href="index.html#home">ホーム</a></li>
-                    <li><a href="index.html#features">コース紹介</a></li>
-                    <li><a href="index.html#gallery">ギャラリー</a></li>
-                    <li><a href="index.html#news">ニュース</a></li>
-                    <li><a href="events.html">イベント</a></li>
-                    <li><a href="index.html#contact">お問い合わせ</a></li>
+                    <li><a href="index.html#home" data-i18n="nav-home">ホーム</a></li>
+                    <li><a href="index.html#features" data-i18n="nav-features">コース紹介</a></li>
+                    <li><a href="index.html#gallery" data-i18n="nav-gallery">ギャラリー</a></li>
+                    <li><a href="index.html#news" data-i18n="nav-news">ニュース</a></li>
+                    <li><a href="events.html" data-i18n="nav-events">イベント</a></li>
+                    <li><a href="index.html#contact" data-i18n="nav-contact">お問い合わせ</a></li>
+                    <li class="language-switch">
+                        <button class="language-btn active" data-lang="ja" type="button">日本語</button>
+                        <button class="language-btn" data-lang="en" type="button">English</button>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -124,37 +166,37 @@
     <main class="main-content">
         <div class="container">
             <div class="page-title">
-                <h1>学生作品ギャラリー</h1>
-                <p>3Dアートコースの学生たちが制作した作品をご紹介します</p>
+                <h1 data-i18n="page-title">学生作品ギャラリー</h1>
+                <p data-i18n="page-subtitle">3Dアートコースの学生たちが制作した作品をご紹介します</p>
             </div>
 
             <!-- フィルターコントロール -->
             <div class="filter-controls">
-                <button class="filter-button active" data-filter="all">すべて</button>
-                <button class="filter-button" data-filter="sculpture">彫刻</button>
-                <button class="filter-button" data-filter="3dmodel">3Dモデリング</button>
-                <button class="filter-button" data-filter="animation">アニメーション</button>
-                <button class="filter-button" data-filter="vr">VR/AR</button>
-                <button class="filter-button" data-filter="concept">コンセプトアート</button>
-                <button class="filter-button" data-filter="print">3Dプリント</button>
-                <button class="filter-button" data-filter="faculty">教員作品</button>
+                <button class="filter-button active" data-filter="all" data-i18n="filter-all">すべて</button>
+                <button class="filter-button" data-filter="sculpture" data-i18n="filter-sculpture">彫刻</button>
+                <button class="filter-button" data-filter="3dmodel" data-i18n="filter-3dmodel">3Dモデリング</button>
+                <button class="filter-button" data-filter="animation" data-i18n="filter-animation">アニメーション</button>
+                <button class="filter-button" data-filter="vr" data-i18n="filter-vr">VR/AR</button>
+                <button class="filter-button" data-filter="concept" data-i18n="filter-concept">コンセプトアート</button>
+                <button class="filter-button" data-filter="print" data-i18n="filter-print">3Dプリント</button>
+                <button class="filter-button" data-filter="faculty" data-i18n="filter-faculty">教員作品</button>
             </div>
 
             <!-- 彫刻作品 -->
-            <div class="gallery-section">
-                <h2 class="section-title">彫刻作品</h2>
+            <div class="gallery-section" data-section="sculpture">
+                <h2 class="section-title" data-i18n="section-sculpture">彫刻作品</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="sculpture">
                         <div class="gallery-image">
                             <img src="images/phi_st.jpeg" alt="彫刻作品 - 九州崇城大学の彫刻・美術作品" data-position="center 30%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">彫刻作品</h3>
-                            <p class="gallery-author">4年生 </p>
+                            <h3 class="gallery-title" data-i18n="sculp-1-title">彫刻作品</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
                             <p class="gallery-description"></p>
-                            <span class="gallery-tag">彫刻</span>
-                            <span class="gallery-tag">美術</span>
-                            <span class="gallery-tag">芸術</span>
+                            <span class="gallery-tag" data-i18n="tag-sculpture">彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-art">美術</span>
+                            <span class="gallery-tag" data-i18n="tag-fine-art">芸術</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="sculpture">
@@ -162,12 +204,12 @@
                             <img src="images/phi_st2.jpeg" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 20%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">彫刻作品</h3>
-                            <p class="gallery-author">4年生 </p>
+                            <h3 class="gallery-title" data-i18n="sculp-2-title">彫刻作品</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
                             <p class="gallery-description"></p>
-                            <span class="gallery-tag">彫刻</span>
-                            <span class="gallery-tag">立体造形</span>
-                            <span class="gallery-tag">芸術</span>
+                            <span class="gallery-tag" data-i18n="tag-sculpture">彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-3d-form">立体造形</span>
+                            <span class="gallery-tag" data-i18n="tag-fine-art">芸術</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="sculpture">
@@ -175,12 +217,12 @@
                             <img src="images/kansatu_yu.png" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 10%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">観察</h3>
-                            <p class="gallery-author">3年生 </p>
+                            <h3 class="gallery-title" data-i18n="sculp-3-title">観察</h3>
+                            <p class="gallery-author" data-i18n="author-3rd">3年生 </p>
                             <p class="gallery-description"></p>
-                            <span class="gallery-tag">彫刻</span>
-                            <span class="gallery-tag">立体造形</span>
-                            <span class="gallery-tag">アクリル</span>
+                            <span class="gallery-tag" data-i18n="tag-sculpture">彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-3d-form">立体造形</span>
+                            <span class="gallery-tag" data-i18n="tag-acrylic">アクリル</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="sculpture">
@@ -188,11 +230,11 @@
                             <img src="images/phi_MN.jpg" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 20%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">彫刻作品4</h3>
-                            <p class="gallery-author">4年生 </p>
+                            <h3 class="gallery-title" data-i18n="sculp-4-title">彫刻作品4</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
                             <p class="gallery-description"></p>
-                            <span class="gallery-tag">彫刻</span>
-                            <span class="gallery-tag">立体造形</span>
+                            <span class="gallery-tag" data-i18n="tag-sculpture">彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-3d-form">立体造形</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="sculpture">
@@ -200,19 +242,19 @@
                             <img src="images/negikamoMN.jpg" alt="彫刻作品2 - 九州崇城大学の彫刻・美術作品" data-position="center 30%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">ネギカモ</h3>
-                            <p class="gallery-author">4年生 </p>
+                            <h3 class="gallery-title" data-i18n="sculp-5-title">ネギカモ</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
                             <p class="gallery-description"></p>
-                            <span class="gallery-tag">彫刻</span>
-                            <span class="gallery-tag">立体造形</span>
+                            <span class="gallery-tag" data-i18n="tag-sculpture">彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-3d-form">立体造形</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- 3Dモデリング作品 -->
-            <div class="gallery-section">
-                <h2 class="section-title">3DCG作品</h2>
+            <div class="gallery-section" data-section="3dmodel">
+                <h2 class="section-title" data-i18n="section-3dcg">3DCG作品</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item" data-category="3dmodel">
                         <div class="gallery-image">
@@ -220,14 +262,14 @@
                                 data-position="center 10%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">くまゆ</h3>
-                            <p class="gallery-author">4年生 </p>
-                            <p class="gallery-description">「熊本のコンシェルジュキャラクター」をテーマにデザインからモデリングまで製作<br>
+                            <h3 class="gallery-title" data-i18n="cg-1-title">くまゆ</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
+                            <p class="gallery-description" data-i18n-html="cg-1-desc">「熊本のコンシェルジュキャラクター」をテーマにデザインからモデリングまで製作<br>
                                 工学部建築学科との共同研究にてAIコンシェルジュとして活躍</p>
-                            <span class="gallery-tag">キャラクターデザイン</span>
-                            <span class="gallery-tag">Maya</span>
-                            <span class="gallery-tag">Blender</span>
-                            <span class="gallery-tag">Vtuber</span>
+                            <span class="gallery-tag" data-i18n="tag-char-design">キャラクターデザイン</span>
+                            <span class="gallery-tag" data-i18n="tag-maya">Maya</span>
+                            <span class="gallery-tag" data-i18n="tag-blender">Blender</span>
+                            <span class="gallery-tag" data-i18n="tag-vtuber">Vtuber</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="3dmodel">
@@ -236,13 +278,13 @@
                                 data-position="center 10%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">先導者</h3>
-                            <p class="gallery-author">3年生 </p>
-                            <p class="gallery-description">ZBrushを使用したデジタル彫刻作品。3DCGの技術を活かした芸術表現。</p>
-                            <span class="gallery-tag">3Dモデリング</span>
+                            <h3 class="gallery-title" data-i18n="cg-2-title">先導者</h3>
+                            <p class="gallery-author" data-i18n="author-3rd">3年生 </p>
+                            <p class="gallery-description" data-i18n="cg-2-desc">ZBrushを使用したデジタル彫刻作品。3DCGの技術を活かした芸術表現。</p>
+                            <span class="gallery-tag" data-i18n="tag-3d-modeling">3Dモデリング</span>
                             <span class="gallery-tag">UnrealEngine, ZBrush</span>
-                            <span class="gallery-tag">デジタル彫刻</span>
-                            <span class="gallery-tag">芸術</span>
+                            <span class="gallery-tag" data-i18n="tag-digital-sculpture">デジタル彫刻</span>
+                            <span class="gallery-tag" data-i18n="tag-fine-art">芸術</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="3dmodel">
@@ -251,13 +293,13 @@
                                 data-position="center 50%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">メラン・リリオン</h3>
-                            <p class="gallery-author">4年生 </p>
-                            <p class="gallery-description">キャラクターデザインの課題として作成したラスボス</p>
-                            <span class="gallery-tag">プロダクトデザイン</span>
+                            <h3 class="gallery-title" data-i18n="cg-3-title">メラン・リリオン</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
+                            <p class="gallery-description" data-i18n="cg-3-desc">キャラクターデザインの課題として作成したラスボス</p>
+                            <span class="gallery-tag" data-i18n="tag-product-design">プロダクトデザイン</span>
                             <span class="gallery-tag">Fusion 360</span>
-                            <span class="gallery-tag">ゲーム</span>
-                            <span class="gallery-tag">3DCG</span>
+                            <span class="gallery-tag" data-i18n="tag-game">ゲーム</span>
+                            <span class="gallery-tag" data-i18n="tag-3dcg">3DCG</span>
                         </div>
                     </div>
                     <div class="gallery-item" data-category="3dmodel">
@@ -266,21 +308,21 @@
                                 data-position="center 10%">
                         </div>
                         <div class="gallery-info">
-                            <h3 class="gallery-title">ポピー</h3>
-                            <p class="gallery-author">4年生 </p>
-                            <p class="gallery-description">キャラクターデザインの課題として作成したオリジナルゲームのキャラクター</p>
-                            <span class="gallery-tag">プロダクトデザイン</span>
+                            <h3 class="gallery-title" data-i18n="cg-4-title">ポピー</h3>
+                            <p class="gallery-author" data-i18n="author-4th">4年生 </p>
+                            <p class="gallery-description" data-i18n="cg-4-desc">キャラクターデザインの課題として作成したオリジナルゲームのキャラクター</p>
+                            <span class="gallery-tag" data-i18n="tag-product-design">プロダクトデザイン</span>
                             <span class="gallery-tag">Fusion 360</span>
-                            <span class="gallery-tag">ゲーム</span>
-                            <span class="gallery-tag">3DCG</span>
+                            <span class="gallery-tag" data-i18n="tag-game">ゲーム</span>
+                            <span class="gallery-tag" data-i18n="tag-3dcg">3DCG</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- アニメーション作品 -->
-            <div class="gallery-section">
-                <h2 class="section-title">アニメーション作品</h2>
+            <div class="gallery-section" data-section="animation">
+                <h2 class="section-title" data-i18n="section-animation">アニメーション作品</h2>
                 <div class="gallery-grid">
                     <!--
                     <div class="gallery-item" data-category="animation">
