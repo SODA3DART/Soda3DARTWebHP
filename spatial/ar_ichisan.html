@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
+    <script>
+        // GLB 準備後: false に変更し、下記コメントの a-asset-item / ichisan-model を有効化
+        window.ICHISAN_AR_PENDING = true;
+    </script>
+    <title>いちさん AR</title>
+    <style>
+        #marker-ui-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            padding: 8px 18px;
+            background: rgba(20, 20, 30, 0.75);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        #marker-ui-btn:hover {
+            background: rgba(40, 40, 55, 0.9);
+        }
+
+        #pending-banner {
+            position: fixed;
+            top: 72px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            max-width: min(92vw, 360px);
+            padding: 8px 16px;
+            background: rgba(255, 180, 50, 0.92);
+            color: #1a1a1a;
+            border-radius: 20px;
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .marker-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease;
+        }
+
+        .marker-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .marker-panel {
+            max-width: min(92vw, 440px);
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-family: sans-serif;
+            color: #eee;
+        }
+
+        .marker-panel h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .marker-panel p {
+            margin: 0 0 12px 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #bbb;
+        }
+
+        .marker-panel .pending-note {
+            color: #ffc857;
+            font-size: 0.82rem;
+        }
+
+        .marker-panel img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            background: #fff;
+        }
+
+        .marker-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+            gap: 10px;
+        }
+
+        .marker-close {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border: none;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .marker-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #mode-ui-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10000;
+            padding: 8px 18px;
+            background: rgba(20, 20, 30, 0.75);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        #mode-ui-btn:hover {
+            background: rgba(40, 40, 55, 0.9);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="ar_character_hub.html"
+        style="position: absolute; top: 20px; left: 20px; z-index: 1000; padding: 8px 20px; background: rgba(20, 20, 30, 0.6); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; text-decoration: none; font-family: sans-serif; backdrop-filter: blur(10px);">←
+        一覧に戻る</a>
+    <button type="button" id="marker-ui-btn" aria-expanded="false" aria-controls="marker-overlay">マーカーを表示</button>
+    <p id="pending-banner">3Dモデル準備中 — マーカー認識で ? アイコンが表示されます</p>
+    <button type="button" id="mode-ui-btn" aria-pressed="false">ポスターモード</button>
+    <div id="marker-overlay" class="marker-overlay" role="dialog" aria-modal="true" aria-labelledby="marker-dialog-title" hidden>
+        <div class="marker-panel">
+            <h2 id="marker-dialog-title">いちさん AR のマーカー</h2>
+            <p>下の画像と同じものをカメラで映すと、プレースホルダーが表示されます。</p>
+            <p class="pending-note">3Dモデルは後日差し替え予定です。</p>
+            <img src="../3dartensyu3/ar/11/ichisan_icon.jpeg" alt="いちさん AR 用マーカー画像" />
+            <div class="marker-actions">
+                <button type="button" class="marker-close" id="marker-close-btn">閉じる</button>
+            </div>
+        </div>
+    </div>
+    <a-scene mindar-image="imageTargetSrc: ../3dartensyu3/ar/11/ichisan_mindar.mind;" color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false">
+        <a-light type="ambient" color="#ffffff" intensity="0.7"></a-light>
+        <a-light type="directional" color="#ffffff" intensity="0.6" position="0 1 1"></a-light>
+        <a-assets timeout="120000">
+            <img id="ichisan-icon" src="../3dartensyu3/ar/11/ichisan_icon.jpeg" crossorigin="anonymous" />
+            <!-- モデル準備後に追加:
+            <a-asset-item id="ichisan" src="../3dartensyu3/ar/11/ichisan.glb"></a-asset-item>
+            -->
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0" id="target">
+            <!-- プレースホルダー（モデル未準備時） -->
+            <a-entity id="ichisan-placeholder" class="ar-model" rotation="90 0 0" position="0 0 0" scale="0.45 0.45 0.45">
+                <a-plane color="#252535" width="1.15" height="1.15" position="0 0 0.001"></a-plane>
+                <a-image src="#ichisan-icon" width="0.9" height="0.9" position="0 0 0.002"></a-image>
+                <a-text value="?" align="center" color="#ffffff" width="4" wrap-count="1" position="0 0.12 0.003"
+                    scale="2 2 2"></a-text>
+            </a-entity>
+            <!-- モデル準備後: visible="true" にし placeholder を visible="false" に
+            <a-entity id="ichisan-model" class="ar-model" visible="false" gltf-model="#ichisan"
+                rotation="90 0 0" position="0 0 0" scale="0.3 0.3 0.3"
+                animation-mixer="clip: *; loop: repeat;"></a-entity>
+            -->
+        </a-entity>
+    </a-scene>
+    <script>
+        (function () {
+            const MODE_ROTATION = {
+                stand: '90 0 0',
+                poster: '0 0 0'
+            };
+            const POSTER_Y_OFFSET = -0.45;
+
+            function getPositionString(el) {
+                const pos = el.getAttribute('position');
+                if (!pos) return '0 0 0';
+                if (typeof pos === 'string') return pos;
+                return `${pos.x || 0} ${pos.y || 0} ${pos.z || 0}`;
+            }
+
+            function parsePositionString(str) {
+                const parts = String(str || '0 0 0').trim().split(/\s+/).map(Number);
+                return [
+                    Number.isFinite(parts[0]) ? parts[0] : 0,
+                    Number.isFinite(parts[1]) ? parts[1] : 0,
+                    Number.isFinite(parts[2]) ? parts[2] : 0
+                ];
+            }
+
+            const arModels = document.querySelectorAll('.ar-model');
+            const placeholder = document.querySelector('#ichisan-placeholder');
+            const pendingBanner = document.getElementById('pending-banner');
+
+            arModels.forEach((el) => {
+                el.dataset.standPosition = getPositionString(el);
+            });
+
+            if (window.ICHISAN_AR_PENDING && placeholder) {
+                placeholder.setAttribute('visible', true);
+            }
+
+            const modeBtn = document.getElementById('mode-ui-btn');
+            let displayMode = 'stand';
+
+            function applyDisplayMode() {
+                arModels.forEach((el) => {
+                    if (el.getAttribute('visible') === 'false') return;
+                    el.setAttribute('rotation', MODE_ROTATION[displayMode]);
+                    const parts = parsePositionString(el.dataset.standPosition);
+                    if (displayMode === 'poster') {
+                        el.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
+                    } else {
+                        el.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
+                    }
+                });
+                const isPoster = displayMode === 'poster';
+                modeBtn.textContent = isPoster ? '立体モード' : 'ポスターモード';
+                modeBtn.setAttribute('aria-pressed', isPoster ? 'true' : 'false');
+            }
+
+            modeBtn.addEventListener('click', () => {
+                displayMode = displayMode === 'stand' ? 'poster' : 'stand';
+                applyDisplayMode();
+            });
+
+            applyDisplayMode();
+
+            const btn = document.getElementById('marker-ui-btn');
+            const overlay = document.getElementById('marker-overlay');
+            const closeBtn = document.getElementById('marker-close-btn');
+            function openOverlay() {
+                overlay.hidden = false;
+                overlay.classList.add('is-open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+            function closeOverlay() {
+                overlay.classList.remove('is-open');
+                btn.setAttribute('aria-expanded', 'false');
+                overlay.hidden = true;
+            }
+            btn.addEventListener('click', () => openOverlay());
+            closeBtn.addEventListener('click', () => closeOverlay());
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeOverlay();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+            });
+
+            if (!window.ICHISAN_AR_PENDING && pendingBanner) {
+                pendingBanner.hidden = true;
+            }
+        })();
+    </script>
+</body>
+
+</html>
