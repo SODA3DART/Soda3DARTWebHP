@@ -304,32 +304,16 @@
                 poster: '0 0 0'
             };
             const POSTER_Y_OFFSET = -0.45;
-
-            function getPositionString(el) {
-                const pos = el.getAttribute('position');
-                if (!pos) return '0 0 0';
-                if (typeof pos === 'string') return pos;
-                return `${pos.x || 0} ${pos.y || 0} ${pos.z || 0}`;
-            }
-
-            function parsePositionString(str) {
-                const parts = String(str || '0 0 0').trim().split(/\s+/).map(Number);
-                return [
-                    Number.isFinite(parts[0]) ? parts[0] : 0,
-                    Number.isFinite(parts[1]) ? parts[1] : 0,
-                    Number.isFinite(parts[2]) ? parts[2] : 0
-                ];
-            }
+            const MODEL_LAYOUT = {
+                'stage-model': { stand: [0, -0.18, 0] },
+                'tarukichi-model': { stand: [0, 0.5, 0] }
+            };
 
             const scene = document.querySelector('a-scene');
             const arModels = document.querySelectorAll('.ar-model');
             const tarukichiModel = document.querySelector('#tarukichi-model');
             const stageModel = document.querySelector('#stage-model');
             const audio = document.getElementById('bgm');
-
-            arModels.forEach((el) => {
-                el.dataset.standPosition = getPositionString(el);
-            });
 
             if (tarukichiModel) {
                 tarukichiModel.addEventListener('model-error', (e) => {
@@ -350,13 +334,13 @@
 
             function applyDisplayMode() {
                 arModels.forEach((el) => {
+                    const layout = MODEL_LAYOUT[el.id];
+                    if (!layout) return;
+
                     el.setAttribute('rotation', MODE_ROTATION[displayMode]);
-                    const parts = parsePositionString(el.dataset.standPosition);
-                    if (displayMode === 'poster') {
-                        el.setAttribute('position', `${parts[0]} ${parts[1] + POSTER_Y_OFFSET} ${parts[2]}`);
-                    } else {
-                        el.setAttribute('position', `${parts[0]} ${parts[1]} ${parts[2]}`);
-                    }
+                    const [x, y, z] = layout.stand;
+                    const posY = displayMode === 'poster' ? y + POSTER_Y_OFFSET : y;
+                    el.setAttribute('position', `${x} ${posY} ${z}`);
                 });
                 const isPoster = displayMode === 'poster';
                 modeBtn.textContent = isPoster ? '立体モード' : 'ポスターモード';
@@ -444,6 +428,9 @@
             }
 
             applyDisplayMode();
+            if (scene) {
+                scene.addEventListener('loaded', applyDisplayMode);
+            }
 
             const btn = document.getElementById('marker-ui-btn');
             const overlay = document.getElementById('marker-overlay');
