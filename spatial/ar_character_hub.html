@@ -205,8 +205,10 @@
     </style>
 </head>
 
-<body>
+<body data-ar-howto-auto="false">
     <div id="root"></div>
+    <link rel="stylesheet" href="ar-howto.css">
+    <script src="ar-howto.js"></script>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
@@ -418,6 +420,12 @@
         };
 
         const App = () => {
+            useEffect(() => {
+                if (typeof window.initArHowto === 'function') {
+                    window.initArHowto({ theme: 'light' });
+                }
+            }, []);
+
             return (
                 <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
                     <Header />
