@@ -1,37 +1,9 @@
-/* 遊び方ポップアップ（AR個別ページ：ダーク） */
-#howto-ui-btn {
-    position: fixed;
-    top: 20px;
-    right: 158px;
-    z-index: 10000;
-    padding: 8px 18px;
-    background: rgba(20, 20, 30, 0.75);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 30px;
-    font-family: sans-serif;
-    font-size: 0.9rem;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-#howto-ui-btn:hover {
-    background: rgba(40, 40, 55, 0.9);
-}
-
-@media (max-width: 480px) {
-    #howto-ui-btn {
-        top: 68px;
-        right: 20px;
-    }
-}
-
+/* 飛び出すARハブ — 「遊び方」ポップアップ */
 .howto-overlay {
     position: fixed;
     inset: 0;
     z-index: 10002;
-    background: rgba(0, 0, 0, 0.88);
+    background: rgba(45, 52, 54, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,19 +23,25 @@
     max-width: min(92vw, 480px);
     max-height: min(85vh, 640px);
     overflow-y: auto;
-    background: #1a1a24;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
     padding: 20px 22px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    font-family: sans-serif;
-    color: #eee;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    color: #2d3436;
     box-sizing: border-box;
 }
 
 .howto-panel h2 {
     margin: 0 0 14px 0;
     font-size: 1.15rem;
-    font-weight: 600;
+    font-weight: 700;
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 .howto-panel ol {
@@ -71,7 +49,7 @@
     padding-left: 1.25em;
     font-size: 0.88rem;
     line-height: 1.65;
-    color: #ccc;
+    color: #636e72;
 }
 
 .howto-panel li {
@@ -85,11 +63,11 @@
 .howto-panel .howto-note {
     margin: 14px 0 0 0;
     padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 114, 255, 0.06);
     border-radius: 10px;
     font-size: 0.8rem;
     line-height: 1.5;
-    color: #aaa;
+    color: #636e72;
 }
 
 .howto-actions {
@@ -101,7 +79,7 @@
 
 .howto-close {
     padding: 8px 18px;
-    background: rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, #0072ff, #00c6ff);
     color: #fff;
     border: none;
     border-radius: 24px;
@@ -110,44 +88,6 @@
 }
 
 .howto-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* ハブページ用（ライト） */
-.howto-overlay.howto-overlay--light {
-    background: rgba(45, 52, 54, 0.45);
-}
-
-.howto-overlay--light .howto-panel {
-    background: rgba(255, 255, 255, 0.95);
-    color: #2d3436;
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-}
-
-.howto-overlay--light .howto-panel h2 {
-    background: linear-gradient(135deg, #0072ff, #00c6ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-}
-
-.howto-overlay--light .howto-panel ol {
-    color: #636e72;
-}
-
-.howto-overlay--light .howto-panel .howto-note {
-    background: rgba(0, 114, 255, 0.06);
-    color: #636e72;
-}
-
-.howto-overlay--light .howto-close {
-    background: linear-gradient(135deg, #0072ff, #00c6ff);
-    color: #fff;
-}
-
-.howto-overlay--light .howto-close:hover {
     opacity: 0.9;
 }
 
