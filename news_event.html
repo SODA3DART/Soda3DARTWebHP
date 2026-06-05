@@ -535,6 +535,20 @@
         // サンプルニュースデータ（実際の環境では、サーバーから取得するか、HTMLファイルを解析して取得します）
         const newsData = [
             {
+                id: 16,
+                date: '2026年5月21日',
+                title: '飛び出すAR作品が公開されました',
+                excerpt: '3年生によるゲームキャラクターデザインの学びをもとに制作したWebAR作品「飛び出す!ARキャラクター」を公開しました。スマートフォンでマーカーを映すとキャラクターが立体表示されます。',
+                content: `<p>3年生ではゲームキャラクターデザインを学んでいます。今回、その学びの成果として WebAR 作品「<strong>飛び出す!ARキャラクター</strong>」を公開しました。</p>
+                <p><strong>飛び出すAR</strong>とは、スマートフォンの画面を通して、専用マーカーをカメラで映すと、3Dキャラクターがその場に飛び出して見える体験のことです。アプリのインストールは不要で、ブラウザからお楽しみいただけます。</p>
+                <p>スマートフォン向け WebAR ではデータ量や表示速度などの制約があるため、それらを意識しながら、<strong>デザインからモデリングまで約1か月</strong>で仕上げた作品です。キャラクターごとにポスターモードや立体表示など、作品ならではの見せ方も試しています。</p>
+                <p>制作に使用した Web アプリ「<strong>ARtrium WebAR Tools</strong>」は、GitHub 上でオープンソースとして公開しています。</p>
+                <p><a href="spatial/ar_character_hub.html" style="color: #4285f4; text-decoration: none;">→ 飛び出す!ARキャラクターを体験する</a></p>
+                <p><a href="https://github.com/SODA3DART/ARtrium_WebARTools" target="_blank" rel="noopener noreferrer" style="color: #4285f4; text-decoration: none;">→ ARtrium WebAR Tools（GitHub）</a></p>`,
+                image: '3dartensyu3/ar/06/marker.png',
+                fullArticle: 'spatial/ar_character_hub.html'
+            },
+            {
                 id: 15,
                 date: '2026年5月12日',
                 title: '3Dアートコースが吹上浜砂の祭典に参加',
@@ -827,32 +841,74 @@
         const NEWS_LAST_UPDATED_KEY = 'newsLastUpdated';
 
         // ページ読み込み時にローカルストレージからニュース記事を読み込む
+        // 組み込み newsData（const）を正とし、localStorage 分をマージする
+        const builtinNewsData = newsData.slice();
+
         function loadStoredNewsArticles() {
             const storedNews = localStorage.getItem('newsArticles');
+            const merged = builtinNewsData.slice();
+            const existingIds = merged.map((news) => news.id);
+
             if (storedNews) {
                 const newsArticles = JSON.parse(storedNews);
-
-                // 既存のニュースデータをクリアして新しいデータで置き換える
-                newsData.length = 0;
-                newsData.push(...newsArticles);
-
-                // 組み込みのニュースデータを追加（重複を避けるため、IDをチェック）
-                const existingIds = newsData.map(news => news.id);
-                const defaultNews = getDefaultNewsData();
-                defaultNews.forEach(news => {
+                newsArticles.forEach((news) => {
                     if (!existingIds.includes(news.id)) {
-                        newsData.push(news);
+                        merged.push(news);
+                        existingIds.push(news.id);
                     }
                 });
+            }
 
-                // 最終更新時間を記録
+            getDefaultNewsData().forEach((news) => {
+                if (!existingIds.includes(news.id)) {
+                    merged.push(news);
+                    existingIds.push(news.id);
+                }
+            });
+
+            newsData.length = 0;
+            newsData.push(...merged);
+
+            if (storedNews) {
                 localStorage.setItem(NEWS_LAST_UPDATED_KEY, Date.now().toString());
             }
         }
 
-        // デフォルトのニュースデータを取得する関数
+        // デフォルトのニュースデータを取得する関数（localStorage マージ用・newsData と同期すること）
         function getDefaultNewsData() {
             return [
+                {
+                    id: 16,
+                    date: '2026年5月21日',
+                    title: '飛び出すAR作品が公開されました',
+                    excerpt: '3年生によるゲームキャラクターデザインの学びをもとに制作したWebAR作品「飛び出す!ARキャラクター」を公開しました。スマートフォンでマーカーを映すとキャラクターが立体表示されます。',
+                    content: `<p>3年生ではゲームキャラクターデザインを学んでいます。今回、その学びの成果として WebAR 作品「<strong>飛び出す!ARキャラクター</strong>」を公開しました。</p>
+                    <p><strong>飛び出すAR</strong>とは、スマートフォンの画面を通して、専用マーカーをカメラで映すと、3Dキャラクターがその場に飛び出して見える体験のことです。アプリのインストールは不要で、ブラウザからお楽しみいただけます。</p>
+                    <p>スマートフォン向け WebAR ではデータ量や表示速度などの制約があるため、それらを意識しながら、<strong>デザインからモデリングまで約1か月</strong>で仕上げた作品です。キャラクターごとにポスターモードや立体表示など、作品ならではの見せ方も試しています。</p>
+                    <p>制作に使用した Web アプリ「<strong>ARtrium WebAR Tools</strong>」は、GitHub 上でオープンソースとして公開しています。</p>
+                    <p><a href="spatial/ar_character_hub.html" style="color: #4285f4; text-decoration: none;">→ 飛び出す!ARキャラクターを体験する</a></p>
+                    <p><a href="https://github.com/SODA3DART/ARtrium_WebARTools" target="_blank" rel="noopener noreferrer" style="color: #4285f4; text-decoration: none;">→ ARtrium WebAR Tools（GitHub）</a></p>`,
+                    image: '3dartensyu3/ar/06/marker.png',
+                    fullArticle: 'spatial/ar_character_hub.html'
+                },
+                {
+                    id: 15,
+                    date: '2026年5月12日',
+                    title: '3Dアートコースが吹上浜砂の祭典に参加',
+                    excerpt: '2026年5月3日（日）～5日（火）、鹿児島県南さつま市で開催された「吹上浜砂の祭典」に、本学芸術学部美術学科3Dアートコースの学生と教員が招待を受け参加しました。',
+                    content: `<p>2026年5月3日（日）～5日（火）、鹿児島県南さつま市で開催された「吹上浜砂の祭典」に、本学芸術学部美術学科3Dアートコースの学生と教員が招待を受け参加しました。</p>
+                    <p>清島浩徳教授、山口典子助教と学生２名、卒業生１名が参加し、わずか2日間という短期間で作品を仕上げました。</p>
+                    <p>制作作品は「興元閣とクビライ・ハン」を題材としており、作品サイズは高さ2.4m、幅2.8m、奥行1.8mです。</p>
+                    <p>熊本地震からの復興支援をきっかけとして同祭典への参加が8年前に始まり、コロナ禍による中断期間を除き継続して参加しています。</p>
+                    <p>現地では地域の方々と交流も行い、毎年昼食の提供などの支援を受けています。</p>
+                    <p>今後も、芸術活動を通じた地域交流および地域貢献に継続して取り組んでいきます。</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
+                        <img src="images/events/Snanosaiten/Image (4).jpeg" alt="完成した砂像「興元閣とクビライ・ハン」" style="width: 48%; min-width: 220px; border-radius: 8px;">
+                        <img src="images/events/Snanosaiten/cdda1bdc7e9b01f2ba10cf787d6e6d3a996ea1aa.jpg" alt="参加メンバーと作品" style="width: 48%; min-width: 220px; border-radius: 8px;">
+                    </div>`,
+                    image: 'images/events/Snanosaiten/Image (4).jpeg',
+                    fullArticle: null
+                },
                 {
                     id: 14,
                     date: '2026年4月7日',
