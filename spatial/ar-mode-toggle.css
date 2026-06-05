@@ -1,0 +1,54 @@
+#ar-mode-toggle-btn {
+    position: fixed;
+    top: 68px;
+    left: 20px;
+    z-index: 10000;
+    padding: 8px 16px;
+    background: rgba(90, 60, 180, 0.82);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    font-family: sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#ar-mode-toggle-btn:hover {
+    background: rgba(110, 75, 210, 0.92);
+}
+
+#ar-mode-toggle-btn.is-markerless {
+    background: rgba(20, 120, 80, 0.85);
+}
+
+#ar-markerless-frame {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 5000;
+    display: none;
+    background: #000;
+}
+
+#ar-markerless-hint {
+    position: fixed;
+    bottom: 88px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: min(92vw, 360px);
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    border-radius: 10px;
+    font-family: sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+    z-index: 10001;
+    display: none;
+    pointer-events: none;
+}
