@@ -39,12 +39,18 @@
             font-family: 'Zen Kaku Gothic New', 'Outfit', sans-serif;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         #root {
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-shell {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -153,8 +159,18 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        .nav-arrow-prev {
+            left: 10px;
+        }
+
+        .nav-arrow-next {
+            right: 10px;
+        }
+
         .card-container {
             position: absolute;
+            top: 50%;
+            left: 50%;
             width: 280px;
             background: white;
             border-radius: 30px;
@@ -164,65 +180,188 @@
             text-align: center;
         }
 
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            .header-container {
-                padding: 15px 15px 5px;
-            }
-
-            .header-title {
-                font-size: 1.6rem;
-                margin: 0 0 15px 0;
-            }
-
-            .description-card {
-                padding: 15px 20px;
-                border-radius: 20px;
-            }
-
-            .description-text {
-                font-size: 0.85rem;
-                line-height: 1.5;
-            }
-
-            /* Adjust sub-text to be more compact or ensure it doesn't break layout */
-            .sub-text {
-                font-size: 0.8rem;
-                margin-top: 8px;
-            }
-
-            .card-container {
-                width: 240px;
-                padding: 20px;
-            }
-
-            /* Ensure arrows don't overlap content too aggressively */
-            .nav-arrow {
-                width: 36px;
-                height: 36px;
-                background: rgba(255, 255, 255, 0.9);
-            }
+        .carousel-track {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 380px;
+            touch-action: pan-y;
         }
 
-        /* Make sure small phones don't break */
-        @media (max-height: 700px) {
-            .header-container {
-                padding: 10px 15px;
-            }
+        .card-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 4px solid #f0f0f0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-            .header-title {
-                font-size: 1.4rem;
-                margin-bottom: 10px;
-            }
+        .card-title {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+        }
 
-            .description-card {
-                padding: 12px 16px;
-                max-height: 200px;
+        .card-desc {
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            min-height: 2.5em;
+        }
+
+        .hub-footer {
+            text-align: center;
+            padding: 10px;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
                 overflow-y: auto;
             }
 
+            .app-shell {
+                min-height: 100dvh;
+                height: auto;
+            }
+
+            .gallery-back-link {
+                top: 12px;
+                left: 10px;
+                padding: 8px 14px;
+                font-size: 0.78rem;
+                max-width: 42vw;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .header-container {
+                padding: 58px 14px 12px;
+            }
+
+            .header-title {
+                font-size: 1.35rem;
+                margin: 0 0 12px 0;
+                line-height: 1.3;
+            }
+
+            .description-card {
+                padding: 14px 16px;
+                border-radius: 16px;
+            }
+
             .description-text {
+                font-size: 0.82rem;
+                line-height: 1.55;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .sub-text {
+                display: none;
+            }
+
+            .carousel-wrapper {
+                flex-grow: 0;
+                min-height: 0;
+                padding: 8px 0 4px;
+            }
+
+            .carousel-track {
+                min-height: 340px;
+            }
+
+            .card-container {
+                width: min(220px, 78vw);
+                padding: 18px 16px;
+                border-radius: 22px;
+            }
+
+            .card-avatar {
+                width: 88px;
+                height: 88px;
+                margin-bottom: 10px;
+            }
+
+            .card-title {
+                font-size: 1.05rem;
+            }
+
+            .card-desc {
                 font-size: 0.8rem;
+                margin-bottom: 12px;
+                min-height: 1.5em;
+            }
+
+            .nav-arrow {
+                width: 34px;
+                height: 34px;
+                top: 46%;
+            }
+
+            .nav-arrow-prev {
+                left: 4px;
+            }
+
+            .nav-arrow-next {
+                right: 4px;
+            }
+
+            .hub-footer {
+                padding: 8px 10px 16px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            body {
+                overflow: hidden;
+            }
+
+            #root,
+            .app-shell {
+                height: 100vh;
+            }
+        }
+
+        @media (max-width: 768px) and (max-height: 740px) {
+            .header-title {
+                font-size: 1.2rem;
+                margin-bottom: 8px;
+            }
+
+            .description-card {
+                padding: 12px 14px;
+            }
+
+            .description-text {
+                -webkit-line-clamp: 2;
+                font-size: 0.78rem;
+            }
+
+            .carousel-track {
+                min-height: 300px;
+            }
+
+            .card-container {
+                width: min(200px, 74vw);
+                padding: 14px 12px;
+            }
+
+            .card-avatar {
+                width: 76px;
+                height: 76px;
             }
         }
     </style>
@@ -323,25 +462,18 @@
                 <div className="carousel-wrapper">
 
                     {/* Navigation Arrows */}
-                    <div className="nav-arrow" onClick={goPrev} style={{ left: '10px' }}>
+                    <div className="nav-arrow nav-arrow-prev" onClick={goPrev}>
                         ◀
                     </div>
-                    <div className="nav-arrow" onClick={goNext} style={{ right: '10px' }}>
+                    <div className="nav-arrow nav-arrow-next" onClick={goNext}>
                         ▶
                     </div>
 
                     <div
                         ref={containerRef}
+                        className="carousel-track"
                         style={{
-                            flexGrow: 1,
-                            position: 'relative',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '100%',
-                            cursor: isDragging ? 'grabbing' : 'grab',
-                            touchAction: 'none'
+                            cursor: isDragging ? 'grabbing' : 'grab'
                         }}
                         onMouseDown={handleDragStart}
                         onMouseMove={handleDragMove}
@@ -373,26 +505,18 @@
                             return (
                                 <div key={project.id} className="card-container" style={{
                                     transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                                    transform: `translateX(${x}%) scale(${scale})`,
+                                    transform: `translate(calc(-50% + ${x}%), -50%) scale(${scale})`,
                                     opacity: opacity,
                                     zIndex: zIndex,
                                     display: display,
                                     pointerEvents: isActive ? 'auto' : 'none',
                                     border: isActive ? `2px solid var(--primary-accent)` : '1px solid transparent'
                                 }}>
-                                    <div style={{
-                                        width: '120px',
-                                        height: '120px',
-                                        borderRadius: '50%',
-                                        margin: '0 auto 15px',
-                                        overflow: 'hidden',
-                                        border: '4px solid #f0f0f0',
-                                        boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
-                                    }}>
+                                    <div className="card-avatar">
                                         <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     </div>
-                                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.2rem' }}>{project.title}</h3>
-                                    <p style={{ color: 'var(--text-sub)', fontSize: '0.85rem', marginBottom: '15px', minHeight: '2.5em' }}>{project.desc}</p>
+                                    <h3 className="card-title">{project.title}</h3>
+                                    <p className="card-desc">{project.desc}</p>
                                     <a href={project.link} style={{
                                         display: 'inline-block',
                                         padding: '10px 25px',
@@ -450,18 +574,11 @@
             }, []);
 
             return (
-                <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <div className="app-shell">
                     <a href="../gallery.html" className="gallery-back-link">← ギャラリーに戻る</a>
                     <Header />
                     <Carousel />
-                    <footer style={{
-                        textAlign: 'center',
-                        padding: '10px',
-                        color: 'var(--text-sub)',
-                        fontSize: '0.75rem',
-                        opacity: 0.7,
-                        flexShrink: 0
-                    }}>
+                    <footer className="hub-footer">
                         &copy; Soda3DART Class Project
                     </footer>
                 </div>
