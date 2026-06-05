@@ -2,7 +2,8 @@
  * マーカーレス（8th Wall）用キャラクター定義 — ar_character_hub 登録分
  *
  * MindAR 立体モードの model rotation="90 0 0" はマーカー法線（+Z）方向に立たせる補正。
- * 8th Wall の床（ワールド +Y 上）では root に -90 0 0 を足して Y-up に直す。
+ * 8th Wall の床（ワールド +Y 上）では floor-pivot に -90 0 0（X 軸補正）。
+ * カメラ向きの Y 回転は別階層（placed-root）に分離し、ななめ傾きを防ぐ。
  * fox / doomy は MindAR 同様 model 240 180 0（root -90 のみ）。
  */
 window.AR_MARKERLESS_CHARACTERS = {

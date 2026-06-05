@@ -15,6 +15,12 @@
     const assetsEl = document.getElementById('markerless-assets');
     const rootEl = document.getElementById('placed-root');
 
+    const pivotEl = document.createElement('a-entity');
+    pivotEl.id = 'floor-pivot';
+    pivotEl.setAttribute('rotation', config.rootRotation || '0 0 0');
+    pivotEl.setAttribute('scale', config.rootScale || '1 1 1');
+    rootEl.appendChild(pivotEl);
+
     config.models.forEach((model, index) => {
         const assetId = `ml-model-${index}`;
         const item = document.createElement('a-asset-item');
@@ -31,22 +37,14 @@
         if (model.mixer) {
             entity.setAttribute('animation-mixer', 'clip: *; loop: repeat');
         }
-        rootEl.appendChild(entity);
+        pivotEl.appendChild(entity);
     });
 
     rootEl.setAttribute('position', config.rootPosition || '0 0 -2');
-    rootEl.setAttribute('rotation', config.rootRotation || '0 0 0');
-    rootEl.setAttribute('scale', config.rootScale || '1 1 1');
-
-    const parseRotation = (value) => {
-        const parts = String(value || '0 0 0').split(/\s+/).map(Number);
-        return { x: parts[0] || 0, y: parts[1] || 0, z: parts[2] || 0 };
-    };
-
-    const baseRootRotation = parseRotation(config.rootRotation || '0 0 0');
+    rootEl.setAttribute('rotation', '0 0 0');
 
     const placeRoot = (x, y, z) => {
-        let yaw = baseRootRotation.y;
+        let yaw = 0;
         const cameraEl = document.querySelector('[camera]');
         if (cameraEl && cameraEl.object3D) {
             const camPos = new THREE.Vector3();
@@ -56,7 +54,7 @@
             yaw = Math.atan2(dx, dz) * (180 / Math.PI);
         }
         rootEl.setAttribute('position', `${x} ${y} ${z}`);
-        rootEl.setAttribute('rotation', `${baseRootRotation.x} ${yaw} ${baseRootRotation.z}`);
+        rootEl.setAttribute('rotation', `0 ${yaw} 0`);
         rootEl.setAttribute('visible', 'true');
     };
 
