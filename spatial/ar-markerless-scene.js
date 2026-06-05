@@ -27,6 +27,7 @@
         entity.setAttribute('rotation', model.rotation || '0 0 0');
         entity.setAttribute('position', model.position || '0 0 0');
         entity.setAttribute('scale', model.scale || '1 1 1');
+        entity.setAttribute('double-sided', '');
         if (model.mixer) {
             entity.setAttribute('animation-mixer', 'clip: *; loop: repeat');
         }

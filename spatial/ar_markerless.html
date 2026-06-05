@@ -8,6 +8,35 @@
     <script src="https://cdn.8thwall.com/web/xrextras/xrextras.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.0.0/dist/aframe-extras.min.js"></script>
     <script async src="../3dartensyu3/ar/018th/libs/xr.js" data-preload-chunks="slam"></script>
+    <script>
+        AFRAME.registerComponent('double-sided', {
+            init: function () {
+                this.el.addEventListener('model-loaded', () => {
+                    const obj = this.el.getObject3D('mesh') || this.el.object3D;
+                    if (!obj) return;
+                    obj.traverse((node) => {
+                        if (!node.isMesh || !node.material) return;
+                        const materials = Array.isArray(node.material) ? node.material : [node.material];
+                        const nodeName = node.name.toLowerCase();
+                        materials.forEach((mat) => {
+                            if (!mat) return;
+                            const matName = mat.name ? mat.name.toLowerCase() : '';
+                            const needsAlpha = mat.transparent || mat.alphaTest > 0 || !!mat.alphaMap;
+                            if (nodeName.includes('outline') || matName.includes('outline')) {
+                                mat.side = THREE.FrontSide;
+                                return;
+                            }
+                            mat.side = THREE.DoubleSide;
+                            if (!needsAlpha) {
+                                mat.transparent = false;
+                                mat.depthWrite = true;
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    </script>
     <style>
         body { margin: 0; overflow: hidden; background: #000; }
     </style>
@@ -18,12 +47,13 @@
         xrextras-loading
         xrextras-runtime-error
         xrextras-tap-recenter
-        renderer="colorManagement: true; physicallyCorrectLights: true"
+        renderer="colorManagement: true; physicallyCorrectLights: false"
         background="color: #000"
         id="markerless-scene">
         <a-camera position="0 1.6 0"></a-camera>
-        <a-entity light="type: ambient; intensity: 0.7"></a-entity>
-        <a-entity light="type: directional; intensity: 0.6; position: 2 4 2"></a-entity>
+        <a-light type="ambient" color="#ffffff" intensity="0.85"></a-light>
+        <a-light type="directional" color="#ffffff" intensity="0.7" position="0.5 2 1.5"></a-light>
+        <a-light type="directional" color="#c8d8ff" intensity="0.35" position="-1.5 2 -1"></a-light>
         <a-assets id="markerless-assets" timeout="120000"></a-assets>
         <a-entity id="placed-root" visible="true"></a-entity>
     </a-scene>
