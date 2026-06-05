@@ -38,8 +38,25 @@
     rootEl.setAttribute('rotation', config.rootRotation || '0 0 0');
     rootEl.setAttribute('scale', config.rootScale || '1 1 1');
 
+    const parseRotation = (value) => {
+        const parts = String(value || '0 0 0').split(/\s+/).map(Number);
+        return { x: parts[0] || 0, y: parts[1] || 0, z: parts[2] || 0 };
+    };
+
+    const baseRootRotation = parseRotation(config.rootRotation || '0 0 0');
+
     const placeRoot = (x, y, z) => {
+        let yaw = baseRootRotation.y;
+        const cameraEl = document.querySelector('[camera]');
+        if (cameraEl && cameraEl.object3D) {
+            const camPos = new THREE.Vector3();
+            cameraEl.object3D.getWorldPosition(camPos);
+            const dx = camPos.x - x;
+            const dz = camPos.z - z;
+            yaw = Math.atan2(dx, dz) * (180 / Math.PI);
+        }
         rootEl.setAttribute('position', `${x} ${y} ${z}`);
+        rootEl.setAttribute('rotation', `${baseRootRotation.x} ${yaw} ${baseRootRotation.z}`);
         rootEl.setAttribute('visible', 'true');
     };
 
