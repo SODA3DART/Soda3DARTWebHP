@@ -103,6 +103,29 @@
             color: var(--text-sub);
         }
 
+        .gallery-back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 300;
+            padding: 10px 22px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #0072ff;
+            border: 1px solid rgba(0, 114, 255, 0.2);
+            border-radius: 50px;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 16px rgba(0, 114, 255, 0.12);
+        }
+
+        .gallery-back-link:hover {
+            background: #fff;
+        }
+
         .carousel-wrapper {
             flex-grow: 1;
             position: relative;
@@ -428,6 +451,7 @@
 
             return (
                 <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+                    <a href="../gallery.html" className="gallery-back-link">← ギャラリーに戻る</a>
                     <Header />
                     <Carousel />
                     <footer style={{
