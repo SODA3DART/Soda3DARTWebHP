@@ -55,16 +55,30 @@
             flex-direction: column;
         }
 
-        /* Responsive Styles */
-        .header-container {
+        .hub-title-wrap {
             text-align: center;
-            padding: 30px 20px;
-            z-index: 10;
-            position: relative;
+            padding: 30px 20px 0;
             flex-shrink: 0;
+        }
+
+        .hub-info-section {
+            max-width: 640px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .hub-carousel-section {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            min-height: 0;
+        }
+
+        .carousel-section-label {
+            display: none;
         }
 
         .header-title {
@@ -237,9 +251,11 @@
         .print-link-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             margin-top: 16px;
-            padding: 10px 18px;
+            padding: 12px 18px;
+            min-height: 44px;
             background: linear-gradient(135deg, var(--secondary-accent), var(--primary-accent));
             color: #fff;
             text-decoration: none;
@@ -247,6 +263,7 @@
             font-size: 0.88rem;
             font-weight: 700;
             box-shadow: 0 4px 14px rgba(0, 114, 255, 0.25);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .print-link-btn:hover {
@@ -376,6 +393,64 @@
             min-height: 2.5em;
         }
 
+        .card-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--secondary-accent), var(--primary-accent));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: opacity 0.3s, transform 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .card-cta.is-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .card-cta.is-inactive {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .carousel-dots {
+            text-align: center;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 200;
+            flex-shrink: 0;
+        }
+
+        .carousel-dot {
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            min-width: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .carousel-dot.is-active {
+            width: 24px;
+            background: var(--primary-accent);
+        }
+
+        .carousel-dot:not(.is-active) {
+            width: 8px;
+        }
+
         .hub-footer {
             text-align: center;
             padding: 10px;
@@ -389,6 +464,7 @@
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
+                padding-bottom: env(safe-area-inset-bottom, 0);
             }
 
             .app-shell {
@@ -397,32 +473,66 @@
             }
 
             .gallery-back-link {
-                top: 12px;
-                left: 10px;
-                padding: 8px 14px;
-                font-size: 0.78rem;
-                max-width: 42vw;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                top: max(12px, env(safe-area-inset-top, 12px));
+                left: max(10px, env(safe-area-inset-left, 10px));
+                padding: 8px 12px;
+                font-size: 0.75rem;
+                max-width: 38vw;
             }
 
-            .header-container {
-                padding: 58px 14px 12px;
+            .howto-hub-btn {
+                top: max(12px, env(safe-area-inset-top, 12px));
+                right: max(10px, env(safe-area-inset-right, 10px));
+            }
+
+            .hub-title-wrap {
+                padding: calc(52px + env(safe-area-inset-top, 0px)) 14px 8px;
+                order: 1;
             }
 
             .header-title {
-                font-size: 1.35rem;
-                margin: 0 0 12px 0;
-                line-height: 1.3;
+                font-size: 1.25rem;
+                margin: 0;
+                line-height: 1.35;
+                letter-spacing: 0.02em;
+            }
+
+            .hub-info-section {
+                padding: 0 14px 16px;
+                order: 3;
+            }
+
+            .hub-carousel-section {
+                order: 2;
+                flex-grow: 0;
+            }
+
+            .carousel-section-label {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 0 14px 8px;
+                font-size: 0.82rem;
+                font-weight: 700;
+                color: var(--secondary-accent);
+            }
+
+            .carousel-section-label::before,
+            .carousel-section-label::after {
+                content: '';
+                flex: 1;
+                max-width: 48px;
+                height: 1px;
+                background: rgba(0, 114, 255, 0.25);
             }
 
             .description-card {
-                border-radius: 16px;
+                border-radius: 14px;
             }
 
             .guide-toggle.is-collapsed {
-                padding: 10px 14px;
+                padding: 12px 14px;
             }
 
             .guide-toggle.is-open {
@@ -430,16 +540,25 @@
             }
 
             .guide-toggle-hint {
-                font-size: 0.7rem;
+                font-size: 0.68rem;
+            }
+
+            .guide-toggle-header {
+                min-height: 44px;
             }
 
             .description-text {
-                font-size: 0.82rem;
-                line-height: 1.55;
+                font-size: 0.84rem;
+                line-height: 1.6;
             }
 
             .guide-steps {
-                font-size: 0.8rem;
+                font-size: 0.82rem;
+                padding-left: 1.1em;
+            }
+
+            .guide-steps li {
+                margin-bottom: 10px;
             }
 
             .concept-card {
@@ -448,63 +567,86 @@
             }
 
             .concept-note {
-                font-size: 0.82rem;
-                line-height: 1.6;
+                font-size: 0.84rem;
+                line-height: 1.65;
             }
 
             .print-link-btn {
-                font-size: 0.82rem;
-                padding: 9px 16px;
+                display: flex;
+                width: 100%;
+                font-size: 0.86rem;
+                padding: 12px 16px;
             }
 
             .carousel-wrapper {
                 flex-grow: 0;
                 min-height: 0;
-                padding: 8px 0 4px;
+                padding: 0 0 4px;
             }
 
             .carousel-track {
-                min-height: 340px;
+                min-height: 320px;
+                touch-action: pan-y pinch-zoom;
             }
 
             .card-container {
-                width: min(220px, 78vw);
-                padding: 18px 16px;
-                border-radius: 22px;
+                width: min(240px, 82vw);
+                padding: 20px 18px 18px;
+                border-radius: 20px;
             }
 
             .card-avatar {
-                width: 88px;
-                height: 88px;
-                margin-bottom: 10px;
+                width: 96px;
+                height: 96px;
+                margin-bottom: 12px;
             }
 
             .card-title {
-                font-size: 1.05rem;
+                font-size: 1.1rem;
             }
 
             .card-desc {
                 font-size: 0.8rem;
-                margin-bottom: 12px;
-                min-height: 1.5em;
+                margin-bottom: 14px;
+                min-height: 1.2em;
+            }
+
+            .card-cta {
+                width: 100%;
+                font-size: 0.95rem;
+                padding: 12px 20px;
             }
 
             .nav-arrow {
-                width: 34px;
-                height: 34px;
-                top: 46%;
+                width: 40px;
+                height: 40px;
+                top: 50%;
+                font-size: 0.85rem;
             }
 
             .nav-arrow-prev {
-                left: 4px;
+                left: 6px;
             }
 
             .nav-arrow-next {
-                right: 4px;
+                right: 6px;
+            }
+
+            .carousel-dots {
+                padding: 10px 14px 6px;
+                gap: 10px;
+            }
+
+            .carousel-dot {
+                min-width: 10px;
+                min-height: 10px;
+                padding: 6px;
+                background-clip: content-box;
             }
 
             .hub-footer {
-                padding: 8px 10px 16px;
+                padding: 8px 10px calc(16px + env(safe-area-inset-bottom, 0px));
+                order: 4;
             }
         }
 
@@ -517,38 +659,58 @@
             .app-shell {
                 height: 100vh;
             }
+
+            .hub-title-wrap {
+                padding: 24px 20px 0;
+                order: 1;
+            }
+
+            .hub-info-section {
+                padding-bottom: 12px;
+                order: 2;
+            }
+
+            .hub-carousel-section {
+                order: 3;
+                flex: 1;
+            }
+
+            .hub-footer {
+                order: 4;
+            }
+
+            .header-title {
+                margin-bottom: 20px;
+            }
         }
 
         @media (max-width: 768px) and (max-height: 740px) {
             .header-title {
-                font-size: 1.2rem;
-                margin-bottom: 8px;
-            }
-
-            .description-card {
-                padding: 12px 14px;
-            }
-
-            .description-text {
-                font-size: 0.78rem;
-            }
-
-            .guide-steps {
-                font-size: 0.76rem;
+                font-size: 1.1rem;
             }
 
             .carousel-track {
-                min-height: 300px;
+                min-height: 280px;
             }
 
             .card-container {
-                width: min(200px, 74vw);
-                padding: 14px 12px;
+                width: min(220px, 78vw);
+                padding: 16px 14px;
             }
 
             .card-avatar {
-                width: 76px;
-                height: 76px;
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .guide-toggle-hint {
+                display: none;
+            }
+
+            .gallery-back-link {
+                max-width: 34vw;
             }
         }
     </style>
@@ -577,15 +739,11 @@
             { id: 11, title: "いちさん", link: "ar_ichisan.html", image: "../3dartensyu3/ar/11/ichisan_icon.jpeg", desc: "3D準備中" }
         ];
 
-        const Header = () => {
+        const HubInfoSection = () => {
             const [guideOpen, setGuideOpen] = useState(false);
 
             return (
-                <header className="header-container">
-                    <h1 className="header-title">
-                        飛び出す!ARキャラクター
-                    </h1>
-
+                <section className="hub-info-section" aria-label="作品について・遊び方">
                     <div className="description-card concept-card">
                         <div className="section-label">
                             <span className="section-label-bar"></span>
@@ -621,14 +779,14 @@
                                 スマートフォンで<strong>マーカー画像</strong>をカメラに映すと、3Dキャラクターが飛び出して見えます。アプリのインストールは不要です。
                             </p>
                             <ol className="guide-steps">
-                                <li>下から<strong>キャラクターを選び</strong>「ARを見る」をタップ</li>
-                                <li><strong>マーカー</strong>を用意する（<a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>印刷用ページ</a>でコースター大サイズに印刷するのがおすすめ）</li>
+                                <li>キャラクター一覧から<strong>好きなキャラ</strong>を選び「ARを見る」をタップ</li>
+                                <li><strong>マーカー</strong>を用意（<a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>印刷用ページ</a>でコースター大サイズ推奨）</li>
                                 <li>ARページでカメラを許可し、<strong>マーカーを映す</strong>とキャラクターが表示されます</li>
                             </ol>
                             <a href="ar_marker_print.html" className="print-link-btn">マーカー印刷用ページへ</a>
                         </div>
                     </div>
-                </header>
+                </section>
             );
         };
 
@@ -637,7 +795,16 @@
             const [isDragging, setIsDragging] = useState(false);
             const [startX, setStartX] = useState(0);
             const [dragOffset, setDragOffset] = useState(0);
+            const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
             const containerRef = useRef(null);
+
+            useEffect(() => {
+                const mq = window.matchMedia('(max-width: 768px)');
+                const onChange = () => setIsMobile(mq.matches);
+                onChange();
+                mq.addEventListener('change', onChange);
+                return () => mq.removeEventListener('change', onChange);
+            }, []);
 
             const getWrappedIndex = (index) => {
                 const len = projects.length;
@@ -712,8 +879,10 @@
                             const opacity = Math.max(0.5, 1 - distance * 0.3);
                             const zIndex = 100 - Math.round(distance * 10);
 
-                            const x = effectiveOffset * 65;
-                            const display = distance > 2.5 ? 'none' : 'block';
+                            const xStep = isMobile ? 50 : 65;
+                            const x = effectiveOffset * xStep;
+                            const hideDistance = isMobile ? 1.6 : 2.5;
+                            const display = distance > hideDistance ? 'none' : 'block';
 
                             return (
                                 <div key={project.id} className="card-container" style={{
@@ -729,20 +898,13 @@
                                         <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     </div>
                                     <h3 className="card-title">{project.title}</h3>
-                                    <p className="card-desc">{project.desc}</p>
-                                    <a href={project.link} style={{
-                                        display: 'inline-block',
-                                        padding: '10px 25px',
-                                        background: 'linear-gradient(135deg, var(--secondary-accent), var(--primary-accent))',
-                                        color: 'white',
-                                        textDecoration: 'none',
-                                        borderRadius: '50px',
-                                        fontWeight: '600',
-                                        opacity: isActive ? 1 : 0,
-                                        transform: isActive ? 'scale(1)' : 'scale(0.8)',
-                                        transition: 'opacity 0.3s, transform 0.3s',
-                                        fontSize: '0.9rem'
-                                    }}>
+                                    <p className="card-desc">{project.desc || '\u00A0'}</p>
+                                    <a
+                                        href={project.link}
+                                        className={`card-cta ${isActive ? 'is-active' : 'is-inactive'}`}
+                                        aria-hidden={!isActive}
+                                        tabIndex={isActive ? 0 : -1}
+                                    >
                                         ARを見る
                                     </a>
                                 </div>
@@ -751,27 +913,16 @@
                     </div>
 
                     {/* Bottom Slider/Dots */}
-                    <div style={{
-                        textAlign: 'center',
-                        padding: '15px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        zIndex: 200,
-                        flexShrink: 0
-                    }}>
-                        {projects.map((_, idx) => (
-                            <div
+                    <div className="carousel-dots" role="tablist" aria-label="キャラクター選択">
+                        {projects.map((project, idx) => (
+                            <button
                                 key={idx}
+                                type="button"
+                                role="tab"
+                                aria-selected={activeIndex === idx}
+                                aria-label={project.title}
+                                className={`carousel-dot ${activeIndex === idx ? 'is-active' : ''}`}
                                 onClick={() => setActiveIndex(idx)}
-                                style={{
-                                    width: activeIndex === idx ? '24px' : '8px',
-                                    height: '8px',
-                                    borderRadius: '4px',
-                                    background: activeIndex === idx ? 'var(--primary-accent)' : 'rgba(0,0,0,0.2)',
-                                    transition: 'all 0.3s',
-                                    cursor: 'pointer'
-                                }}
                             />
                         ))}
                     </div>
@@ -789,8 +940,14 @@
             return (
                 <div className="app-shell">
                     <a href="../gallery.html" className="gallery-back-link">← ギャラリーに戻る</a>
-                    <Header />
-                    <Carousel />
+                    <div className="hub-title-wrap">
+                        <h1 className="header-title">飛び出す!ARキャラクター</h1>
+                    </div>
+                    <section className="hub-carousel-section" aria-label="キャラクター一覧">
+                        <p className="carousel-section-label">キャラクターを選ぶ</p>
+                        <Carousel />
+                    </section>
+                    <HubInfoSection />
                     <footer className="hub-footer">
                         &copy; Soda3DART Class Project
                     </footer>
