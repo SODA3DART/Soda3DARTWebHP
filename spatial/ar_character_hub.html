@@ -254,12 +254,13 @@
         }
 
         .concept-note {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            max-width: 640px;
+            width: 100%;
+            margin: 0 0 14px;
             font-size: 0.85rem;
             color: var(--text-sub);
-            line-height: 1.6;
+            line-height: 1.65;
+            text-align: center;
         }
 
         .gallery-back-link {
@@ -434,7 +435,9 @@
             }
 
             .concept-note {
-                display: none;
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+                padding: 0 4px;
             }
 
             .print-link-btn {
@@ -571,6 +574,10 @@
                         飛び出す!ARキャラクター
                     </h1>
 
+                    <p className="concept-note">
+                        3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
+                    </p>
+
                     <div className={`description-card guide-toggle ${guideOpen ? 'is-open' : 'is-collapsed'}`}>
                         <button
                             type="button"
@@ -601,9 +608,6 @@
                                 <li>ARページでカメラを許可し、<strong>マーカーを映す</strong>とキャラクターが表示されます</li>
                             </ol>
                             <a href="ar_marker_print.html" className="print-link-btn">マーカー印刷用ページへ</a>
-                            <p className="concept-note">
-                                3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
-                            </p>
                         </div>
                     </div>
                 </header>
