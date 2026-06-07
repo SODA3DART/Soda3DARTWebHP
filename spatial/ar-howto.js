@@ -5,7 +5,7 @@
     const HOWTO_HTML = `
         <h2 id="howto-dialog-title">遊び方</h2>
         <ol>
-            <li>カルーセルから<strong>好きなキャラクター</strong>を選び、「ARを見る」をタップしてください。</li>
+            <li>下のカルーセルから<strong>好きなキャラクター</strong>を選び、「ARを見る」をタップしてください。</li>
             <li><strong>マーカー画像</strong>を用意します。おすすめは<a href="ar_marker_print.html" style="color:#0072ff;font-weight:700;">マーカー印刷用ページ</a>から<strong>コースター大サイズ（90mm角）</strong>で印刷し、平らな台に置いて使う方法です。</li>
             <li>ARページでカメラを「許可」し、<strong>印刷したマーカー</strong>（または別端末の「マーカーを表示」画面）を映すと、3Dキャラクターが飛び出して見えます。</li>
             <li>作品によって<strong>ポスターモード</strong>（マーカーに平行）や<strong>立体モード</strong>、<strong>ソリッドWF</strong>、<strong>BGM</strong>などの機能があります。</li>
