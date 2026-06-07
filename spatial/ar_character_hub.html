@@ -253,14 +253,22 @@
             opacity: 0.92;
         }
 
+        .concept-card {
+            padding: 18px 24px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .concept-card .section-label {
+            margin-bottom: 10px;
+        }
+
         .concept-note {
-            max-width: 640px;
-            width: 100%;
-            margin: 0 0 14px;
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            line-height: 1.65;
-            text-align: center;
+            margin: 0;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            line-height: 1.75;
+            font-weight: 500;
         }
 
         .gallery-back-link {
@@ -434,10 +442,14 @@
                 font-size: 0.8rem;
             }
 
+            .concept-card {
+                padding: 14px 16px;
+                margin-bottom: 10px;
+            }
+
             .concept-note {
-                font-size: 0.8rem;
-                margin-bottom: 12px;
-                padding: 0 4px;
+                font-size: 0.82rem;
+                line-height: 1.6;
             }
 
             .print-link-btn {
@@ -574,9 +586,15 @@
                         飛び出す!ARキャラクター
                     </h1>
 
-                    <p className="concept-note">
-                        3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
-                    </p>
+                    <div className="description-card concept-card">
+                        <div className="section-label">
+                            <span className="section-label-bar"></span>
+                            <span className="section-label-text">ABOUT</span>
+                        </div>
+                        <p className="concept-note">
+                            3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
+                        </p>
+                    </div>
 
                     <div className={`description-card guide-toggle ${guideOpen ? 'is-open' : 'is-collapsed'}`}>
                         <button
