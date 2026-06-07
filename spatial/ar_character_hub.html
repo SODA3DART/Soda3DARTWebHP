@@ -229,8 +229,16 @@
             margin-bottom: 8px;
         }
 
-        .guide-steps li:last-child {
-            margin-bottom: 0;
+        .guide-body-short {
+            display: none;
+        }
+
+        .guide-steps-compact {
+            margin-top: 0;
+        }
+
+        .guide-steps-compact li {
+            margin-bottom: 6px;
         }
 
         .print-link-btn {
@@ -463,6 +471,19 @@
                 line-height: 1.65;
             }
 
+            .guide-body-full {
+                display: none;
+            }
+
+            .guide-body-short {
+                display: block;
+            }
+
+            .guide-steps-compact {
+                font-size: 0.84rem;
+                line-height: 1.55;
+            }
+
             .print-link-btn {
                 font-size: 0.82rem;
                 padding: 9px 16px;
@@ -619,14 +640,23 @@
                             id="guide-toggle-body"
                             className={`guide-toggle-body ${guideOpen ? 'is-visible' : ''}`}
                         >
-                            <p className="description-text">
-                                スマートフォンで<strong>マーカー画像</strong>をカメラに映すと、3Dキャラクターが飛び出して見えます。アプリ不要です。
-                            </p>
-                            <ol className="guide-steps">
-                                <li>下からキャラを選び「ARを見る」</li>
-                                <li><a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>印刷用ページ</a>でマーカーを用意（コースター大推奨）</li>
-                                <li>カメラを許可し、マーカーを映す</li>
-                            </ol>
+                            <div className="guide-body-full">
+                                <p className="description-text">
+                                    スマートフォンで<strong>マーカー画像</strong>をカメラに映すと、3Dキャラクターが飛び出して見えます。アプリのインストールは不要です。
+                                </p>
+                                <ol className="guide-steps">
+                                    <li>下からキャラクターを選び「<strong>ARを見る</strong>」をタップ</li>
+                                    <li><a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>印刷用ページ</a>でマーカーを用意（コースター大・90mm角推奨）</li>
+                                    <li>カメラを許可し、<strong>マーカーを映す</strong>とキャラクターが表示されます</li>
+                                </ol>
+                            </div>
+                            <div className="guide-body-short">
+                                <ol className="guide-steps guide-steps-compact">
+                                    <li>キャラを選んで「<strong>ARを見る</strong>」</li>
+                                    <li>マーカーを印刷（<a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>90mm角</a>）</li>
+                                    <li>カメラでマーカーを映す</li>
+                                </ol>
+                            </div>
                             <a href="ar_marker_print.html" className="print-link-btn">マーカー印刷用ページへ</a>
                         </div>
                     </div>

@@ -4,14 +4,24 @@
 (function (global) {
     const HOWTO_HTML = `
         <h2 id="howto-dialog-title">遊び方</h2>
-        <ol>
-            <li>下のカルーセルから<strong>好きなキャラクター</strong>を選び、「ARを見る」をタップしてください。</li>
-            <li><strong>マーカー画像</strong>を用意します。おすすめは<a href="ar_marker_print.html" style="color:#0072ff;font-weight:700;">マーカー印刷用ページ</a>から<strong>コースター大サイズ（90mm角）</strong>で印刷し、平らな台に置いて使う方法です。</li>
-            <li>ARページでカメラを「許可」し、<strong>印刷したマーカー</strong>（または別端末の「マーカーを表示」画面）を映すと、3Dキャラクターが飛び出して見えます。</li>
-            <li>作品によって<strong>ポスターモード</strong>（マーカーに平行）や<strong>立体モード</strong>、<strong>ソリッドWF</strong>、<strong>BGM</strong>などの機能があります。</li>
-            <li>各ARページ左下の「<strong>マーカーレス（実験）</strong>」で、マーカーなし体験に切り替えられます（スマートフォン推奨）。</li>
-        </ol>
-        <p class="howto-note">印刷時はプリンター設定を<strong>実際のサイズ・100%</strong>にしてください。うまく表示されないときは、明るい場所でマーカーを曲げずに置いてお試しください。</p>
+        <div class="howto-body-full">
+            <ol>
+                <li>下のカルーセルから<strong>好きなキャラクター</strong>を選び、「ARを見る」をタップしてください。</li>
+                <li><strong>マーカー画像</strong>を用意します。おすすめは<a href="ar_marker_print.html" style="color:#0072ff;font-weight:700;">マーカー印刷用ページ</a>から<strong>コースター大サイズ（90mm角）</strong>で印刷し、平らな台に置いて使う方法です。</li>
+                <li>ARページでカメラを「許可」し、<strong>印刷したマーカー</strong>（または別端末の「マーカーを表示」画面）を映すと、3Dキャラクターが飛び出して見えます。</li>
+                <li>作品によって<strong>ポスターモード</strong>（マーカーに平行）や<strong>立体モード</strong>、<strong>ソリッドWF</strong>、<strong>BGM</strong>などの機能があります。</li>
+                <li>各ARページ左下の「<strong>マーカーレス（実験）</strong>」で、マーカーなし体験に切り替えられます（スマートフォン推奨）。</li>
+            </ol>
+            <p class="howto-note">印刷時はプリンター設定を<strong>実際のサイズ・100%</strong>にしてください。うまく表示されないときは、明るい場所でマーカーを曲げずに置いてお試しください。</p>
+        </div>
+        <div class="howto-body-short">
+            <ol class="howto-steps-compact">
+                <li>キャラを選んで「<strong>ARを見る</strong>」</li>
+                <li>マーカーを印刷（<a href="ar_marker_print.html" style="color:#0072ff;font-weight:700;">90mm角</a>）</li>
+                <li>カメラ許可 → マーカーを映す</li>
+            </ol>
+            <p class="howto-note">画面表示のマーカーは<strong>端末2台</strong>必要。印刷は100%サイズで。</p>
+        </div>
         <div class="howto-actions">
             <a href="ar_marker_print.html" class="howto-close" style="display:inline-block;text-decoration:none;margin-right:8px;background:#fff;color:#0072ff;border:1px solid rgba(0,114,255,0.3);">印刷ページへ</a>
             <button type="button" class="howto-close" id="howto-close-btn">閉じる</button>

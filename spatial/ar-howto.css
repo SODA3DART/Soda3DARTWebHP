@@ -60,6 +60,22 @@
     margin-bottom: 0;
 }
 
+.howto-body-short {
+    display: none;
+}
+
+.howto-steps-compact {
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #636e72;
+}
+
+.howto-steps-compact li {
+    margin-bottom: 8px;
+}
+
 .howto-panel .howto-note {
     margin: 14px 0 0 0;
     padding: 10px 12px;
@@ -125,5 +141,24 @@
         right: 10px;
         padding: 8px 14px;
         font-size: 0.78rem;
+    }
+
+    .howto-body-full {
+        display: none;
+    }
+
+    .howto-body-short {
+        display: block;
+    }
+
+    .howto-panel h2 {
+        font-size: 1.05rem;
+        margin-bottom: 12px;
+    }
+
+    .howto-panel .howto-note {
+        font-size: 0.78rem;
+        padding: 8px 10px;
+        margin-top: 10px;
     }
 }
