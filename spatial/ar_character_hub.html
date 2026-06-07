@@ -109,6 +109,71 @@
             color: var(--text-sub);
         }
 
+        .section-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .section-label-bar {
+            display: inline-block;
+            width: 4px;
+            height: 1.2em;
+            background: var(--primary-accent);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .section-label-text {
+            font-weight: 700;
+            color: var(--secondary-accent);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        .guide-steps {
+            margin: 14px 0 0;
+            padding-left: 1.2em;
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .guide-steps li {
+            margin-bottom: 8px;
+        }
+
+        .guide-steps li:last-child {
+            margin-bottom: 0;
+        }
+
+        .print-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, var(--secondary-accent), var(--primary-accent));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(0, 114, 255, 0.25);
+        }
+
+        .print-link-btn:hover {
+            opacity: 0.92;
+        }
+
+        .concept-note {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
         .gallery-back-link {
             position: fixed;
             top: 20px;
@@ -263,14 +328,19 @@
             .description-text {
                 font-size: 0.82rem;
                 line-height: 1.55;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
             }
 
-            .sub-text {
+            .guide-steps {
+                font-size: 0.8rem;
+            }
+
+            .concept-note {
                 display: none;
+            }
+
+            .print-link-btn {
+                font-size: 0.82rem;
+                padding: 9px 16px;
             }
 
             .carousel-wrapper {
@@ -346,8 +416,11 @@
             }
 
             .description-text {
-                -webkit-line-clamp: 2;
                 font-size: 0.78rem;
+            }
+
+            .guide-steps {
+                font-size: 0.76rem;
             }
 
             .carousel-track {
@@ -397,23 +470,21 @@
                 </h1>
 
                 <div className="description-card">
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{
-                            display: 'inline-block',
-                            width: '4px',
-                            height: '1.2em',
-                            background: 'var(--primary-accent)',
-                            marginRight: '10px',
-                            borderRadius: '2px'
-                        }}></span>
-                        <span style={{ fontWeight: '700', color: 'var(--secondary-accent)', fontSize: '0.8rem', letterSpacing: '0.1em' }}>ABOUT CONCEPT</span>
+                    <div className="section-label">
+                        <span className="section-label-bar"></span>
+                        <span className="section-label-text">ARの楽しみ方</span>
                     </div>
                     <p className="description-text">
-                        3年生による『飛び出す!ARキャラクター』のページです。<br />
-                        実在のランドマークを基にキャラクターデザインからモデリングまで行い、スマートフォンで動くことができる形で制作しました。
-                        <span className="sub-text">
-                            ゲームデザインの一環としてスマートフォンで動かすために様々な制約がある中で、形状の記号化や様々なテクニックを駆使して、各自のデザイン具現化を行いました。
-                        </span>
+                        スマートフォンで<strong>マーカー画像</strong>をカメラに映すと、3Dキャラクターが飛び出して見えます。アプリのインストールは不要です。
+                    </p>
+                    <ol className="guide-steps">
+                        <li>下から<strong>キャラクターを選び</strong>「ARを見る」をタップ</li>
+                        <li><strong>マーカー</strong>を用意する（<a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>印刷用ページ</a>でコースター大サイズに印刷するのがおすすめ）</li>
+                        <li>ARページでカメラを許可し、<strong>マーカーを映す</strong>とキャラクターが表示されます</li>
+                    </ol>
+                    <a href="ar_marker_print.html" className="print-link-btn">マーカー印刷用ページへ</a>
+                    <p className="concept-note">
+                        3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
                     </p>
                 </div>
             </header>

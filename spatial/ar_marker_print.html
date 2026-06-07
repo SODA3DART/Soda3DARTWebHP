@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マーカー印刷用 | 飛び出すARキャラクター</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #0072ff;
+            --text: #2d3436;
+            --sub: #636e72;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            color: var(--text);
+            background: #f4f6f8;
+            line-height: 1.7;
+        }
+
+        .screen-only {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 48px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            font-size: 1.45rem;
+            margin: 0 0 12px;
+            line-height: 1.4;
+        }
+
+        .lead {
+            margin: 0 0 20px;
+            color: var(--sub);
+            font-size: 0.95rem;
+        }
+
+        .guide-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .guide-card h2 {
+            font-size: 1rem;
+            margin: 0 0 12px;
+            color: var(--accent);
+        }
+
+        .steps {
+            margin: 0;
+            padding-left: 1.2em;
+        }
+
+        .steps li {
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+
+        .steps strong {
+            color: var(--text);
+        }
+
+        .size-badge {
+            display: inline-block;
+            background: rgba(0, 114, 255, 0.1);
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .print-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 24px;
+            padding: 12px 22px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--accent);
+            border: 1px solid rgba(0, 114, 255, 0.25);
+        }
+
+        .note {
+            font-size: 0.85rem;
+            color: var(--sub);
+            margin: 0;
+        }
+
+        .marker-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .marker-select label {
+            display: block;
+            background: #fff;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .marker-select input {
+            margin-right: 6px;
+        }
+
+        .marker-select label:has(input:checked) {
+            border-color: var(--accent);
+        }
+
+        .marker-select img {
+            display: block;
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 6px;
+        }
+
+        .marker-select span {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* 印刷シート */
+        .print-sheet {
+            background: #fff;
+            padding: 10mm;
+        }
+
+        .print-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 90mm);
+            gap: 8mm;
+            justify-content: center;
+        }
+
+        .marker-print-cell {
+            width: 90mm;
+            height: 90mm;
+            border: 0.3mm dashed #bbb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            page-break-inside: avoid;
+            position: relative;
+        }
+
+        .marker-print-cell img {
+            width: 86mm;
+            height: 86mm;
+            object-fit: contain;
+        }
+
+        .marker-print-label {
+            position: absolute;
+            bottom: 1mm;
+            font-size: 7pt;
+            color: #888;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .screen-only {
+                display: none !important;
+            }
+
+            .print-sheet {
+                padding: 0;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+        }
+
+        @media screen {
+            .print-sheet {
+                border-radius: 12px;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+                margin-top: 8px;
+            }
+
+            .print-preview-title {
+                font-size: 0.9rem;
+                color: var(--sub);
+                margin: 0 0 12px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen-only">
+        <a href="ar_character_hub.html" class="back-link">← ARキャラクターハブに戻る</a>
+        <h1>マーカー印刷用ページ</h1>
+        <p class="lead">AR体験に使う<strong>マーカー画像</strong>を、コースター大サイズ（90mm角）で印刷できるページです。紙やコースターに印刷して、スマートフォンのカメラで映してください。</p>
+
+        <div class="guide-card">
+            <span class="size-badge">推奨サイズ：コースター大（90mm × 90mm）</span>
+            <h2>印刷して使うまでの流れ</h2>
+            <ol class="steps">
+                <li>下から<strong>印刷したいキャラクター</strong>にチェックを入れ、「選択したマーカーを印刷」を押します。</li>
+                <li>プリンターの設定で<strong>実際のサイズ・100%・余白なし（または最小）</strong>を選び、A4用紙に印刷します。</li>
+                <li>点線に沿って切り取るか、そのまま平らな台に置きます（<strong>曲がったり光が反射しない</strong>場所がおすすめです）。</li>
+                <li><a href="ar_character_hub.html">ARキャラクターハブ</a>からキャラを選び「ARを見る」を開き、カメラで<strong>印刷したマーカー</strong>を映すと3Dキャラクターが表示されます。</li>
+            </ol>
+            <p class="note" style="margin-top:14px;">※ コンビニや印刷サービスで「コースター大」「90mm角」として注文しても使えます。スマホ画面にマーカーを表示して映す方法もあります（各ARページの「マーカーを表示」）。</p>
+        </div>
+
+        <div class="print-actions">
+            <button type="button" class="btn btn-primary" id="print-selected-btn">選択したマーカーを印刷</button>
+            <button type="button" class="btn btn-secondary" id="print-all-btn">全キャラクターを印刷</button>
+            <button type="button" class="btn btn-secondary" id="select-all-btn">すべて選択</button>
+        </div>
+
+        <div class="marker-select" id="marker-select"></div>
+
+        <p class="print-preview-title">▼ 印刷プレビュー（1マーカー = 90mm角）</p>
+    </div>
+
+    <div class="print-sheet">
+        <div class="print-grid" id="print-grid"></div>
+    </div>
+
+    <script src="ar-marker-print-data.js"></script>
+    <script>
+        const markers = window.AR_MARKER_PRINT_DATA || [];
+        const selectEl = document.getElementById('marker-select');
+        const gridEl = document.getElementById('print-grid');
+
+        function renderSelect() {
+            selectEl.innerHTML = markers.map((m) => `
+                <label>
+                    <input type="checkbox" name="marker" value="${m.id}" checked>
+                    <img src="${m.markerSrc}" alt="${m.title}">
+                    <span>${m.title}</span>
+                </label>
+            `).join('');
+        }
+
+        function getSelectedMarkers() {
+            const checked = [...selectEl.querySelectorAll('input:checked')].map((el) => el.value);
+            return markers.filter((m) => checked.includes(m.id));
+        }
+
+        function renderPrintGrid(list) {
+            gridEl.innerHTML = list.map((m) => `
+                <div class="marker-print-cell">
+                    <img src="${m.markerSrc}" alt="${m.title} マーカー">
+                    <span class="marker-print-label">${m.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function doPrint(list) {
+            if (!list.length) {
+                alert('印刷するキャラクターを1つ以上選んでください。');
+                return;
+            }
+            renderPrintGrid(list);
+            window.print();
+        }
+
+        document.getElementById('print-selected-btn').addEventListener('click', () => {
+            doPrint(getSelectedMarkers());
+        });
+
+        document.getElementById('print-all-btn').addEventListener('click', () => {
+            selectEl.querySelectorAll('input').forEach((el) => { el.checked = true; });
+            doPrint(markers);
+        });
+
+        document.getElementById('select-all-btn').addEventListener('click', () => {
+            selectEl.querySelectorAll('input').forEach((el) => { el.checked = true; });
+            renderPrintGrid(markers);
+        });
+
+        selectEl.addEventListener('change', () => {
+            renderPrintGrid(getSelectedMarkers());
+        });
+
+        renderSelect();
+        renderPrintGrid(markers);
+    </script>
+</body>
+</html>

@@ -73,8 +73,13 @@
 .howto-actions {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
     margin-top: 16px;
     gap: 10px;
+}
+
+.howto-actions a.howto-close {
+    line-height: 1.2;
 }
 
 .howto-close {
