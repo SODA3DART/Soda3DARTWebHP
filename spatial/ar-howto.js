@@ -16,15 +16,17 @@
         </div>
         <div class="howto-body-short">
             <ol class="howto-steps-compact">
-                <li>キャラを選んで「<strong>ARを見る</strong>」</li>
-                <li>マーカーを印刷（<a href="ar_marker_print.html" style="color:#0072ff;font-weight:700;">90mm角</a>）</li>
-                <li>カメラ許可 → マーカーを映す</li>
+                <li>キャラを選ぶ →「<strong>ARを見る</strong>」</li>
+                <li>地面を<strong>タップ</strong>して配置</li>
             </ol>
-            <p class="howto-note">画面表示のマーカーは<strong>端末2台</strong>必要。印刷は100%サイズで。</p>
+            <p class="howto-note howto-note-optional">マーカー派は左下ボタンで切替 · <a href="ar_marker_print.html" style="color:#0072ff;font-weight:600;">印刷</a></p>
         </div>
-        <div class="howto-actions">
+        <div class="howto-actions howto-actions-full">
             <a href="ar_marker_print.html" class="howto-close" style="display:inline-block;text-decoration:none;margin-right:8px;background:#fff;color:#0072ff;border:1px solid rgba(0,114,255,0.3);">印刷ページへ</a>
             <button type="button" class="howto-close" id="howto-close-btn">閉じる</button>
+        </div>
+        <div class="howto-actions howto-actions-short">
+            <button type="button" class="howto-close" id="howto-close-btn-mobile">OK</button>
         </div>
     `;
 
@@ -64,12 +66,7 @@
         document.body.appendChild(overlay);
 
         const closeBtn = document.getElementById('howto-close-btn');
-
-        function openOverlay() {
-            overlay.hidden = false;
-            overlay.classList.add('is-open');
-            if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
-        }
+        const closeBtnMobile = document.getElementById('howto-close-btn-mobile');
 
         function closeOverlay() {
             overlay.classList.remove('is-open');
@@ -80,8 +77,15 @@
             } catch (e) { /* ignore */ }
         }
 
+        function openOverlay() {
+            overlay.hidden = false;
+            overlay.classList.add('is-open');
+            if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
+        }
+
         if (openBtn) openBtn.addEventListener('click', openOverlay);
         closeBtn.addEventListener('click', closeOverlay);
+        closeBtnMobile.addEventListener('click', closeOverlay);
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) closeOverlay();
         });

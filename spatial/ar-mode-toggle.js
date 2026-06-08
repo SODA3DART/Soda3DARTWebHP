@@ -23,9 +23,9 @@
     }
 
     const markerOnlySelectors = ['#marker-ui-btn', '#mode-ui-btn', '#view-ui-btn'];
-    let mode = 'marker';
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    let mode = isMobile ? 'markerless' : 'marker';
     let iframe = null;
-    let iframeLoaded = false;
 
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -36,7 +36,9 @@
 
     const hint = document.createElement('div');
     hint.id = 'ar-markerless-hint';
-    hint.textContent = '実験モード：地面をタップしてキャラクターを配置できます（8th Wall SLAM）';
+    hint.textContent = isMobile
+        ? '地面をタップして配置'
+        : '実験モード：地面をタップしてキャラクターを配置できます（8th Wall SLAM）';
     document.body.appendChild(hint);
 
     function pauseMarkerMedia() {
@@ -111,4 +113,6 @@
         mode = mode === 'marker' ? 'markerless' : 'marker';
         applyMode();
     });
+
+    applyMode();
 })();

@@ -241,6 +241,20 @@
             margin-bottom: 6px;
         }
 
+        .guide-marker-optional {
+            display: none;
+            margin: 10px 0 0;
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+
+        .guide-marker-optional a {
+            color: var(--secondary-accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
         .print-link-btn {
             display: inline-flex;
             align-items: center;
@@ -480,13 +494,20 @@
             }
 
             .guide-steps-compact {
-                font-size: 0.84rem;
-                line-height: 1.55;
+                font-size: 0.88rem;
+                line-height: 1.5;
+            }
+
+            .guide-steps-compact li {
+                margin-bottom: 4px;
+            }
+
+            .guide-marker-optional {
+                display: block;
             }
 
             .print-link-btn {
-                font-size: 0.82rem;
-                padding: 9px 16px;
+                display: none;
             }
 
             .carousel-wrapper {
@@ -615,7 +636,7 @@
                             3年生のゲームキャラクターデザインの学習成果です。九州のランドマークなどをモチーフに、デザインから3Dモデリングまで約1か月で制作しました。
                         </p>
                         <p className="concept-note concept-note-short">
-                            3年生の学習成果。マーカーを映すとAR体験できます。
+                            3年生作品。地面タップでAR体験（アプリ不要）
                         </p>
                     </div>
 
@@ -652,10 +673,12 @@
                             </div>
                             <div className="guide-body-short">
                                 <ol className="guide-steps guide-steps-compact">
-                                    <li>キャラを選んで「<strong>ARを見る</strong>」</li>
-                                    <li>マーカーを印刷（<a href="ar_marker_print.html" style={{ color: 'var(--secondary-accent)', fontWeight: 700 }}>90mm角</a>）</li>
-                                    <li>カメラでマーカーを映す</li>
+                                    <li>キャラを選ぶ →「<strong>ARを見る</strong>」</li>
+                                    <li>地面を<strong>タップ</strong>して配置</li>
                                 </ol>
+                                <p className="guide-marker-optional">
+                                    マーカー派は左下ボタンで切替 · <a href="ar_marker_print.html">印刷</a>
+                                </p>
                             </div>
                             <a href="ar_marker_print.html" className="print-link-btn">マーカー印刷用ページへ</a>
                         </div>
