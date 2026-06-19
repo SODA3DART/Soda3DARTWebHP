@@ -84,8 +84,8 @@
         }
 
         if (openBtn) openBtn.addEventListener('click', openOverlay);
-        closeBtn.addEventListener('click', closeOverlay);
-        closeBtnMobile.addEventListener('click', closeOverlay);
+        if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
+        if (closeBtnMobile) closeBtnMobile.addEventListener('click', closeOverlay);
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) closeOverlay();
         });
