@@ -1177,6 +1177,20 @@
             z-index: 3;
         }
 
+        /* React製パーティクル背景レイヤー */
+        #hero-particles-root {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hero-particles-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         .hero-title {
             font-size: 4rem;
             letter-spacing: 0.02em;
@@ -1406,6 +1420,8 @@
     <div class="hero-bg"></div>
     <div class="hero-bg"></div>
     <div class="hero-bg"></div>
+    <!-- React製 パーティクル・コンステレーション背景 -->
+    <div id="hero-particles-root"></div>
     <div class="hero-content">
         <h1 class="hero-title">2026 オープンキャンパス</h1>
         <p class="hero-subtitle">崇城大学芸術学部美術学科 3Dアートコース</p>
@@ -2231,6 +2247,163 @@
         <ScheduleContainer />,
         document.getElementById('schedule-container')
     );
+</script>
+
+<!-- React製 パーティクル・コンステレーション背景 -->
+<script type="text/babel">
+    const HeroParticles = () => {
+        const canvasRef = React.useRef(null);
+
+        React.useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const colors = ['#4f7cff', '#8b5cf6', '#22d3ee'];
+            const prefersReduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            let width = 0, height = 0, dpr = 1;
+            let particles = [];
+            let rafId = null;
+            const mouse = { x: null, y: null };
+            const LINK_DIST = 130;
+            const MOUSE_DIST = 180;
+
+            const initParticles = () => {
+                const target = Math.max(24, Math.min(90, Math.floor((width * height) / 13000)));
+                particles = Array.from({ length: target }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.45,
+                    vy: (Math.random() - 0.5) * 0.45,
+                    r: Math.random() * 2.2 + 1,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                }));
+            };
+
+            const resize = () => {
+                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const rect = canvas.getBoundingClientRect();
+                width = rect.width;
+                height = rect.height;
+                canvas.width = Math.round(width * dpr);
+                canvas.height = Math.round(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                initParticles();
+            };
+
+            const step = () => {
+                ctx.clearRect(0, 0, width, height);
+
+                for (const p of particles) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    if (mouse.x !== null) {
+                        const dx = mouse.x - p.x;
+                        const dy = mouse.y - p.y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < MOUSE_DIST && dist > 0.001) {
+                            const pull = (1 - dist / MOUSE_DIST) * 0.35;
+                            p.x += (dx / dist) * pull;
+                            p.y += (dy / dist) * pull;
+                        }
+                    }
+                }
+
+                // 粒子同士をつなぐ線
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const a = particles[i];
+                        const b = particles[j];
+                        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+                        if (dist < LINK_DIST) {
+                            ctx.strokeStyle = 'rgba(139, 148, 255, ' + (1 - dist / LINK_DIST) * 0.35 + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(a.x, a.y);
+                            ctx.lineTo(b.x, b.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // マウスへ伸びる線
+                if (mouse.x !== null) {
+                    for (const p of particles) {
+                        const dist = Math.hypot(mouse.x - p.x, mouse.y - p.y);
+                        if (dist < MOUSE_DIST) {
+                            ctx.strokeStyle = 'rgba(34, 211, 238, ' + (1 - dist / MOUSE_DIST) * 0.5 + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(mouse.x, mouse.y);
+                            ctx.lineTo(p.x, p.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // 発光する粒子
+                for (const p of particles) {
+                    ctx.beginPath();
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.shadowBlur = 0;
+
+                rafId = requestAnimationFrame(step);
+            };
+
+            const drawStaticFrame = () => {
+                ctx.clearRect(0, 0, width, height);
+                for (const p of particles) {
+                    ctx.beginPath();
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.shadowBlur = 0;
+            };
+
+            const onMove = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            };
+            const onLeave = () => {
+                mouse.x = null;
+                mouse.y = null;
+            };
+
+            resize();
+            if (prefersReduced) {
+                drawStaticFrame();
+            } else {
+                step();
+                window.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseleave', onLeave);
+            }
+            window.addEventListener('resize', resize);
+
+            return () => {
+                if (rafId) cancelAnimationFrame(rafId);
+                window.removeEventListener('resize', resize);
+                window.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseleave', onLeave);
+            };
+        }, []);
+
+        return <canvas ref={canvasRef} className="hero-particles-canvas" aria-hidden="true" />;
+    };
+
+    ReactDOM.render(<HeroParticles />, document.getElementById('hero-particles-root'));
 </script>
 
 <!-- JavaScript -->
