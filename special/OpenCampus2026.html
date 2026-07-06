@@ -2266,17 +2266,17 @@
             let particles = [];
             let rafId = null;
             const mouse = { x: null, y: null };
-            const LINK_DIST = 130;
-            const MOUSE_DIST = 180;
+            const LINK_DIST = 155;
+            const MOUSE_DIST = 200;
 
             const initParticles = () => {
-                const target = Math.max(24, Math.min(90, Math.floor((width * height) / 13000)));
+                const target = Math.max(28, Math.min(100, Math.floor((width * height) / 12000)));
                 particles = Array.from({ length: target }, () => ({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     vx: (Math.random() - 0.5) * 0.45,
                     vy: (Math.random() - 0.5) * 0.45,
-                    r: Math.random() * 2.2 + 1,
+                    r: Math.random() * 2.4 + 1.2,
                     color: colors[Math.floor(Math.random() * colors.length)]
                 }));
             };
@@ -2320,8 +2320,8 @@
                         const b = particles[j];
                         const dist = Math.hypot(a.x - b.x, a.y - b.y);
                         if (dist < LINK_DIST) {
-                            ctx.strokeStyle = 'rgba(139, 148, 255, ' + (1 - dist / LINK_DIST) * 0.35 + ')';
-                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'rgba(150, 170, 255, ' + (1 - dist / LINK_DIST) * 0.6 + ')';
+                            ctx.lineWidth = 1.4;
                             ctx.beginPath();
                             ctx.moveTo(a.x, a.y);
                             ctx.lineTo(b.x, b.y);
@@ -2335,8 +2335,8 @@
                     for (const p of particles) {
                         const dist = Math.hypot(mouse.x - p.x, mouse.y - p.y);
                         if (dist < MOUSE_DIST) {
-                            ctx.strokeStyle = 'rgba(34, 211, 238, ' + (1 - dist / MOUSE_DIST) * 0.5 + ')';
-                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'rgba(34, 211, 238, ' + (1 - dist / MOUSE_DIST) * 0.8 + ')';
+                            ctx.lineWidth = 1.6;
                             ctx.beginPath();
                             ctx.moveTo(mouse.x, mouse.y);
                             ctx.lineTo(p.x, p.y);
