@@ -1178,8 +1178,10 @@
         }
 
         .hero-title {
-            font-size: 4.2rem;
+            font-size: 4rem;
             letter-spacing: 0.02em;
+            word-break: keep-all;
+            overflow-wrap: normal;
             text-shadow: 0 4px 30px rgba(79, 124, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.6);
         }
 
@@ -1258,8 +1260,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
+            height: 6px;
             background: var(--oc-grad);
+            z-index: 1;
         }
 
         .experience-card:hover {
