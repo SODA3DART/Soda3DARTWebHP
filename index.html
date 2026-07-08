@@ -704,7 +704,10 @@
 
         // イースターエッグ: 隠しゲームへのアクセス
         // コナミコマンド風のキー入力シーケンスを検出
-        let secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        // くまゆシューティング起動コマンド: ↑↑↓↓→←→←BA（右左右左）
+        let secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'b', 'a'];
+        // 従来のコナミコード（↑↑↓↓←→←→BA）も受け付ける
+        let secretCodeClassic = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
         let secretCode2 = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', 'a', 'b', 'b', 'a'];
         let userInput = [];
         let secretGameIcon = null;
@@ -720,23 +723,21 @@
             userInput.push(e.key);
 
             // 入力履歴が長すぎる場合は古い入力を削除
-            if (userInput.length > Math.max(secretCode.length, secretCode2.length)) {
+            if (userInput.length > Math.max(secretCode.length, secretCodeClassic.length, secretCode2.length)) {
                 userInput.shift();
             }
 
             // 現在の入力シーケンスをコンソールに表示（デバッグ用）
             console.log('Current sequence:', userInput.join(','));
 
-            // 最初のシーケンス（コナミコード）が一致するか確認
-            if (!konamiCodeActivated && checkSequence(userInput, secretCode)) {
+            // コナミコマンド（右左右左 or 従来の左右左右）が一致したら、くまゆシューティングを起動
+            if (checkSequence(userInput, secretCode) || checkSequence(userInput, secretCodeClassic)) {
+                console.log('Konami code activated! → くまゆシューティング');
                 konamiCodeActivated = true;
-                console.log('Konami code activated!');
-                revealSecretGameIcon();
 
                 // 隠しヒントを表示（炙り出し効果）
                 secretHintElement = document.getElementById('secret-hint');
                 if (secretHintElement) {
-                    // ゆっくりと表示する
                     let opacity = 0;
                     const fadeIn = setInterval(function () {
                         opacity += 0.01;
@@ -747,8 +748,8 @@
                     }, 100);
                 }
 
-                // 入力をリセット
                 userInput = [];
+                launchKumayuShooting();
             }
             // 2番目のシーケンスが一致するか確認（コナミコードが有効化された後のみ）
             else if (konamiCodeActivated && checkSequence(userInput, secretCode2)) {
@@ -756,6 +757,17 @@
                 goToSecretGame2();
             }
         });
+
+        // くまゆシューティングへフラッシュ演出付きで遷移
+        function launchKumayuShooting() {
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:9999;opacity:0;transition:opacity 0.25s ease-in-out;';
+            document.body.appendChild(flash);
+            requestAnimationFrame(() => { flash.style.opacity = '1'; });
+            setTimeout(() => {
+                window.location.href = 'special/SpecialSecretGame.html';
+            }, 300);
+        }
 
         // 代替の隠しトリガー: ロゴを3回クリック
         document.addEventListener('DOMContentLoaded', function () {
