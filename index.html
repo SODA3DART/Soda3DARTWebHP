@@ -247,12 +247,12 @@
                 <h3>最新情報 </h3>
                 <p><a href="special/OpenCampus2026.html"
                         style="color: #e63946; font-weight: bold;">🎉 2026年オープンキャンパス（7/18・8/2・8/22）参加者募集中！</a></p>
+                <p><a href="news_event.html?id=17"
+                        style="color: #666; font-weight: bold;">公式LINEオープンチャット開始しました！</a></p>
                 <p><a href="news_event.html?id=16"
                         style="color: #666; font-weight: bold;">飛び出すAR作品が公開されました</a></p>
                 <p><a href="news_event.html?id=15"
                         style="color: #666; font-weight: bold;">5.12 吹上浜砂の祭典に参加しました</a></p>
-                <p><a href="special/Chat.html">10/17 くまゆチャットを導入しました。</a></p>
-
                 <p><a href="courseinfo.html#interview">5.28更新！　学生インタビューを掲載しました。</a></p>
             </div>
         </div>
@@ -1660,6 +1660,20 @@
         // デフォルトのニュースデータを取得する関数（フェッチに失敗した場合のフォールバック）
         function getDefaultNewsData() {
             return [
+                {
+                    id: 17,
+                    date: '2026年7月20日',
+                    title: '3Dアートコース公式LINEオープンチャット開始しました！',
+                    excerpt: '3Dアートコースの公式LINEオープンチャットを開設しました。コースの最新情報や交流の場としてご利用ください。参加は下のQRコードからどうぞ。',
+                    content: `<p>崇城大学芸術学部美術学科<strong>3Dアートコース公式LINEオープンチャット</strong>を開始しました！</p>
+                    <p>コースの最新情報や、学生・関係者との交流の場としてご活用いただけます。ご興味のある方は、下のQRコードをスマートフォンで読み取り、オープンチャットへご参加ください。</p>
+                    <div style="text-align: center; margin: 24px 0;">
+                        <img src="images/course/QrCode.jpg" alt="3Dアートコース公式LINEオープンチャット参加用QRコード" style="width: min(280px, 80vw); height: auto; border-radius: 8px; background: #fff; padding: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                        <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">↑ 参加用QRコード</p>
+                    </div>`,
+                    image: 'images/course/QrCode.jpg',
+                    fullArticle: null
+                },
                 {
                     id: 16,
                     date: '2026年5月21日',
